@@ -4,7 +4,7 @@ from typing import Optional
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "sqlite:///./content.db"
+    DATABASE_URL: str = "sqlite:///./store.db"
     
     # Security
     SECRET_KEY: str = "your-secret-key-change-this-in-production"
@@ -14,7 +14,6 @@ class Settings(BaseSettings):
     # Admin
     ADMIN_USERNAME: str = "admin"
     ADMIN_PASSWORD: str = "admin123"  # Change this in production
-    ADMIN_EMAIL: str = "davemelk@gmail.com"
     
     # CORS
     # Can be comma-separated string or list
