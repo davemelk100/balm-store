@@ -1,0 +1,15 @@
+# Ignore uploaded images
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.bmp
+
+# Keep SVG files and directory structure
+!.gitkeep
+!*.svg
+
+# Keep README
+!README.md
+

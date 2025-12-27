@@ -12,6 +12,7 @@ import { LegalModal } from "../components/LegalModal";
 import { PrivacyPolicyContent } from "../../components/PrivacyPolicyContent";
 import { TermsOfServiceContent } from "../../components/TermsOfServiceContent";
 import StoreHeader from "../components/StoreHeader";
+import { StoreFooter } from "../components/StoreFooter";
 
 // Product Image Row Component
 const ProductImageRow = ({
@@ -370,7 +371,7 @@ const Store = () => {
       <LegalModal
         isOpen={legalModal === "privacy"}
         onClose={closeLegalModal}
-        title="Privacy Policy"
+        title="Privacy"
       >
         <PrivacyPolicyContent />
       </LegalModal>
@@ -378,35 +379,16 @@ const Store = () => {
       <LegalModal
         isOpen={legalModal === "terms"}
         onClose={closeLegalModal}
-        title="Terms of Service"
+        title="TOS"
       >
         <TermsOfServiceContent />
       </LegalModal>
 
       {/* Sticky Footer with BALM */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-[rgba(240,240,240,1)] py-0.5">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col">
-            <span className="font-bold tracking-tight balm-logo text-[#d0d0d0] text-2xl [text-shadow:rgba(255,255,255,0.9)_-1px_-1px_1px,rgba(0,0,0,0.2)_1px_1px_2px,rgba(255,255,255,0.5)_0px_0px_1px]">
-              BALM
-            </span>
-            <div className="flex">
-              <button
-                onClick={() => openLegalModal("privacy")}
-                className="flex text-xs text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
-              >
-                Privacy Policy
-              </button>
-              <button
-                onClick={() => openLegalModal("terms")}
-                className="flex text-xs text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
-              >
-                Terms of Service
-              </button>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <StoreFooter
+        onPrivacyClick={() => openLegalModal("privacy")}
+        onTermsClick={() => openLegalModal("terms")}
+      />
     </div>
   );
 };

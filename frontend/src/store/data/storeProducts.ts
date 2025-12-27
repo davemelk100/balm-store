@@ -24,13 +24,12 @@ export const storeProducts: Product[] = [
     mainCategory: "art",
     title: "BALM Chest Print Button-Up Cursive",
     price: 25.0,
-    image: "/img/balm-cursive.png",
+    image: "/img/products/balm-cursive.png",
     images: [
-      "/img/balm-cursive.png",
-      "/img/balm-cluh-hooded-dude.png",
-      "/img/balm-cursive-loadout.png",
-      "/img/balm-cursive-sidestage.png",
-      "/img/balm-cursive-stark.jpg",
+      "/img/products/balm-cursive.png",
+      "/img/products/balm-cluh-hooded-dude.png",
+      "/img/products/balm-cursive-sidestage.png",
+      "/img/products/balm-cursive-stark.jpg",
     ],
     description: "",
     details: `2.9 oz./yd² (US), 4.8 oz./L yd (CA), 100% polyester

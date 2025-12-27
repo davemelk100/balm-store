@@ -1,0 +1,5 @@
+<svg width="600" height="800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="800" fill="#f0f0f0"/>
+  <text x="50%" y="50%" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" fill="#808080" font-weight="bold">BALM</text>
+  <text x="50%" y="58%" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#a0a0a0">Product Image</text>
+</svg>

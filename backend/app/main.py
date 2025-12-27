@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
 from app.api.routes.products import router as products_router
@@ -19,6 +20,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount static files directory
+public_dir = Path(__file__).parent.parent / "public"
+if public_dir.exists():
+    app.mount("/static", StaticFiles(directory=str(public_dir)), name="static")
 
 # Include routers
 app.include_router(products_router)

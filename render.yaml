@@ -1,0 +1,31 @@
+services:
+  # FastAPI Backend Web Service
+  - type: web
+    name: balm-store-api
+    env: python
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    rootDir: backend
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+      # Add these manually in Render dashboard:
+      # - DATABASE_URL (from PostgreSQL database)
+      # - SECRET_KEY (generate securely)
+      # - ADMIN_PASSWORD (your secure password)
+      # - ADMIN_USERNAME (default: admin)
+      # - CORS_ORIGINS (your Netlify URL)
+
+databases:
+  # PostgreSQL Database
+  - name: balm-store-db
+    plan: free
+    databaseName: balm_store
+    user: balm_store_user
+

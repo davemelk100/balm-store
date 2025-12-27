@@ -59,7 +59,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           <div className="mb-4">
             <Link to="/" className="hover:opacity-80 transition-opacity">
               <img
-                src="/img/balm-varsity.svg"
+                src="/img/logos/balm-varsity.svg"
                 alt="BALM Varsity"
                 className="w-[40px] h-auto md:w-auto md:h-[100px]"
               />
