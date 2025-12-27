@@ -51,6 +51,7 @@ Your store comes with:
 ### 1. Explore the Store
 
 Visit http://localhost:5173 to see:
+
 - Product listings
 - Product details
 - Shopping cart
@@ -61,6 +62,7 @@ Visit http://localhost:5173 to see:
 Go to http://localhost:8000/admin/store
 
 **Default credentials**:
+
 - Username: `admin`
 - Password: `admin123`
 
@@ -69,6 +71,7 @@ Go to http://localhost:8000/admin/store
 ### 3. Add Your First Product
 
 In the admin panel:
+
 1. Click "Products" tab
 2. Click "+ Add Product"
 3. Fill in:
@@ -166,6 +169,7 @@ In admin panel, change the category dropdown options or edit:
 ### Test Stripe Integration
 
 Use these test cards:
+
 - **Success**: `4242 4242 4242 4242`
 - **Decline**: `4000 0000 0000 0002`
 - **3D Secure**: `4000 0027 6000 3184`
@@ -177,6 +181,7 @@ Any future expiry date and any 3-digit CVC works.
 Visit http://localhost:8000/docs for interactive API documentation.
 
 Try:
+
 - `GET /api/products` - List products
 - `GET /api/products/{id}` - Get product details
 - `POST /api/orders` - Create order
@@ -188,6 +193,7 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for complete deployment guide.
 **Quick version**:
 
 1. **Frontend** (Netlify):
+
    - Connect GitHub repo
    - Set build: `npm run build` in `frontend/`
    - Set env vars
@@ -212,6 +218,7 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for complete deployment guide.
 **Problem**: `ModuleNotFoundError` or import errors
 
 **Solution**:
+
 ```bash
 cd backend
 source venv/bin/activate  # Must activate!
@@ -223,6 +230,7 @@ pip install -r requirements.txt
 **Problem**: API calls failing
 
 **Solution**:
+
 - Check backend is running on port 8000
 - Verify `VITE_API_URL` in `.env`
 - Check browser console for CORS errors
@@ -232,6 +240,7 @@ pip install -r requirements.txt
 **Problem**: Table doesn't exist
 
 **Solution**:
+
 ```bash
 cd backend
 rm store.db  # Delete old database
@@ -243,6 +252,7 @@ python scripts/init_db.py  # Recreate
 **Problem**: Incompatibility errors
 
 **Solution**: Use Python 3.11 or 3.12 (not 3.14!)
+
 ```bash
 python3.11 -m venv venv
 ```
@@ -282,4 +292,3 @@ Your BALM Store is now running! Start customizing and adding products.
 **API Docs**: http://localhost:8000/docs
 
 Happy selling! 🛍️
-
