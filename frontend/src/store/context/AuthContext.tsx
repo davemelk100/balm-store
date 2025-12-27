@@ -106,11 +106,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     try {
-      // In dev, use relative path so Vite proxy handles it
-      // In production, use full URL
-      const url = import.meta.env.DEV
-        ? "/.netlify/functions/auth-session"
-        : `${window.location.origin}/.netlify/functions/auth-session`;
+      // Skip session check in development if backend doesn't have auth endpoints
+      if (import.meta.env.DEV) {
+        console.warn("Auth: Session check skipped in development mode");
+        setLoading(false);
+        return;
+      }
+
+      // In production, check with Netlify functions
+      const url = `${window.location.origin}/.netlify/functions/auth-session`;
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -138,21 +142,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [checkSession]);
 
   const login = useCallback(() => {
-    // In dev, use relative path so Vite proxy handles it
-    // In production, use full URL
-    const url = import.meta.env.DEV
-      ? "/.netlify/functions/auth-login"
-      : `${window.location.origin}/.netlify/functions/auth-login`;
+    // In development, navigate to login page
+    // In production with Netlify functions, redirect to auth endpoint
+    if (import.meta.env.DEV) {
+      console.warn("Auth: Redirecting to login page (dev mode)");
+      window.location.href = "/login";
+      return;
+    }
+    
+    // Production: use Netlify function
+    const url = `${window.location.origin}/.netlify/functions/auth-login`;
     window.location.href = url;
   }, []);
 
   const loginWithEmail = useCallback(
     async (email: string, password: string) => {
-      // In dev, use relative path so Vite proxy handles it
-      // In production, use full URL
-      const url = import.meta.env.DEV
-        ? "/.netlify/functions/auth-login-email"
-        : `${window.location.origin}/.netlify/functions/auth-login-email`;
+      // In development without backend auth, simulate login
+      if (import.meta.env.DEV) {
+        console.warn("Auth: Simulating email login (dev mode)");
+        const mockUser = {
+          id: "dev-user",
+          email: email,
+          name: email.split('@')[0],
+          image: null,
+        };
+        setUser(mockUser);
+        setToken("dev-token-" + Date.now());
+        return;
+      }
+
+      // Production: use Netlify function
+      const url = `${window.location.origin}/.netlify/functions/auth-login-email`;
       const response = await fetch(url, {
         method: "POST",
         headers: {

@@ -69,8 +69,8 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           {/* Cart and Profile - Centered Below Logo (unless minimal) */}
           {!minimal && (
             <div className="flex items-center gap-4">
-              {/* Cart Icon - show when there are items */}
-              {!hideCart && getTotalItems() > 0 && (
+              {/* Cart Icon - always show unless hidden */}
+              {!hideCart && (
                 <button
                   onClick={() => navigate("/checkout")}
                   className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
@@ -92,8 +92,8 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                 </button>
               )}
 
-              {/* User Profile Dropdown - only show when authenticated */}
-              {isAuthenticated && (
+              {/* User Profile Dropdown or Login Button */}
+              {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
@@ -164,31 +164,29 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                       )}
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    {isAuthenticated ? (
-                      <DropdownMenuItem
-                        onClick={handleLogout}
-                        style={{ fontFamily: '"Geist Mono", monospace' }}
-                      >
-                        Sign Out
-                      </DropdownMenuItem>
-                    ) : (
-                      <>
-                        <DropdownMenuItem
-                          onClick={() => navigate("/login")}
-                          style={{ fontFamily: '"Geist Mono", monospace' }}
-                        >
-                          Sign In
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => navigate("/signup")}
-                          style={{ fontFamily: '"Geist Mono", monospace' }}
-                        >
-                          Sign Up
-                        </DropdownMenuItem>
-                      </>
-                    )}
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      style={{ fontFamily: '"Geist Mono", monospace' }}
+                    >
+                      Sign Out
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+              ) : (
+                <button
+                  onClick={() => navigate("/login")}
+                  className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                  style={{
+                    backgroundColor: "#f0f0f0",
+                    boxShadow:
+                      "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                  }}
+                >
+                  <User
+                    className="h-5 w-5"
+                    style={{ color: "rgb(168, 168, 168)" }}
+                  />
+                </button>
               )}
             </div>
           )}
