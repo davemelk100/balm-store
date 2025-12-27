@@ -1,35 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const AuthCallback = () => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { isAuthenticated, loading } = useAuth();
-  const [hasToken] = useState(() => !!searchParams.get("token"));
+  const navigate = useNavigate();
+  const { setToken } = useAuth();
 
   useEffect(() => {
-    // Wait for auth loading to complete
-    if (!loading) {
-      // If we had a token in the URL and we're now authenticated, go to store
-      if (hasToken && isAuthenticated) {
-        navigate("/", { replace: true });
-      }
-      // If we had a token but auth still failed, or no token at all, go to login
-      else if (!isAuthenticated) {
-        // Give it a moment in case the session check is still processing
-        const timer = setTimeout(() => {
-          navigate("/login", { replace: true });
-        }, 1500);
-        return () => clearTimeout(timer);
-      }
+    const token = searchParams.get("token");
+
+    if (token) {
+      // Store the token
+      setToken(token);
+
+      // Redirect to home page
+      navigate("/", { replace: true });
+    } else {
+      // No token found, redirect to login
+      navigate("/login", { replace: true });
     }
-  }, [isAuthenticated, loading, hasToken, navigate]);
+  }, [searchParams, setToken, navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-lg" style={{ color: "black" }}>
-        Completing sign in...
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold mb-4">Completing sign in...</h2>
+        <p className="text-gray-600">Please wait while we sign you in.</p>
       </div>
     </div>
   );

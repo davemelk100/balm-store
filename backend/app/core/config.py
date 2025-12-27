@@ -20,6 +20,11 @@ class Settings(BaseSettings):
     # In production, set via environment variable: CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
     CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000,http://localhost:8080"
     
+    # Google OAuth
+    GOOGLE_CLIENT_ID: Optional[str] = None
+    GOOGLE_CLIENT_SECRET: Optional[str] = None
+    GOOGLE_REDIRECT_URI: str = "http://localhost:8888/auth-login"
+    
     @property
     def cors_origins_list(self) -> list[str]:
         """Parse CORS_ORIGINS string into list"""

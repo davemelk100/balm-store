@@ -56,34 +56,29 @@ const Signup = () => {
     }
 
     try {
-      const baseUrl = import.meta.env.DEV
-        ? "http://localhost:8888"
-        : window.location.origin;
-      const response = await fetch(
-        `${baseUrl}/.netlify/functions/auth-register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-            name: formData.name || null,
-          }),
-        }
-      );
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const response = await fetch(`${apiUrl}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name || null,
+        }),
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Registration failed");
+        setError(data.detail || "Registration failed");
         setLoading(false);
         return;
       }
 
       // Store token and redirect
-      setToken(data.token);
+      setToken(data.access_token);
       navigate("/");
     } catch (err: any) {
       setError(err.message || "An error occurred during registration");
@@ -99,7 +94,7 @@ const Signup = () => {
       }}
     >
       {/* Top Header */}
-      <StoreHeader sticky={false} />
+      <StoreHeader sticky={false} hideCart={true} hideUser={true} />
 
       {/* Signup Content */}
       <div className="flex items-center justify-center min-h-[60vh]">

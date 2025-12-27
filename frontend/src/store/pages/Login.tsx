@@ -12,18 +12,20 @@ import { PrivacyPolicyContent } from "../../components/PrivacyPolicyContent";
 import { TermsOfServiceContent } from "../../components/TermsOfServiceContent";
 import StoreHeader from "../components/StoreHeader";
 import { StoreFooter } from "../components/StoreFooter";
+import { API_BASE_URL } from "../../config/api";
 
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const auth = useAuth();
-  const { login, loginWithEmail, isAuthenticated, loading: authLoading } = auth;
+  const { loginWithEmail, isAuthenticated, loading: authLoading } = auth;
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // Legal modal management
   const legalModal = searchParams.get("legal");
@@ -34,17 +36,12 @@ const Login = () => {
     searchParams.delete("legal");
     setSearchParams(searchParams);
   };
-  const [loading, setLoading] = useState(false);
 
-  // Wait for auth to initialize
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div>Loading...</div>
-      </div>
-    );
-  }
+  // Check for error in URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlError = urlParams.get("error");
 
+  // All hooks must be called before any conditional returns
   useEffect(() => {
     // If already authenticated, redirect to intended destination or store
     if (isAuthenticated) {
@@ -53,21 +50,36 @@ const Login = () => {
     }
   }, [isAuthenticated, navigate, location]);
 
-  // Check for error in URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const urlError = urlParams.get("error");
-
   useEffect(() => {
     if (urlError) {
       setError(urlError);
     }
   }, [urlError]);
 
-  const handleGoogleLogin = () => {
-    if (login) {
-      login();
-    } else {
-      console.error("Login function not available");
+  // Wait for auth to initialize - AFTER all hooks
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Loading...</div>
+      </div>
+    );
+  }
+
+  const handleGoogleLogin = async () => {
+    setError("");
+    try {
+      // Get Google OAuth URL from backend
+      const response = await fetch(`${API_BASE_URL}/api/auth/google`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Failed to initiate Google login");
+      }
+
+      // Redirect to Google OAuth
+      window.location.href = data.url;
+    } catch (err: any) {
+      setError(err.message || "Google login failed");
     }
   };
 
@@ -94,7 +106,7 @@ const Login = () => {
       }}
     >
       {/* Top Header */}
-      <StoreHeader sticky={false} />
+      <StoreHeader sticky={false} hideCart={true} hideUser={true} />
 
       {/* Login Content */}
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -219,7 +231,7 @@ const Login = () => {
                 <span
                   style={{
                     color: "black",
-                    backgroundColor: "transparent",
+                    backgroundColor: "#f0f0f0",
                     padding: "0 1rem",
                   }}
                 >
@@ -230,6 +242,7 @@ const Login = () => {
 
             <button
               onClick={handleGoogleLogin}
+              type="button"
               className="w-full px-6 py-4 font-semibold rounded-md transition-all hover:scale-105 relative z-20 flex items-center justify-center gap-3"
               style={{
                 fontFamily: '"Geist Mono", monospace',

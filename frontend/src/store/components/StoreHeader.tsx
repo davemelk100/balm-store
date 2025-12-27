@@ -24,6 +24,10 @@ interface StoreHeaderProps {
    */
   hideCart?: boolean;
   /**
+   * If true, hides the user/login icon (useful for login/signup pages)
+   */
+  hideUser?: boolean;
+  /**
    * If true, shows a minimal header with just the logo
    */
   minimal?: boolean;
@@ -32,6 +36,7 @@ interface StoreHeaderProps {
 const StoreHeader: React.FC<StoreHeaderProps> = ({
   sticky = true,
   hideCart = false,
+  hideUser = false,
   minimal = false,
 }) => {
   const navigate = useNavigate();
@@ -93,8 +98,9 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
               )}
 
               {/* User Profile Dropdown or Login Button */}
-              {isAuthenticated ? (
-                <DropdownMenu>
+              {!hideUser && (
+                isAuthenticated ? (
+                  <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
                       className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
@@ -187,6 +193,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                     style={{ color: "rgb(168, 168, 168)" }}
                   />
                 </button>
+              )
               )}
             </div>
           )}

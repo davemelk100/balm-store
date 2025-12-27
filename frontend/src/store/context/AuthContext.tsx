@@ -106,16 +106,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     try {
-      // Skip session check in development if backend doesn't have auth endpoints
-      if (import.meta.env.DEV) {
-        console.warn("Auth: Session check skipped in development mode");
-        setLoading(false);
-        return;
-      }
-
-      // In production, check with Netlify functions
-      const url = `${window.location.origin}/.netlify/functions/auth-session`;
-      const response = await fetch(url, {
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const response = await fetch(`${apiUrl}/api/auth/session`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -157,23 +149,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const loginWithEmail = useCallback(
     async (email: string, password: string) => {
-      // In development without backend auth, simulate login
-      if (import.meta.env.DEV) {
-        console.warn("Auth: Simulating email login (dev mode)");
-        const mockUser = {
-          id: "dev-user",
-          email: email,
-          name: email.split('@')[0],
-          image: null,
-        };
-        setUser(mockUser);
-        setToken("dev-token-" + Date.now());
-        return;
-      }
-
-      // Production: use Netlify function
-      const url = `${window.location.origin}/.netlify/functions/auth-login-email`;
-      const response = await fetch(url, {
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const response = await fetch(`${apiUrl}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -184,10 +161,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Login failed");
+        throw new Error(data.detail || "Login failed");
       }
 
-      setToken(data.token);
+      setToken(data.access_token);
       setUser(data.user);
     },
     [setToken]
