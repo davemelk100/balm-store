@@ -94,101 +94,101 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
 
               {/* User Profile Dropdown - only show when authenticated */}
               {isAuthenticated && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
-                    style={{
-                      backgroundColor: "#f0f0f0",
-                      boxShadow:
-                        "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                    }}
-                  >
-                    <Avatar className="h-10 w-10">
-                      {user?.image ? (
-                        <img
-                          src={user.image}
-                          alt={user.name || user.email}
-                          className="h-full w-full rounded-full"
-                        />
-                      ) : (
-                        <AvatarFallback
-                          style={{
-                            backgroundColor: "#f0f0f0",
-                            boxShadow:
-                              "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                          }}
-                        >
-                          {user?.name ? (
-                            user.name.charAt(0).toUpperCase()
-                          ) : (
-                            <User
-                              className="h-5 w-5"
-                              style={{ color: "rgb(168, 168, 168)" }}
-                            />
-                          )}
-                        </AvatarFallback>
-                      )}
-                    </Avatar>
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="w-56"
-                  style={{ fontFamily: '"Geist Mono", monospace' }}
-                >
-                  <DropdownMenuLabel
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                      style={{
+                        backgroundColor: "#f0f0f0",
+                        boxShadow:
+                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                      }}
+                    >
+                      <Avatar className="h-10 w-10">
+                        {user?.image ? (
+                          <img
+                            src={user.image}
+                            alt={user.name || user.email}
+                            className="h-full w-full rounded-full"
+                          />
+                        ) : (
+                          <AvatarFallback
+                            style={{
+                              backgroundColor: "#f0f0f0",
+                              boxShadow:
+                                "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                            }}
+                          >
+                            {user?.name ? (
+                              user.name.charAt(0).toUpperCase()
+                            ) : (
+                              <User
+                                className="h-5 w-5"
+                                style={{ color: "rgb(168, 168, 168)" }}
+                              />
+                            )}
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-56"
                     style={{ fontFamily: '"Geist Mono", monospace' }}
                   >
-                    {isAuthenticated && user ? (
-                      <div>
-                        <p
-                          className="font-medium text-sm"
-                          style={{ fontFamily: '"Geist Mono", monospace' }}
-                        >
-                          {user.name || "User"}
-                        </p>
-                        <p
-                          className="text-gray-500"
-                          style={{
-                            fontFamily: '"Geist Mono", monospace',
-                            fontSize: "14px",
-                            fontWeight: 300,
-                          }}
-                        >
-                          {user.email}
-                        </p>
-                      </div>
-                    ) : (
-                      "My Account"
-                    )}
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {isAuthenticated ? (
-                    <DropdownMenuItem
-                      onClick={handleLogout}
+                    <DropdownMenuLabel
                       style={{ fontFamily: '"Geist Mono", monospace' }}
                     >
-                      Sign Out
-                    </DropdownMenuItem>
-                  ) : (
-                    <>
+                      {isAuthenticated && user ? (
+                        <div>
+                          <p
+                            className="font-medium text-sm"
+                            style={{ fontFamily: '"Geist Mono", monospace' }}
+                          >
+                            {user.name || "User"}
+                          </p>
+                          <p
+                            className="text-gray-500"
+                            style={{
+                              fontFamily: '"Geist Mono", monospace',
+                              fontSize: "14px",
+                              fontWeight: 300,
+                            }}
+                          >
+                            {user.email}
+                          </p>
+                        </div>
+                      ) : (
+                        "My Account"
+                      )}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {isAuthenticated ? (
                       <DropdownMenuItem
-                        onClick={() => navigate("/login")}
+                        onClick={handleLogout}
                         style={{ fontFamily: '"Geist Mono", monospace' }}
                       >
-                        Sign In
+                        Sign Out
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => navigate("/signup")}
-                        style={{ fontFamily: '"Geist Mono", monospace' }}
-                      >
-                        Sign Up
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    ) : (
+                      <>
+                        <DropdownMenuItem
+                          onClick={() => navigate("/login")}
+                          style={{ fontFamily: '"Geist Mono", monospace' }}
+                        >
+                          Sign In
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => navigate("/signup")}
+                          style={{ fontFamily: '"Geist Mono", monospace' }}
+                        >
+                          Sign Up
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
             </div>
           )}
