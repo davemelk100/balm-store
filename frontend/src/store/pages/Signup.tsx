@@ -307,6 +307,7 @@ const Signup = () => {
       <StoreFooter
         onPrivacyClick={() => openLegalModal("privacy")}
         onTermsClick={() => openLegalModal("terms")}
+        hideUser={true}
       />
     </div>
   );

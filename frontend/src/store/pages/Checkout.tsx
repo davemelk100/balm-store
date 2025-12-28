@@ -118,7 +118,7 @@ const Checkout = () => {
       if (!text) {
         console.error("Empty response from server. Status:", response.status);
         throw new Error(
-          `Server returned empty response (${response.status}). Make sure the dev server is running: npm run dev:server`
+          `Stripe checkout is not yet configured. Payment processing is currently unavailable.`
         );
       }
 
@@ -149,7 +149,7 @@ const Checkout = () => {
       console.error("Checkout error:", err);
       setError(
         err.message ||
-          "An error occurred during checkout. Make sure the dev server is running: npm run dev:server"
+          "Stripe checkout is not yet configured. Payment processing is currently unavailable."
       );
       setLoading(false);
     }
@@ -171,7 +171,7 @@ const Checkout = () => {
       {/* Top Header with DM, Nav, Cart, and Profile */}
       <StoreHeader sticky={false} hideCart={false} />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-0 sm:py-0">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

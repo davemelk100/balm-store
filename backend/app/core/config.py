@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     # CORS
     # Can be comma-separated string or list
     # In production, set via environment variable: CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
-    CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000,http://localhost:8080"
+    CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000,http://localhost:8080,http://localhost:8888"
     
     # Google OAuth
     GOOGLE_CLIENT_ID: Optional[str] = None

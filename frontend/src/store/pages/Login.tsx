@@ -314,6 +314,7 @@ const Login = () => {
       <StoreFooter
         onPrivacyClick={() => openLegalModal("privacy")}
         onTermsClick={() => openLegalModal("terms")}
+        hideUser={true}
       />
     </div>
   );

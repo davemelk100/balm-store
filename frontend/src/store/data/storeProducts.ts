@@ -27,8 +27,9 @@ export const storeProducts: Product[] = [
     image: "/img/products/balm-cursive.png",
     images: [
       "/img/products/balm-cursive.png",
-      "/img/products/balm-cluh-hooded-dude.png",
-      "/img/products/balm-cursive-sidestage.png",
+      "/img/products/balm-cursive-1-longhair.png",
+      "/img/products/balm-cursive-1-sideways.png",
+      "/img/products/balm-cursive-1-skater.png",
       "/img/products/balm-cursive-stark.jpg",
     ],
     description: "",

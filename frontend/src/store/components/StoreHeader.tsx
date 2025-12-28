@@ -58,8 +58,31 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col items-center justify-center"
+          className="flex flex-col items-center justify-center relative"
         >
+          {/* Cart Icon - Top Right on Mobile, Hidden on Desktop */}
+          {!minimal && !hideCart && (
+            <button
+              onClick={() => navigate("/checkout")}
+              className="md:hidden absolute top-0 right-0 flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+              style={{
+                backgroundColor: "#f0f0f0",
+                boxShadow:
+                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+              }}
+            >
+              <ShoppingCart
+                className="h-5 w-5"
+                style={{ color: "rgb(168, 168, 168)" }}
+              />
+              {getTotalItems() > 0 && (
+                <span className="absolute -top-1 -right-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {getTotalItems()}
+                </span>
+              )}
+            </button>
+          )}
+
           {/* Balm Varsity Logo - Centered at Top */}
           <div className="mb-4">
             <Link to="/" className="hover:opacity-80 transition-opacity">
@@ -71,10 +94,10 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
             </Link>
           </div>
 
-          {/* Cart and Profile - Centered Below Logo (unless minimal) */}
+          {/* Cart and Profile - Centered Below Logo (Desktop only) */}
           {!minimal && (
-            <div className="flex items-center gap-4">
-              {/* Cart Icon - always show unless hidden */}
+            <div className="hidden md:flex items-center gap-4">
+              {/* Cart Icon - Desktop */}
               {!hideCart && (
                 <button
                   onClick={() => navigate("/checkout")}
@@ -97,7 +120,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                 </button>
               )}
 
-              {/* User Profile Dropdown or Login Button */}
+              {/* User Profile Dropdown or Login Button - Desktop only */}
               {!hideUser && (
                 isAuthenticated ? (
                   <DropdownMenu>

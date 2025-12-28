@@ -3,7 +3,14 @@
 [build]
   base = "frontend/"
   command = "npm run build"
-  publish = "frontend/dist"
+  publish = "dist"
+  functions = "../netlify/functions"
+
+# Local development configuration
+# This will proxy your existing Vite server (port 5173) and add Netlify functions
+[dev]
+  targetPort = 5173
+  port = 8888
 
 # Redirect all traffic to index.html for client-side routing
 [[redirects]]

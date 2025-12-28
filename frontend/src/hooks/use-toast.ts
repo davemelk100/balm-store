@@ -175,7 +175,7 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
-      onOpenChange: (open) => {
+      onOpenChange: (open: boolean) => {
         if (!open) {
           // Always allow manual dismiss (user clicked X or swiped)
           // Clear the timeout and dismiss

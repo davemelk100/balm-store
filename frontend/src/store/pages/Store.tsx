@@ -281,7 +281,7 @@ const Store = () => {
                           <ProductImageRow
                             product={product}
                             onImageClick={() =>
-                              navigate(`/store/product/${product.id}`)
+                              navigate(`/product/${product.id}`)
                             }
                             onImageModalClick={(images, currentIndex) => {
                               setModalImage({

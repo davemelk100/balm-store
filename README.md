@@ -134,7 +134,16 @@ cd frontend
 npm run dev
 ```
 
-### 6. Access the Application
+### 6. Set Up Stripe Payments (Required for Checkout)
+
+See **[STRIPE_QUICKSTART.md](STRIPE_QUICKSTART.md)** for a 5-minute setup guide.
+
+**Quick version:**
+1. Get your Stripe test key from https://dashboard.stripe.com/test/apikeys
+2. Add `STRIPE_SECRET_KEY` to Netlify environment variables
+3. Redeploy
+
+### 7. Access the Application
 
 - **Store**: http://localhost:5173
 - **Admin Panel**: http://localhost:8000/admin/store
@@ -304,6 +313,8 @@ npm test
 ## 📚 Documentation
 
 - **[SETUP.md](SETUP.md)** - Detailed setup instructions
+- **[STRIPE_QUICKSTART.md](STRIPE_QUICKSTART.md)** - 🔥 Quick Stripe setup (5 min)
+- **[STRIPE_SETUP.md](STRIPE_SETUP.md)** - Complete Stripe integration guide
 - **[INVENTORY_SYSTEM.md](backend/INVENTORY_SYSTEM.md)** - Inventory API docs
 - **[INVENTORY_QUICKSTART.md](backend/INVENTORY_QUICKSTART.md)** - Quick start guide
 - **[EXTRACTION_COMPLETE.md](EXTRACTION_COMPLETE.md)** - Extraction notes

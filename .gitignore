@@ -41,3 +41,6 @@ yarn-error.log*
 coverage/
 .pytest_cache/
 
+
+# Local Netlify folder
+.netlify

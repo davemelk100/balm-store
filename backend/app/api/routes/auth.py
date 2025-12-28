@@ -67,6 +67,7 @@ def register(user_data: UserRegister, db: Session = Depends(get_db)):
         email=user_data.email,
         username=user_data.email,  # Use email as username
         hashed_password=hashed_password,
+        name=user_data.name,  # Store the name from signup
         is_active=True,
     )
     
@@ -86,8 +87,8 @@ def register(user_data: UserRegister, db: Session = Depends(get_db)):
         "user": {
             "id": str(db_user.id),
             "email": db_user.email,
-            "name": user_data.name or db_user.email.split('@')[0],
-            "image": None,
+            "name": user_data.name or db_user.name or db_user.email.split('@')[0],
+            "image": db_user.profile_image,
         }
     }
 
@@ -123,8 +124,8 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
         "user": {
             "id": str(user.id),
             "email": user.email,
-            "name": user.email.split('@')[0],
-            "image": None,
+            "name": user.name or user.email.split('@')[0],
+            "image": user.profile_image,
         }
     }
 
@@ -159,8 +160,8 @@ def get_session(current_user: User = Depends(get_current_user)):
         "user": {
             "id": str(current_user.id),
             "email": current_user.email,
-            "name": current_user.email.split('@')[0],
-            "image": None,
+            "name": current_user.name or current_user.email.split('@')[0],
+            "image": current_user.profile_image,
         }
     }
 
@@ -251,9 +252,19 @@ async def google_callback(code: str, db: Session = Depends(get_db)):
                 email=email,
                 username=email,
                 hashed_password=get_password_hash(""),  # Empty password for OAuth users
+                name=name,
+                profile_image=picture,
                 is_active=True,
             )
             db.add(user)
+            db.commit()
+            db.refresh(user)
+        else:
+            # Update existing user's profile image and name if they changed
+            if picture and user.profile_image != picture:
+                user.profile_image = picture
+            if name and user.name != name:
+                user.name = name
             db.commit()
             db.refresh(user)
         

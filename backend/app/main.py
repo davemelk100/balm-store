@@ -7,16 +7,17 @@ from pathlib import Path
 from app.api.routes.products import router as products_router
 from app.api.routes.auth import router as auth_router
 from app.db.database import engine, Base
+from app.core.config import settings
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="BALM Store API", version="1.0.0")
 
-# CORS
+# CORS - Use settings from config
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
