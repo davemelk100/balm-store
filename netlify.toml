@@ -2,13 +2,9 @@
 
 [build]
   base = "frontend/"
-  command = "npm run build"
+  command = "npm --prefix ../netlify/functions install && npm run build"
   publish = "dist"
   functions = "../netlify/functions"
-
-# Install dependencies in functions folder
-[[plugins]]
-  package = "@netlify/plugin-functions-install-core"
 
 # Local development configuration
 # This will proxy your existing Vite server (port 5173) and add Netlify functions
