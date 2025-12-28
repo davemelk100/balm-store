@@ -20,10 +20,13 @@ class Settings(BaseSettings):
     # In production, set via environment variable: CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
     CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000,http://localhost:8080,http://localhost:8888"
     
+    # Frontend URL for OAuth redirects
+    FRONTEND_URL: str = "http://localhost:8888"
+    
     # Google OAuth
     GOOGLE_CLIENT_ID: Optional[str] = None
     GOOGLE_CLIENT_SECRET: Optional[str] = None
-    GOOGLE_REDIRECT_URI: str = "http://localhost:8888/auth-login"
+    GOOGLE_REDIRECT_URI: str = "http://localhost:8000/api/auth/google/callback"
     
     @property
     def cors_origins_list(self) -> list[str]:

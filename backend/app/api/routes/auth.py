@@ -275,8 +275,7 @@ async def google_callback(code: str, db: Session = Depends(get_db)):
         )
         
         # Redirect to frontend with token
-        frontend_url = settings.CORS_ORIGINS.split(",")[0]  # Use first CORS origin
         return RedirectResponse(
-            url=f"{frontend_url}/auth-callback?token={jwt_token}"
+            url=f"{settings.FRONTEND_URL}/auth-callback?token={jwt_token}"
         )
 
