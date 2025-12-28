@@ -54,7 +54,7 @@ const ProductImageRow = ({
       onClick={handleImageClick}
       className="relative overflow-hidden bg-transparent cursor-pointer rounded-t-lg group p-1.5 pb-0"
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-transparent max-h-[300px] mx-auto">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-transparent max-h-[500px] mx-auto">
         {/* Images */}
         <div className="relative w-full h-full flex items-center justify-center">
           {images.map((image, index) => (
@@ -267,7 +267,7 @@ const Store = () => {
                       key={product.id}
                       variants={fadeInUp}
                       whileHover={{ y: -4, scale: 1.02 }}
-                      className="group relative overflow-hidden rounded-lg flex flex-col cursor-pointer w-full max-w-[520px]"
+                      className="group relative overflow-hidden rounded-lg flex flex-col cursor-pointer w-full max-w-[400px]"
                       onClick={() => navigate(`/store/product/${product.id}`)}
                     >
                       {/* Clear Liquid Glass Background Blobs */}
