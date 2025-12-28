@@ -294,14 +294,14 @@ const Store = () => {
 
                           {/* Product Info */}
                           <div className="store-card-content flex flex-col flex-grow font-['Geist_Mono',monospace] p-2 text-center">
-                            <h3 className="mb-1 cursor-pointer hover:underline text-black font-normal md:line-clamp-1">
+                            <h3 className="mb-1 cursor-pointer hover:underline text-black text-sm font-light md:line-clamp-1">
                               {product.title}
                             </h3>
-                            <p className="mb-2 line-clamp-2 store-card-text font-['Geist_Mono',monospace] text-[11px] text-black">
+                            <p className="mb-2 line-clamp-2 store-card-text font-['Geist_Mono',monospace] text-sm text-black">
                               {product.description}
                             </p>
                             <div className="mb-2">
-                              <span className="store-card-text font-['Geist_Mono',monospace] text-lg text-black">
+                              <span className="store-card-text font-['Geist_Mono',monospace] text-sm text-black">
                                 ${product.price}
                               </span>
                             </div>
@@ -338,7 +338,7 @@ const Store = () => {
                                       variant: "default",
                                     });
                                   }}
-                                  className="flex-1 px-2 rounded-md transition-all hover:scale-105 store-card-button font-['Geist_Mono',monospace] text-base bg-[#f0f0f0] text-[rgb(80,80,80)] h-[45px] shadow-[rgba(255,255,255,0.9)_-1px_-1px_1px,rgba(0,0,0,0.2)_1px_1px_2px,rgba(255,255,255,0.5)_0px_0px_1px]"
+                                  className="flex-1 px-2 rounded-md transition-all hover:scale-105 store-card-button font-['Geist_Mono',monospace] text-sm bg-[#f0f0f0] text-[rgb(80,80,80)] h-[45px] shadow-[rgba(255,255,255,0.9)_-1px_-1px_1px,rgba(0,0,0,0.2)_1px_1px_2px,rgba(255,255,255,0.5)_0px_0px_1px]"
                                 >
                                   Add to Cart
                                 </button>
