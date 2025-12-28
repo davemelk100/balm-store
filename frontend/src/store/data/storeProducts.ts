@@ -30,6 +30,7 @@ export const storeProducts: Product[] = [
       "/img/products/balm-cursive-1-longhair.png",
       "/img/products/balm-cursive-1-sideways.png",
       "/img/products/balm-cursive-1-duo.png",
+      "/img/products/balm-cursive-1-cream.png",
     ],
     description: "",
     details: `2.9 oz./yd² (US), 4.8 oz./L yd (CA), 100% polyester

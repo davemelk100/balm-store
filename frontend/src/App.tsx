@@ -2,23 +2,38 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from "react-router-dom";
-import { Suspense } from "react";
-import { CartProvider, StoreProvider, AuthProvider } from "./store";
-import { ProtectedRoute } from "./store/components/ProtectedRoute";
-import { Toaster } from "@/components/ui/toaster";
 
-// Store Pages
-import Store from "./store/pages/Store";
-import ProductDetail from "./store/pages/ProductDetail";
-import Checkout from "./store/pages/Checkout";
-import CheckoutSuccess from "./store/pages/CheckoutSuccess";
-import Login from "./store/pages/Login";
-import Signup from "./store/pages/Signup";
-import AuthCallback from "./store/pages/AuthCallback";
+// Temporary Coming Soon Page
+import ComingSoon from "./store/pages/ComingSoon";
+
+// ⚠️ MAINTENANCE MODE ACTIVE ⚠️
+// Uncomment the imports and routes below to restore full functionality
+
+// import { Suspense } from "react";
+// import { CartProvider, StoreProvider, AuthProvider } from "./store";
+// import { ProtectedRoute } from "./store/components/ProtectedRoute";
+// import { Toaster } from "@/components/ui/toaster";
+// import Store from "./store/pages/Store";
+// import ProductDetail from "./store/pages/ProductDetail";
+// import Checkout from "./store/pages/Checkout";
+// import CheckoutSuccess from "./store/pages/CheckoutSuccess";
+// import Login from "./store/pages/Login";
+// import Signup from "./store/pages/Signup";
+// import AuthCallback from "./store/pages/AuthCallback";
 
 function App() {
+  // TEMPORARY: Show only Coming Soon page
+  return (
+    <Router>
+      <Routes>
+        <Route path="*" element={<ComingSoon />} />
+      </Routes>
+    </Router>
+  );
+
+  // ORIGINAL APP CODE (commented out):
+  /*
   return (
     <Router>
       <StoreProvider>
@@ -32,11 +47,10 @@ function App() {
               }
             >
               <Routes>
-                {/* Store Routes */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/auth-callback" element={<AuthCallback />} />
-                <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="/auth/auth/callback" element={<AuthCallback />} />
                 <Route path="/" element={<Store />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route
@@ -55,8 +69,6 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-
-                {/* Redirect any unknown routes to home */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Suspense>
@@ -66,6 +78,7 @@ function App() {
       </StoreProvider>
     </Router>
   );
+  */
 }
 
 export default App;
