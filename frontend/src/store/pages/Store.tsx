@@ -124,6 +124,33 @@ const Store = () => {
     productTitle: string;
   } | null>(null);
 
+  // Products state
+  const [products, setProducts] = useState<Product[]>(storeProducts);
+
+  // Fetch products from Stripe via Netlify function
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("/.netlify/functions/get-products");
+        const data = await response.json();
+
+        if (response.ok && data.products && data.products.length > 0) {
+          setProducts(data.products);
+        } else {
+          // Fallback to local products if Stripe fetch fails
+          console.warn("Using local products as fallback");
+          setProducts(storeProducts);
+        }
+      } catch (error) {
+        console.error("Error fetching products from Stripe:", error);
+        // Fallback to local products
+        setProducts(storeProducts);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   // Legal modal management
   const legalModal = searchParams.get("legal");
   const openLegalModal = (type: "privacy" | "terms") => {
@@ -168,8 +195,6 @@ const Store = () => {
   //     color: "emerald",
   //   },
   // ];
-
-  const products = storeProducts;
 
   const filteredProducts = activeCategory
     ? products.filter((product) => product.mainCategory === activeCategory)

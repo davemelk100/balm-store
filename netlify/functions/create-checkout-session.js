@@ -38,10 +38,38 @@ exports.handler = async (event, context) => {
       };
     }
 
+    // Transform items to Stripe format
+    // Items should be either:
+    // 1. { price: 'price_xxx', quantity: 1 } - if using Stripe price IDs
+    // 2. { price_data: {...}, quantity: 1 } - if creating prices on the fly
+    const lineItems = items.map(item => {
+      // If item has a Stripe price ID, use it
+      if (item.price && item.price.startsWith('price_')) {
+        return {
+          price: item.price,
+          quantity: item.quantity || 1,
+        };
+      }
+      
+      // Otherwise, create price data on the fly (fallback for legacy items)
+      return {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: item.title || item.name,
+            description: item.description,
+            images: item.image ? [item.image] : [],
+          },
+          unit_amount: Math.round((item.unit_amount || item.price || 0) * 100),
+        },
+        quantity: item.quantity || 1,
+      };
+    });
+
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      line_items: items,
+      line_items: lineItems,
       mode: 'payment',
       success_url: successUrl,
       cancel_url: cancelUrl,
@@ -49,6 +77,8 @@ exports.handler = async (event, context) => {
         allowed_countries: ['US', 'CA'], // Add more countries as needed
       },
       billing_address_collection: 'required',
+      // Enable automatic tax calculation (optional)
+      // automatic_tax: { enabled: true },
     });
 
     return {

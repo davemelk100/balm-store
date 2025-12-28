@@ -49,6 +49,15 @@ const Checkout = () => {
     try {
       // Prepare line items for Stripe
       const lineItems = items.map((item) => {
+        // If product has a Stripe price ID, use it (preferred method)
+        if ((item as any).stripePriceId) {
+          return {
+            price: (item as any).stripePriceId,
+            quantity: item.quantity,
+          };
+        }
+        
+        // Fallback: create price data on the fly (for legacy products)
         const productData: {
           name: string;
           description?: string;
