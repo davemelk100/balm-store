@@ -101,10 +101,10 @@ const Checkout = () => {
             items: lineItems,
             successUrl: `${
               window.location.origin || "http://localhost:5173"
-            }/store/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+            }/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
             cancelUrl: `${
               window.location.origin || "http://localhost:5173"
-            }/store/checkout`,
+            }/checkout`,
           }),
         }
       );
