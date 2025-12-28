@@ -156,7 +156,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                           <img
                             src="/img/products/avatar.png"
                             alt="User avatar"
-                            className="h-full w-full object-cover rounded-full"
+                            className="h-[75%] w-auto object-cover rounded-full"
                           />
                         </AvatarFallback>
                       </Avatar>

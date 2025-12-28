@@ -28,6 +28,15 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: Optional[str] = None
     GOOGLE_REDIRECT_URI: str = "http://localhost:8000/api/auth/google/callback"
     
+    # Email Configuration (Resend)
+    RESEND_API_KEY: Optional[str] = None
+    EMAIL_FROM: str = "noreply@balmsoothes.com"
+    EMAIL_FROM_NAME: str = "BALM Store"
+    
+    # Password Reset Token Expiry (in minutes)
+    PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 30
+    EMAIL_VERIFICATION_TOKEN_EXPIRE_MINUTES: int = 1440  # 24 hours
+    
     @property
     def cors_origins_list(self) -> list[str]:
         """Parse CORS_ORIGINS string into list"""

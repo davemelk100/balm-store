@@ -139,6 +139,7 @@ npm run dev
 See **[STRIPE_QUICKSTART.md](STRIPE_QUICKSTART.md)** for a 5-minute setup guide.
 
 **Quick version:**
+
 1. Get your Stripe test key from https://dashboard.stripe.com/test/apikeys
 2. Add `STRIPE_SECRET_KEY` to Netlify environment variables
 3. Redeploy
@@ -312,12 +313,33 @@ npm test
 
 ## 📚 Documentation
 
-- **[SETUP.md](SETUP.md)** - Detailed setup instructions
-- **[STRIPE_QUICKSTART.md](STRIPE_QUICKSTART.md)** - 🔥 Quick Stripe setup (5 min)
-- **[STRIPE_SETUP.md](STRIPE_SETUP.md)** - Complete Stripe integration guide
-- **[INVENTORY_SYSTEM.md](backend/INVENTORY_SYSTEM.md)** - Inventory API docs
-- **[INVENTORY_QUICKSTART.md](backend/INVENTORY_QUICKSTART.md)** - Quick start guide
-- **[EXTRACTION_COMPLETE.md](EXTRACTION_COMPLETE.md)** - Extraction notes
+### 🎯 Quick Start
+
+- **[CLI Index](CLI_INDEX.md)** - 🔥 Master hub for all CLI tools and automation
+- **[Getting Started](GETTING_STARTED.md)** - Quick setup guide
+- **[Setup Instructions](SETUP.md)** - Detailed setup walkthrough
+
+### 🛠️ CLI Tools & Automation
+
+- **[CLI Cheatsheet](CLI_CHEATSHEET.md)** - Complete command reference for all CLIs
+- **[CLI Setup Guide](CLI_SETUP_GUIDE.md)** - Installation and configuration
+- **[Development Workflows](dev-workflows.sh)** - Interactive automation menu
+- **[Install All CLIs](install-all-clis.sh)** - One-command CLI installation
+
+### 🚀 Deployment
+
+- **[Railway Quickstart](RAILWAY_QUICKSTART.md)** - Railway CLI quick reference
+- **[Railway Setup](RAILWAY_CLI_SETUP.md)** - Detailed Railway configuration
+- **[Railway Comparison](RAILWAY_COMPARISON.md)** - Platform comparison
+- **[Deployment Guide](DEPLOYMENT.md)** - General deployment guide
+
+### 🔌 Integrations
+
+- **[Stripe Quickstart](STRIPE_QUICKSTART.md)** - 🔥 Quick Stripe setup (5 min)
+- **[Stripe Setup](STRIPE_SETUP.md)** - Complete Stripe integration
+- **[Resend Email Setup](RESEND_EMAIL_SETUP.md)** - 📧 Email configuration (Resend)
+- **[Inventory System](backend/INVENTORY_SYSTEM.md)** - Inventory API docs
+- **[Inventory Quickstart](backend/INVENTORY_QUICKSTART.md)** - Quick start guide
 
 ## 🤝 Contributing
 
