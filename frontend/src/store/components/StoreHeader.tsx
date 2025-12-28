@@ -58,38 +58,50 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col items-center justify-center relative"
+          className="flex flex-col md:items-center md:justify-center relative"
         >
-          {/* Cart Icon - Top Right on Mobile, Hidden on Desktop */}
-          {!minimal && !hideCart && (
-            <button
-              onClick={() => navigate("/checkout")}
-              className="md:hidden absolute top-0 right-0 flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
-              style={{
-                backgroundColor: "#f0f0f0",
-                boxShadow:
-                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-              }}
-            >
-              <ShoppingCart
-                className="h-5 w-5"
-                style={{ color: "rgb(168, 168, 168)" }}
-              />
-              {getTotalItems() > 0 && (
-                <span className="absolute -top-1 -right-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                  {getTotalItems()}
-                </span>
-              )}
-            </button>
-          )}
-
-          {/* Balm Varsity Logo - Centered at Top */}
-          <div className="mb-4">
+          {/* Mobile Only: Logo Left, Cart Right */}
+          <div className="flex items-center justify-between w-full md:hidden mb-4">
+            {/* Balm Varsity Logo - Left Aligned on Mobile */}
             <Link to="/" className="hover:opacity-80 transition-opacity">
               <img
                 src="/img/logos/balm-varsity.svg"
                 alt="BALM Varsity"
-                className="w-[40px] h-auto md:w-auto md:h-[100px]"
+                className="w-[40px] h-auto"
+              />
+            </Link>
+
+            {/* Cart Icon - Right Side on Mobile */}
+            {!minimal && !hideCart && (
+              <button
+                onClick={() => navigate("/checkout")}
+                className="flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                style={{
+                  backgroundColor: "#f0f0f0",
+                  boxShadow:
+                    "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                }}
+              >
+                <ShoppingCart
+                  className="h-5 w-5"
+                  style={{ color: "rgb(168, 168, 168)" }}
+                />
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {getTotalItems()}
+                  </span>
+                )}
+              </button>
+            )}
+          </div>
+
+          {/* Tablet & Desktop: Centered Logo */}
+          <div className="hidden md:block mb-4">
+            <Link to="/" className="hover:opacity-80 transition-opacity">
+              <img
+                src="/img/logos/balm-varsity.svg"
+                alt="BALM Varsity"
+                className="w-auto h-[60px] lg:h-[100px]"
               />
             </Link>
           </div>

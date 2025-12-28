@@ -294,7 +294,7 @@ const Store = () => {
 
                           {/* Product Info */}
                           <div className="store-card-content flex flex-col flex-grow font-['Geist_Mono',monospace] p-2 text-center">
-                            <h3 className="mb-1 line-clamp-1 cursor-pointer hover:underline store-card-text store-card-h3 font-['Geist_Mono',monospace] text-xl text-black font-normal">
+                            <h3 className="mb-1 cursor-pointer hover:underline text-black font-normal md:line-clamp-1">
                               {product.title}
                             </h3>
                             <p className="mb-2 line-clamp-2 store-card-text font-['Geist_Mono',monospace] text-[11px] text-black">

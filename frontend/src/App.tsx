@@ -7,6 +7,7 @@ import {
 import { Suspense } from "react";
 import { CartProvider, StoreProvider, AuthProvider } from "./store";
 import { ProtectedRoute } from "./store/components/ProtectedRoute";
+import { Toaster } from "@/components/ui/toaster";
 
 // Store Pages
 import Store from "./store/pages/Store";
@@ -59,6 +60,7 @@ function App() {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Suspense>
+            <Toaster />
           </CartProvider>
         </AuthProvider>
       </StoreProvider>
