@@ -117,10 +117,7 @@ const Login = () => {
             className="space-y-6"
           >
             <div className="text-center">
-              <h1
-                className="text-4xl sm:text-5xl font-bold mb-4"
-                style={{ color: "black" }}
-              >
+              <h1 className="font-bold mb-4" style={{ color: "black" }}>
                 SIGN IN
               </h1>
               <p className="text-lg mb-8" style={{ color: "black" }}>

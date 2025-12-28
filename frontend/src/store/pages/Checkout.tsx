@@ -179,9 +179,7 @@ const Checkout = () => {
         >
           {/* Header */}
           <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl font-bold mb-2 text-black">
-              CHECKOUT
-            </h1>
+            <h1 className="font-bold mb-2 text-black">CHECKOUT</h1>
             {/* <p className="text-black">
               Review your order and complete your purchase
             </p> */}

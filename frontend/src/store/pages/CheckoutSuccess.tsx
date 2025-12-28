@@ -57,10 +57,7 @@ const CheckoutSuccess = () => {
               </div>
             </div>
 
-            <h1
-              className="text-4xl sm:text-5xl font-bold uppercase"
-              style={{ color: "black" }}
-            >
+            <h1 className="font-bold uppercase" style={{ color: "black" }}>
               Thank You!
             </h1>
             <p className="text-lg" style={{ color: "black" }}>

@@ -301,7 +301,7 @@ const Store = () => {
                               {product.description}
                             </p>
                             <div className="mb-2">
-                              <span className="font-bold store-card-text font-['Geist_Mono',monospace] text-lg text-black">
+                              <span className="store-card-text font-['Geist_Mono',monospace] text-lg text-black">
                                 ${product.price}
                               </span>
                             </div>
@@ -338,7 +338,7 @@ const Store = () => {
                                       variant: "default",
                                     });
                                   }}
-                                  className="flex-1 px-2 font-semibold rounded-md transition-all hover:scale-105 store-card-button font-['Geist_Mono',monospace] text-base bg-[#f0f0f0] text-[rgb(80,80,80)] h-[45px] shadow-[rgba(255,255,255,0.9)_-1px_-1px_1px,rgba(0,0,0,0.2)_1px_1px_2px,rgba(255,255,255,0.5)_0px_0px_1px]"
+                                  className="flex-1 px-2 rounded-md transition-all hover:scale-105 store-card-button font-['Geist_Mono',monospace] text-base bg-[#f0f0f0] text-[rgb(80,80,80)] h-[45px] shadow-[rgba(255,255,255,0.9)_-1px_-1px_1px,rgba(0,0,0,0.2)_1px_1px_2px,rgba(255,255,255,0.5)_0px_0px_1px]"
                                 >
                                   Add to Cart
                                 </button>

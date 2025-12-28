@@ -106,7 +106,7 @@ const Signup = () => {
           >
             <div className="text-center">
               <h1
-                className="text-4xl sm:text-5xl font-bold mb-4"
+                className="font-bold mb-4"
                 style={{ color: "black" }}
               >
                 CREATE ACCOUNT
