@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     # In production, set via environment variable: CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
     CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000,http://localhost:8080,http://localhost:8888"
     
-    # Frontend URL for OAuth redirects
+    # Frontend URL for OAuth redirects and email links
     FRONTEND_URL: str = "http://localhost:8888"
     
     # Google OAuth

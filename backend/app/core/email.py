@@ -189,6 +189,5 @@ class EmailService:
             text_content=text_content
         )
 
-
 # Instance for easy import
 email_service = EmailService()
