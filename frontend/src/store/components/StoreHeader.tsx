@@ -92,7 +92,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                   style={{ color: "rgb(168, 168, 168)" }}
                 />
                 {getTotalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                     {getTotalItems()}
                   </span>
                 )}
