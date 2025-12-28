@@ -14,7 +14,11 @@ const ComingSoon = () => {
         />
         <p
           className="text-[18px] uppercase tracking-wider font-medium"
-          style={{ color: "#cfcfcf" }}
+          style={{
+            color: "#cfcfcf",
+            fontFamily: "'New Amsterdam', sans-serif",
+            letterSpacing: "5px",
+          }}
         >
           PRODUCTS x SERVICES
         </p>
