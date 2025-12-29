@@ -6,7 +6,12 @@ import {
 } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  ShoppingCart,
+} from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { storeProducts } from "../data/storeProducts";
 import { toast } from "@/hooks/use-toast";
@@ -128,10 +133,11 @@ const ProductDetail = () => {
         {/* Back Button */}
         <button
           onClick={() => navigate("/")}
-          className="px-2 py-3 font-semibold rounded-md transition-all hover:scale-105 mb-8 flex items-center gap-2"
+          className="px-2 py-3 rounded-md transition-all hover:scale-105 mb-8 flex items-center gap-2"
           style={{
             fontFamily: '"Geist Mono", monospace',
             fontSize: "16px",
+            fontWeight: 300,
             backgroundColor: "#f0f0f0",
             color: "rgb(80, 80, 80)",
             boxShadow:
@@ -298,7 +304,8 @@ const ProductDetail = () => {
                     className="leading-relaxed"
                     style={{
                       fontFamily: '"Geist Mono", monospace',
-                      fontSize: "14px",
+                      fontSize: "16px",
+                      fontWeight: 300,
                       color: "black",
                     }}
                   >
@@ -313,7 +320,8 @@ const ProductDetail = () => {
                       className="block font-semibold mb-3"
                       style={{
                         fontFamily: '"Geist Mono", monospace',
-                        fontSize: "14px",
+                        fontSize: "16px",
+                        fontWeight: 300,
                         color: "black",
                       }}
                     >
@@ -324,12 +332,11 @@ const ProductDetail = () => {
                         <button
                           key={size}
                           onClick={() => setSelectedSize(size)}
-                          className={`px-6 py-3 font-semibold rounded-md transition-all hover:scale-105 ${
-                            selectedSize === size ? "" : ""
-                          }`}
+                          className="px-6 py-3 rounded-md transition-all hover:scale-105"
                           style={{
                             fontFamily: '"Geist Mono", monospace',
                             fontSize: "16px",
+                            fontWeight: 300,
                             backgroundColor:
                               selectedSize === size ? "#f0f0f0" : "#f0f0f0",
                             color: "rgb(80, 80, 80)",
@@ -354,8 +361,52 @@ const ProductDetail = () => {
                   />
                 </div>
                 */}
-                {/* Add to Cart Button - Own Row */}
-                <div className="w-full product-add-to-cart-wrapper">
+                {/* All Buttons in One Row */}
+                <div className="w-full flex gap-2">
+                  <a
+                    href="https://venmo.com/u/Dave-Melkonian"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2 no-underline"
+                    style={{
+                      fontFamily: '"Geist Mono", monospace',
+                      fontSize: "16px",
+                      fontWeight: 300,
+                      backgroundColor: "#f0f0f0",
+                      color: "rgb(80, 80, 80)",
+                      boxShadow:
+                        "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                    }}
+                  >
+                    <img
+                      src="/img/logos/venmo.svg"
+                      alt="Venmo"
+                      className="h-5 w-5"
+                    />
+                    Venmo
+                  </a>
+                  <a
+                    href="https://paypal.me/Balmsoothes"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2 no-underline"
+                    style={{
+                      fontFamily: '"Geist Mono", monospace',
+                      fontSize: "16px",
+                      fontWeight: 300,
+                      backgroundColor: "#f0f0f0",
+                      color: "rgb(80, 80, 80)",
+                      boxShadow:
+                        "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                    }}
+                  >
+                    <img
+                      src="/img/logos/paypal.svg"
+                      alt="PayPal"
+                      className="h-5 w-5"
+                    />
+                    PayPal
+                  </a>
                   <button
                     onClick={() => {
                       addItem({
@@ -371,16 +422,18 @@ const ProductDetail = () => {
                         duration: 3000,
                       });
                     }}
-                    className="w-full px-2 py-3 font-semibold rounded-md transition-all hover:scale-105"
+                    className="flex-1 px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2"
                     style={{
                       fontFamily: '"Geist Mono", monospace',
                       fontSize: "16px",
+                      fontWeight: 300,
                       backgroundColor: "#f0f0f0",
                       color: "rgb(80, 80, 80)",
                       boxShadow:
                         "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
                     }}
                   >
+                    <ShoppingCart className="h-5 w-5" />
                     Add to Cart
                   </button>
                 </div>

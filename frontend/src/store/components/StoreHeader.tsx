@@ -75,9 +75,113 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
             </Link>
           </div>
 
-          {/* Cart Icon - Mobile & Tablet (Absolute positioned in container) */}
-          {!minimal && !hideCart && getTotalItems() > 0 && (
-            <div className="lg:hidden absolute top-0 right-0">
+          {/* User Avatar and Cart - Top Right (All Viewports) */}
+          {!minimal && !hideUser && isAuthenticated && (
+            <div className="absolute top-0 right-0 flex items-center gap-2">
+              {/* Cart Icon */}
+              {!hideCart && getTotalItems() > 0 && (
+                <button
+                  onClick={() => navigate("/checkout")}
+                  className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                  style={{
+                    backgroundColor: "#f0f0f0",
+                    boxShadow:
+                      "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                  }}
+                >
+                  <ShoppingCart
+                    className="h-5 w-5"
+                    style={{ color: "rgb(168, 168, 168)" }}
+                  />
+                  {getTotalItems() > 0 && (
+                    <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                      {getTotalItems()}
+                    </span>
+                  )}
+                </button>
+              )}
+
+              {/* User Avatar */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                    style={{
+                      backgroundColor: "#f0f0f0",
+                      boxShadow:
+                        "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                    }}
+                  >
+                    <Avatar className="h-10 w-10">
+                      {user?.image ? (
+                        <AvatarImage
+                          src={user.image}
+                          alt={user.name || user.email}
+                          className="object-cover"
+                        />
+                      ) : null}
+                      <AvatarFallback
+                        style={{
+                          backgroundColor: "#f0f0f0",
+                          boxShadow:
+                            "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                        }}
+                      >
+                        <img
+                          src="/img/products/avatar.png"
+                          alt="User avatar"
+                          className="h-[75%] w-auto object-cover rounded-full"
+                        />
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-56"
+                  style={{ fontFamily: '"Geist Mono", monospace' }}
+                >
+                  <DropdownMenuLabel
+                    style={{ fontFamily: '"Geist Mono", monospace' }}
+                  >
+                    {isAuthenticated && user ? (
+                      <div>
+                        <p
+                          className="font-medium text-sm"
+                          style={{ fontFamily: '"Geist Mono", monospace' }}
+                        >
+                          {user.name || "User"}
+                        </p>
+                        <p
+                          className="text-gray-500"
+                          style={{
+                            fontFamily: '"Geist Mono", monospace',
+                            fontSize: "14px",
+                            fontWeight: 300,
+                          }}
+                        >
+                          {user.email}
+                        </p>
+                      </div>
+                    ) : (
+                      "My Account"
+                    )}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    style={{ fontFamily: '"Geist Mono", monospace' }}
+                  >
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
+
+          {/* Cart Only - Top Right (When not authenticated) */}
+          {!minimal && !hideCart && getTotalItems() > 0 && !isAuthenticated && (
+            <div className="absolute top-0 right-0">
               <button
                 onClick={() => navigate("/checkout")}
                 className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
@@ -97,112 +201,6 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                   </span>
                 )}
               </button>
-            </div>
-          )}
-
-          {/* Cart and Profile - Centered Below Logo (Desktop only) */}
-          {!minimal && (getTotalItems() > 0 || isAuthenticated) && (
-            <div className="hidden lg:flex items-center gap-4">
-              {/* Cart Icon - Desktop */}
-              {!hideCart && getTotalItems() > 0 && (
-                <button
-                  onClick={() => navigate("/checkout")}
-                  className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
-                  style={{
-                    backgroundColor: "#f0f0f0",
-                    boxShadow:
-                      "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                  }}
-                >
-                  <ShoppingCart
-                    className="h-5 w-5"
-                    style={{ color: "rgb(168, 168, 168)" }}
-                  />
-                  {getTotalItems() > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                      {getTotalItems()}
-                    </span>
-                  )}
-                </button>
-              )}
-
-              {/* User Profile Dropdown - Desktop only */}
-              {!hideUser && isAuthenticated && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button
-                      className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
-                      style={{
-                        backgroundColor: "#f0f0f0",
-                        boxShadow:
-                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                      }}
-                    >
-                      <Avatar className="h-10 w-10">
-                        {user?.image ? (
-                          <AvatarImage
-                            src={user.image}
-                            alt={user.name || user.email}
-                            className="object-cover"
-                          />
-                        ) : null}
-                        <AvatarFallback
-                          style={{
-                            backgroundColor: "#f0f0f0",
-                            boxShadow:
-                              "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                          }}
-                        >
-                          <img
-                            src="/img/products/avatar.png"
-                            alt="User avatar"
-                            className="h-[75%] w-auto object-cover rounded-full"
-                          />
-                        </AvatarFallback>
-                      </Avatar>
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="end"
-                    className="w-56"
-                    style={{ fontFamily: '"Geist Mono", monospace' }}
-                  >
-                    <DropdownMenuLabel
-                      style={{ fontFamily: '"Geist Mono", monospace' }}
-                    >
-                      {isAuthenticated && user ? (
-                        <div>
-                          <p
-                            className="font-medium text-sm"
-                            style={{ fontFamily: '"Geist Mono", monospace' }}
-                          >
-                            {user.name || "User"}
-                          </p>
-                          <p
-                            className="text-gray-500"
-                            style={{
-                              fontFamily: '"Geist Mono", monospace',
-                              fontSize: "14px",
-                              fontWeight: 300,
-                            }}
-                          >
-                            {user.email}
-                          </p>
-                        </div>
-                      ) : (
-                        "My Account"
-                      )}
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={handleLogout}
-                      style={{ fontFamily: '"Geist Mono", monospace' }}
-                    >
-                      Sign Out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
             </div>
           )}
         </motion.div>

@@ -278,15 +278,26 @@ const Checkout = () => {
                           </div>
                           {/* Description */}
                           <div className="w-full pt-6">
-                            <h3 className="text-sm" style={{ color: "black" }}>
+                            <h3
+                              style={{
+                                color: "black",
+                                fontSize: "16px",
+                                fontWeight: 300,
+                                fontFamily: '"Geist Mono", monospace',
+                              }}
+                            >
                               {item.title}
                             </h3>
                           </div>
                           {/* Price and Toggler */}
                           <div className="flex flex-col gap-2 mt-auto -mt-1">
                             <p
-                              className="font-bold text-base"
-                              style={{ color: "black" }}
+                              style={{
+                                color: "black",
+                                fontSize: "16px",
+                                fontWeight: 300,
+                                fontFamily: '"Geist Mono", monospace',
+                              }}
                             >
                               ${(item.price * item.quantity).toFixed(2)}
                             </p>
@@ -311,9 +322,12 @@ const Checkout = () => {
                                 <Minus className="h-2.5 w-2.5" />
                               </button>
                               <span
-                                className="font-semibold min-w-[1.25rem] text-center text-base"
+                                className="min-w-[1.25rem] text-center"
                                 style={{
                                   color: "black",
+                                  fontSize: "16px",
+                                  fontWeight: 300,
+                                  fontFamily: '"Geist Mono", monospace',
                                 }}
                               >
                                 {item.quantity}
@@ -388,7 +402,8 @@ const Checkout = () => {
                     letterSpacing: "normal",
                     color: "black",
                     fontSize: "16px",
-                    fontWeight: "normal",
+                    fontWeight: 300,
+                    fontFamily: '"Geist Mono", monospace',
                   }}
                 >
                   Order Total
@@ -399,7 +414,8 @@ const Checkout = () => {
                       style={{
                         color: "black",
                         fontSize: "16px",
-                        fontWeight: "normal",
+                        fontWeight: 300,
+                        fontFamily: '"Geist Mono", monospace',
                       }}
                     >
                       Subtotal
@@ -408,7 +424,8 @@ const Checkout = () => {
                       style={{
                         color: "black",
                         fontSize: "16px",
-                        fontWeight: "normal",
+                        fontWeight: 300,
+                        fontFamily: '"Geist Mono", monospace',
                       }}
                     >
                       ${total.toFixed(2)}
@@ -419,7 +436,8 @@ const Checkout = () => {
                       style={{
                         color: "black",
                         fontSize: "16px",
-                        fontWeight: "normal",
+                        fontWeight: 300,
+                        fontFamily: '"Geist Mono", monospace',
                       }}
                     >
                       Shipping
@@ -429,7 +447,8 @@ const Checkout = () => {
                       style={{
                         color: "black",
                         fontSize: "16px",
-                        fontWeight: "normal",
+                        fontWeight: 300,
+                        fontFamily: '"Geist Mono", monospace',
                       }}
                     >
                       Free
@@ -440,7 +459,8 @@ const Checkout = () => {
                       style={{
                         color: "black",
                         fontSize: "16px",
-                        fontWeight: "normal",
+                        fontWeight: 300,
+                        fontFamily: '"Geist Mono", monospace',
                       }}
                     >
                       Total
@@ -449,7 +469,8 @@ const Checkout = () => {
                       style={{
                         color: "black",
                         fontSize: "16px",
-                        fontWeight: "normal",
+                        fontWeight: 300,
+                        fontFamily: '"Geist Mono", monospace',
                       }}
                     >
                       ${total.toFixed(2)}
@@ -464,10 +485,11 @@ const Checkout = () => {
                     handleCheckout(e);
                   }}
                   disabled={loading || items.length === 0}
-                  className="w-full px-2 py-3 font-semibold rounded-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative z-20"
+                  className="w-full px-2 py-3 rounded-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative z-20"
                   style={{
                     fontFamily: '"Geist Mono", monospace',
                     fontSize: "16px",
+                    fontWeight: 300,
                     backgroundColor: "#f0f0f0",
                     color: "rgb(80, 80, 80)",
                     boxShadow:
@@ -491,10 +513,11 @@ const Checkout = () => {
 
                 <button
                   onClick={() => navigate("/")}
-                  className="w-full mt-3 px-2 py-3 font-semibold rounded-md transition-all hover:scale-105 relative z-10"
+                  className="w-full mt-3 px-2 py-3 rounded-md transition-all hover:scale-105 relative z-10"
                   style={{
                     fontFamily: '"Geist Mono", monospace',
                     fontSize: "16px",
+                    fontWeight: 300,
                     backgroundColor: "#f0f0f0",
                     color: "rgb(80, 80, 80)",
                     boxShadow:

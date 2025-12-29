@@ -147,7 +147,15 @@ const Login = () => {
               <h1 className="font-bold mb-4" style={{ color: "black" }}>
                 SIGN IN
               </h1>
-              <p className="text-lg mb-8" style={{ color: "black" }}>
+              <p
+                className="mb-8"
+                style={{
+                  color: "black",
+                  fontSize: "16px",
+                  fontWeight: 300,
+                  fontFamily: '"Geist Mono", monospace',
+                }}
+              >
                 Sign in to access the store
               </p>
             </div>
@@ -169,8 +177,13 @@ const Login = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: "black" }}
+                  className="block mb-2"
+                  style={{
+                    color: "black",
+                    fontSize: "16px",
+                    fontWeight: 300,
+                    fontFamily: '"Geist Mono", monospace',
+                  }}
                 >
                   Email
                 </label>
@@ -198,8 +211,13 @@ const Login = () => {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: "black" }}
+                  className="block mb-2"
+                  style={{
+                    color: "black",
+                    fontSize: "16px",
+                    fontWeight: 300,
+                    fontFamily: '"Geist Mono", monospace',
+                  }}
                 >
                   Password
                 </label>
@@ -253,7 +271,14 @@ const Login = () => {
                       style={{ borderColor: "rgba(0, 0, 0, 0.1)" }}
                     ></div>
                   </div>
-                  <div className="relative flex justify-center text-sm">
+                  <div
+                    className="relative flex justify-center"
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: 300,
+                      fontFamily: '"Geist Mono", monospace',
+                    }}
+                  >
                     <span
                       style={{
                         color: "black",
