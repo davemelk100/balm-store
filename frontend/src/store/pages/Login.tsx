@@ -46,6 +46,13 @@ const Login = () => {
   useEffect(() => {
     // If already authenticated, redirect to intended destination or store
     if (isAuthenticated) {
+      // Check if user was trying to checkout
+      const checkoutAfterLogin = localStorage.getItem("checkout_after_login");
+      if (checkoutAfterLogin === "true") {
+        localStorage.removeItem("checkout_after_login");
+        navigate("/checkout", { replace: true });
+        return;
+      }
       const from = (location.state as any)?.from?.pathname || "/";
       navigate(from, { replace: true });
     }
@@ -117,6 +124,13 @@ const Login = () => {
 
     try {
       await loginWithEmail(formData.email, formData.password);
+      // Check if user was trying to checkout
+      const checkoutAfterLogin = localStorage.getItem("checkout_after_login");
+      if (checkoutAfterLogin === "true") {
+        localStorage.removeItem("checkout_after_login");
+        navigate("/checkout", { replace: true });
+        return;
+      }
       const from = (location.state as any)?.from?.pathname || "/";
       navigate(from, { replace: true });
     } catch (err: any) {

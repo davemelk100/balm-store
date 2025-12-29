@@ -39,14 +39,7 @@ function App() {
                 <Route path="/auth/auth/callback" element={<AuthCallback />} />
                 <Route path="/" element={<Store />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
-                <Route
-                  path="/checkout"
-                  element={
-                    <ProtectedRoute>
-                      <Checkout />
-                    </ProtectedRoute>
-                  }
-                />
+                <Route path="/checkout" element={<Checkout />} />
                 <Route
                   path="/checkout/success"
                   element={

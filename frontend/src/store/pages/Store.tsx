@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { useSearchParams, Link } from "react-router-dom";
-import { useEffect, useState, useMemo, memo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useStore } from "../context/StoreContext";
 import { useCart } from "../context/CartContext";
 import { storeProducts } from "../data/storeProducts";
@@ -11,158 +11,171 @@ import { PrivacyPolicyContent } from "../../components/PrivacyPolicyContent";
 import { TermsOfServiceContent } from "../../components/TermsOfServiceContent";
 import StoreHeader from "../components/StoreHeader";
 import { StoreFooter } from "../components/StoreFooter";
-import { toast } from "@/hooks/use-toast";
 
-// Product Image Row Component - Memoized
-const ProductImageRow = memo(
-  ({
-    product,
-    currentImageIndex,
-    onDotClick,
-  }: {
-    product: Product;
-    currentImageIndex: number;
-    onDotClick?: (index: number) => void;
-  }) => {
-    const images =
-      product.images && product.images.length > 0
-        ? product.images
-        : [product.image];
+// Product Image Row Component
+const ProductImageRow = ({
+  product,
+  currentImageIndex,
+  onDotClick,
+}: {
+  product: Product;
+  currentImageIndex: number;
+  onDotClick?: (index: number) => void;
+}) => {
+  const images =
+    product.images && product.images.length > 0
+      ? product.images
+      : [product.image];
 
-    return (
-      <div className="relative overflow-hidden bg-transparent cursor-pointer rounded-t-lg p-1.5 pb-0">
-        <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-transparent max-h-[500px] mx-auto">
-          {/* Images */}
-          <div className="relative w-full h-full flex items-center justify-center">
-            {images.map((image, index) => (
-              <img
+  return (
+    <div className="relative overflow-hidden bg-transparent cursor-pointer rounded-t-lg p-1.5 pb-0">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-transparent max-h-[250px] mx-auto">
+        {/* Images */}
+        <div className="relative w-full h-full flex items-center justify-center">
+          {images.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt={`${product.title} - Image ${index + 1}`}
+              className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 max-h-full ${
+                index === currentImageIndex ? "opacity-100" : "opacity-0"
+              }`}
+              loading={index === 0 ? "eager" : "lazy"}
+            />
+          ))}
+        </div>
+
+        {/* Dots Indicator - Clickable */}
+        {images.length > 1 && onDotClick && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            {images.map((_, index) => (
+              <button
                 key={index}
-                src={image}
-                alt={`${product.title} - Image ${index + 1}`}
-                className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 max-h-full ${
-                  index === currentImageIndex ? "opacity-100" : "opacity-0"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDotClick(index);
+                }}
+                className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                  index === currentImageIndex
+                    ? "w-4 bg-white"
+                    : "w-1.5 bg-white/50 hover:bg-white/75"
                 }`}
-                loading={index === 0 ? "eager" : "lazy"}
+                aria-label={`View image ${index + 1}`}
               />
             ))}
           </div>
-
-          {/* Dots Indicator - Clickable */}
-          {images.length > 1 && onDotClick && (
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-              {images.map((_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onDotClick(index);
-                  }}
-                  className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                    index === currentImageIndex
-                      ? "w-4 bg-white"
-                      : "w-1.5 bg-white/50 hover:bg-white/75"
-                  }`}
-                  aria-label={`View image ${index + 1}`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        )}
       </div>
-    );
-  }
-);
+    </div>
+  );
+};
 
-// Product Card Component - Memoized to prevent unnecessary re-renders
-const ProductCard = memo(
-  ({ product }: { product: Product }) => {
-    const { addItem } = useCart();
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+// Product Card Component
+const ProductCard = ({ product }: { product: Product }) => {
+  const { addItem, items, updateQuantity } = useCart();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-    const handleDotClick = (index: number) => {
-      setCurrentImageIndex(index);
-    };
+  const handleDotClick = (index: number) => {
+    setCurrentImageIndex(index);
+  };
 
-    const handleAddToCart = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      addItem({
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        image: product.image,
-        description: product.description,
-      });
-      toast({
-        title: "Added to cart",
-        description: product.title,
-        duration: 3000,
-      });
-    };
+  // Find if product is in cart
+  const cartItem = items.find((item) => item.id === product.id);
+  const quantity = cartItem?.quantity || 0;
 
-    const fadeInUp = {
-      initial: { opacity: 0, y: 60 },
-      animate: { opacity: 1, y: 0 },
-    };
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      image: product.image,
+      description: product.description,
+    });
+  };
 
-    return (
-      <motion.div
-        variants={fadeInUp}
-        whileHover={{ y: -4, scale: 1.02 }}
-        className="group relative overflow-visible rounded-lg flex flex-col w-full max-w-[500px]"
+  const handleIncrement = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (cartItem) {
+      updateQuantity(product.id, cartItem.quantity + 1);
+    }
+  };
+
+  const handleDecrement = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (cartItem) {
+      updateQuantity(product.id, cartItem.quantity - 1);
+    }
+  };
+
+  const fadeInUp = {
+    initial: { opacity: 0, y: 60 },
+    animate: { opacity: 1, y: 0 },
+  };
+
+  return (
+    <motion.div
+      variants={fadeInUp}
+      whileHover={{ y: -4, scale: 1.02 }}
+      className="group relative overflow-visible rounded-lg flex flex-col w-full max-w-[250px]"
+    >
+      <Link
+        to={`/product/${product.id}`}
+        className="block w-full cursor-pointer"
+        style={{ textDecoration: "none", pointerEvents: "auto" }}
       >
-        <Link
-          to={`/product/${product.id}`}
-          className="block w-full cursor-pointer"
-          style={{ textDecoration: "none", pointerEvents: "auto" }}
-        >
-          {/* Simple Card - No background */}
-          <div className="relative rounded-lg overflow-hidden flex flex-col">
-            {/* Content */}
-            <div className="relative z-10 flex flex-col">
-              {/* Product Image Row - Clickable - Transparent background */}
-              <div className="bg-transparent">
-                <ProductImageRow
-                  product={product}
-                  currentImageIndex={currentImageIndex}
-                  onDotClick={handleDotClick}
-                />
+        {/* Simple Card - No background */}
+        <div className="relative rounded-lg overflow-hidden flex flex-col">
+          {/* Content */}
+          <div className="relative z-10 flex flex-col">
+            {/* Product Image Row - Clickable - Transparent background */}
+            <div className="bg-transparent">
+              <ProductImageRow
+                product={product}
+                currentImageIndex={currentImageIndex}
+                onDotClick={handleDotClick}
+              />
+            </div>
+
+            {/* Product Info - Transparent background */}
+            <div className="store-card-content flex flex-col flex-grow font-['Geist_Mono',monospace] p-2 text-center">
+              <h3
+                className="mb-1 cursor-pointer hover:underline text-black md:line-clamp-1"
+                style={{
+                  fontSize: "16px",
+                  fontWeight: 300,
+                }}
+              >
+                {product.title}
+              </h3>
+              <p
+                className="mb-2 line-clamp-2 store-card-text font-['Geist_Mono',monospace] text-black"
+                style={{
+                  fontSize: "16px",
+                  fontWeight: 300,
+                }}
+              >
+                {product.description}
+              </p>
+              <div className="mb-3">
+                <span
+                  className="store-card-text font-['Geist_Mono',monospace] text-black"
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: 300,
+                  }}
+                >
+                  ${product.price}
+                </span>
               </div>
 
-              {/* Product Info - Transparent background */}
-              <div className="store-card-content flex flex-col flex-grow font-['Geist_Mono',monospace] p-2 text-center">
-                <h3
-                  className="mb-1 cursor-pointer hover:underline text-black md:line-clamp-1"
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 300,
-                  }}
-                >
-                  {product.title}
-                </h3>
-                <p
-                  className="mb-2 line-clamp-2 store-card-text font-['Geist_Mono',monospace] text-black"
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 300,
-                  }}
-                >
-                  {product.description}
-                </p>
-                <div className="mb-3">
-                  <span
-                    className="store-card-text font-['Geist_Mono',monospace] text-black"
-                    style={{
-                      fontSize: "16px",
-                      fontWeight: 300,
-                    }}
-                  >
-                    ${product.price}
-                  </span>
-                </div>
-                {/* Add to Cart Button */}
+              {/* Add to Cart Button or Quantity Toggler */}
+              {quantity === 0 ? (
                 <button
                   onClick={handleAddToCart}
                   className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-1.5"
@@ -179,18 +192,79 @@ const ProductCard = memo(
                   <ShoppingCart className="h-4 w-4" />
                   Add to Cart
                 </button>
-              </div>
+              ) : (
+                <div className="space-y-2">
+                  {/* Quantity Toggler */}
+                  <div className="flex items-center justify-center gap-2">
+                    <button
+                      onClick={handleDecrement}
+                      className="w-8 h-8 rounded-md transition-all hover:scale-105 flex items-center justify-center"
+                      style={{
+                        fontFamily: '"Geist Mono", monospace',
+                        fontSize: "16px",
+                        fontWeight: 300,
+                        backgroundColor: "#f0f0f0",
+                        color: "rgb(80, 80, 80)",
+                        boxShadow:
+                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                      }}
+                    >
+                      −
+                    </button>
+                    <span
+                      className="min-w-[40px] text-center"
+                      style={{
+                        fontFamily: '"Geist Mono", monospace',
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        color: "rgb(80, 80, 80)",
+                      }}
+                    >
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={handleIncrement}
+                      className="w-8 h-8 rounded-md transition-all hover:scale-105 flex items-center justify-center"
+                      style={{
+                        fontFamily: '"Geist Mono", monospace',
+                        fontSize: "16px",
+                        fontWeight: 300,
+                        backgroundColor: "#f0f0f0",
+                        color: "rgb(80, 80, 80)",
+                        boxShadow:
+                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
+                  {/* View Cart Link */}
+                  <Link
+                    to="/checkout"
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-1.5 no-underline"
+                    style={{
+                      fontFamily: '"Geist Mono", monospace',
+                      fontSize: "14px",
+                      fontWeight: 300,
+                      backgroundColor: "#f0f0f0",
+                      color: "rgb(80, 80, 80)",
+                      boxShadow:
+                        "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                    }}
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                    View Cart
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
-        </Link>
-      </motion.div>
-    );
-  },
-  (prevProps, nextProps) => {
-    // Only re-render if the product ID changes
-    return prevProps.product.id === nextProps.product.id;
-  }
-);
+        </div>
+      </Link>
+    </motion.div>
+  );
+};
 
 const Store = () => {
   const { activeCategory } = useStore();

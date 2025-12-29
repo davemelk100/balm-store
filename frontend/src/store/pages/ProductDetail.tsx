@@ -48,6 +48,22 @@ const ProductDetail = () => {
     setSearchParams(searchParams);
   };
 
+  // Helper function to find first available (in-stock) size
+  const findFirstAvailableSize = (product: Product): string | null => {
+    if (!product.sizes || product.sizes.length === 0) return null;
+
+    // If no inventory tracking, return first size
+    if (!product.inventory) return product.sizes[0];
+
+    // Find first size that's in stock
+    const availableSize = product.sizes.find(
+      (size) => (product.inventory?.[size] ?? null) !== 0
+    );
+
+    // Return available size, or first size as fallback
+    return availableSize || product.sizes[0];
+  };
+
   // Fetch products from Stripe via Netlify function
   useEffect(() => {
     let isMounted = true;
@@ -74,7 +90,7 @@ const ProductDetail = () => {
 
           if (foundProduct) {
             setProduct(foundProduct);
-            setSelectedSize(foundProduct.sizes?.[0] || null);
+            setSelectedSize(findFirstAvailableSize(foundProduct));
           } else {
             // Fallback to local product
             console.warn(
@@ -84,7 +100,7 @@ const ProductDetail = () => {
             console.log("Local product:", localProduct);
             setProduct(localProduct);
             if (localProduct) {
-              setSelectedSize(localProduct.sizes?.[0] || null);
+              setSelectedSize(findFirstAvailableSize(localProduct));
             }
           }
         } else {
@@ -96,7 +112,7 @@ const ProductDetail = () => {
           const localProduct = storeProducts.find((p) => p.id === id);
           setProduct(localProduct);
           if (localProduct) {
-            setSelectedSize(localProduct.sizes?.[0] || null);
+            setSelectedSize(findFirstAvailableSize(localProduct));
           }
         }
       } catch (error) {
@@ -106,7 +122,7 @@ const ProductDetail = () => {
         const localProduct = storeProducts.find((p) => p.id === id);
         setProduct(localProduct);
         if (localProduct) {
-          setSelectedSize(localProduct.sizes?.[0] || null);
+          setSelectedSize(findFirstAvailableSize(localProduct));
         }
       } finally {
         if (isMounted) {
@@ -244,7 +260,7 @@ const ProductDetail = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="relative"
+            className="relative max-w-[350px] mx-auto"
           >
             <div
               className="aspect-square overflow-hidden rounded-xl bg-transparent relative group cursor-pointer"
@@ -440,38 +456,84 @@ const ProductDetail = () => {
                       Size
                     </label>
                     <div className="flex flex-wrap gap-3">
-                      {product.sizes.map((size: string) => (
-                        <button
-                          key={size}
-                          onClick={() => setSelectedSize(size)}
-                          className="px-6 py-3 rounded-md transition-all hover:scale-105"
-                          style={{
-                            fontFamily: '"Geist Mono", monospace',
-                            fontSize: "16px",
-                            fontWeight: selectedSize === size ? 600 : 300,
-                            backgroundColor:
-                              selectedSize === size ? "#ffffff" : "#f0f0f0",
-                            color:
-                              selectedSize === size
+                      {product.sizes.map((size: string) => {
+                        // Check inventory for this size
+                        const stock = product.inventory?.[size] ?? null;
+                        const isOutOfStock = stock === 0;
+                        const isLowStock =
+                          stock !== null && stock > 0 && stock <= 5;
+                        const isSelected = selectedSize === size;
+
+                        return (
+                          <button
+                            key={size}
+                            onClick={() =>
+                              !isOutOfStock && setSelectedSize(size)
+                            }
+                            disabled={isOutOfStock}
+                            className="px-6 py-3 rounded-md transition-all relative"
+                            style={{
+                              fontFamily: '"Geist Mono", monospace',
+                              fontSize: "16px",
+                              fontWeight: isSelected ? 600 : 300,
+                              backgroundColor: isOutOfStock
+                                ? "#e5e5e5"
+                                : isSelected
+                                ? "#ffffff"
+                                : "#f0f0f0",
+                              color: isOutOfStock
+                                ? "rgb(160, 160, 160)"
+                                : isSelected
                                 ? "rgb(20, 20, 20)"
                                 : "rgb(100, 100, 100)",
-                            boxShadow:
-                              selectedSize === size
+                              boxShadow: isOutOfStock
+                                ? "none"
+                                : isSelected
                                 ? "rgba(255, 255, 255, 1) -2px -2px 3px, rgba(0, 0, 0, 0.4) 2px 2px 4px, rgba(255, 255, 255, 0.8) 0px 0px 2px, inset 0 0 0 2px rgba(0, 0, 0, 0.1)"
                                 : "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                            border:
-                              selectedSize === size
+                              border: isOutOfStock
+                                ? "1px solid rgba(0, 0, 0, 0.1)"
+                                : isSelected
                                 ? "2px solid rgba(0, 0, 0, 0.15)"
                                 : "none",
-                            transform:
-                              selectedSize === size
+                              transform: isSelected
                                 ? "scale(1.05)"
                                 : "scale(1)",
-                          }}
-                        >
-                          {size}
-                        </button>
-                      ))}
+                              cursor: isOutOfStock ? "not-allowed" : "pointer",
+                              opacity: isOutOfStock ? 0.5 : 1,
+                              textDecoration: isOutOfStock
+                                ? "line-through"
+                                : "none",
+                            }}
+                          >
+                            <span>{size}</span>
+                            {isOutOfStock && (
+                              <span
+                                className="block text-xs mt-1"
+                                style={{
+                                  color: "#dc2626",
+                                  fontSize: "10px",
+                                  fontWeight: 500,
+                                }}
+                              >
+                                OUT
+                              </span>
+                            )}
+                            {!isOutOfStock && isLowStock && (
+                              <span
+                                className="block text-xs mt-1"
+                                style={{
+                                  color: "#ea580c",
+                                  fontSize: "10px",
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {stock} left
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -526,7 +588,31 @@ const ProductDetail = () => {
                   */}
                   <button
                     onClick={() => {
+                      // Check if size is selected and in stock
+                      const selectedSizeStock =
+                        product.inventory?.[selectedSize || ""] ?? null;
+                      const isSelectedSizeOutOfStock = selectedSizeStock === 0;
+
                       if (!termsAgreed) return;
+                      if (!selectedSize) {
+                        toast({
+                          title: "Please select a size",
+                          description: "Choose a size before adding to cart",
+                          duration: 3000,
+                          variant: "destructive",
+                        });
+                        return;
+                      }
+                      if (isSelectedSizeOutOfStock) {
+                        toast({
+                          title: "Out of stock",
+                          description: `Size ${selectedSize} is currently out of stock`,
+                          duration: 3000,
+                          variant: "destructive",
+                        });
+                        return;
+                      }
+
                       addItem({
                         id: product.id,
                         title: product.title,
@@ -540,9 +626,15 @@ const ProductDetail = () => {
                         duration: 3000,
                       });
                     }}
-                    disabled={!termsAgreed}
+                    disabled={
+                      !termsAgreed ||
+                      !selectedSize ||
+                      (product.inventory?.[selectedSize || ""] ?? null) === 0
+                    }
                     className={`w-full px-2 py-3 rounded-md transition-all flex items-center justify-center gap-2 ${
-                      termsAgreed
+                      termsAgreed &&
+                      selectedSize &&
+                      (product.inventory?.[selectedSize] ?? null) !== 0
                         ? "hover:scale-105 cursor-pointer"
                         : "cursor-not-allowed opacity-50"
                     }`}
@@ -552,13 +644,20 @@ const ProductDetail = () => {
                       fontWeight: 300,
                       backgroundColor: "#f0f0f0",
                       color: "rgb(80, 80, 80)",
-                      boxShadow: termsAgreed
-                        ? "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px"
-                        : "none",
+                      boxShadow:
+                        termsAgreed &&
+                        selectedSize &&
+                        (product.inventory?.[selectedSize] ?? null) !== 0
+                          ? "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px"
+                          : "none",
                     }}
                   >
                     <ShoppingCart className="h-5 w-5" />
-                    Add to Cart
+                    {!selectedSize
+                      ? "Select a Size"
+                      : (product.inventory?.[selectedSize] ?? null) === 0
+                      ? "Out of Stock"
+                      : "Add to Cart"}
                   </button>
                 </div>
               </div>

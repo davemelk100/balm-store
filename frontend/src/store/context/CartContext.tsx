@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { CartItem } from "../types";
-import { toast } from "@/hooks/use-toast";
 
 interface CartContextType {
   items: CartItem[];
@@ -37,18 +36,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     setItems((prevItems) => {
       const existingItem = prevItems.find((i) => i.id === item.id);
       if (existingItem) {
-        toast({
-          title: "Added to cart",
-          description: `${item.title} quantity increased`,
-        });
         return prevItems.map((i) =>
           i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      toast({
-        title: "Added to cart",
-        description: `${item.title} has been added to your cart`,
-      });
       return [...prevItems, { ...item, quantity: 1 }];
     });
   };
