@@ -106,7 +106,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const apiUrl = import.meta.env.VITE_API_BASE || "http://localhost:8000";
       const response = await fetch(`${apiUrl}/api/auth/session`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -141,7 +141,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       window.location.href = "/login";
       return;
     }
-    
+
     // Production: use Netlify function
     const url = `${window.location.origin}/.netlify/functions/auth-login`;
     window.location.href = url;
@@ -149,7 +149,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const loginWithEmail = useCallback(
     async (email: string, password: string) => {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const apiUrl = import.meta.env.VITE_API_BASE || "http://localhost:8000";
       const response = await fetch(`${apiUrl}/api/auth/login`, {
         method: "POST",
         headers: {

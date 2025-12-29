@@ -56,7 +56,7 @@ const Signup = () => {
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const apiUrl = import.meta.env.VITE_API_BASE || "http://localhost:8000";
       const response = await fetch(`${apiUrl}/api/auth/register`, {
         method: "POST",
         headers: {
@@ -105,10 +105,7 @@ const Signup = () => {
             className="space-y-6"
           >
             <div className="text-center">
-              <h1
-                className="font-bold mb-4"
-                style={{ color: "black" }}
-              >
+              <h1 className="font-bold mb-4" style={{ color: "black" }}>
                 CREATE ACCOUNT
               </h1>
               <p className="text-lg mb-8" style={{ color: "black" }}>
