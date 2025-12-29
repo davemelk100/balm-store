@@ -15,11 +15,25 @@ import CheckoutSuccess from "./store/pages/CheckoutSuccess";
 import Login from "./store/pages/Login";
 import Signup from "./store/pages/Signup";
 import AuthCallback from "./store/pages/AuthCallback";
-
-// Temporary Coming Soon Page (disabled)
-// import ComingSoon from "./store/pages/ComingSoon";
+import ComingSoon from "./store/pages/ComingSoon";
 
 function App() {
+  // Check for maintenance bypass token
+  const hasMaintenanceBypass =
+    localStorage.getItem("maintenance_bypass") === "true";
+
+  // MAINTENANCE MODE (enabled):
+  if (!hasMaintenanceBypass) {
+    return (
+      <Router>
+        <Routes>
+          <Route path="*" element={<ComingSoon />} />
+        </Routes>
+      </Router>
+    );
+  }
+
+  // Normal mode (when bypass is active):
   return (
     <Router>
       <StoreProvider>
@@ -57,18 +71,6 @@ function App() {
       </StoreProvider>
     </Router>
   );
-
-  // MAINTENANCE MODE (disabled):
-  // To enable maintenance mode, uncomment the code below and comment out the code above
-  /*
-  return (
-    <Router>
-      <Routes>
-        <Route path="*" element={<ComingSoon />} />
-      </Routes>
-    </Router>
-  );
-  */
 }
 
 export default App;
