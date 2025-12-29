@@ -17,7 +17,7 @@
   - Error: "Stripe checkout is not yet configured"
   - Affects: Multi-item cart purchases
 
-## Two Purchasing Methods
+## The Two Purchasing Methods
 
 ### Method 1: Buy Now Button (Working ✅)
 
