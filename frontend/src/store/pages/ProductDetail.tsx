@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { storeProducts } from "../data/storeProducts";
+import { Product } from "../types";
 import { toast } from "@/hooks/use-toast";
 import { ImageModal } from "../components/ImageModal";
 import { LegalModal } from "../components/LegalModal";
@@ -31,6 +32,11 @@ const ProductDetail = () => {
     images: string[];
     currentIndex: number;
   } | null>(null);
+  const [product, setProduct] = useState<Product | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [termsAgreed, setTermsAgreed] = useState(false);
 
   // Legal modal management
   const legalModal = searchParams.get("legal");
@@ -42,7 +48,111 @@ const ProductDetail = () => {
     setSearchParams(searchParams);
   };
 
-  const product = storeProducts.find((p) => p.id === id);
+  // Helper function to find first available (in-stock) size
+  const findFirstAvailableSize = (product: Product): string | null => {
+    if (!product.sizes || product.sizes.length === 0) return null;
+
+    // If no inventory tracking, return first size
+    if (!product.inventory) return product.sizes[0];
+
+    // Find first size that's in stock
+    const availableSize = product.sizes.find(
+      (size) => (product.inventory?.[size] ?? null) !== 0
+    );
+
+    // Return available size, or first size as fallback
+    return availableSize || product.sizes[0];
+  };
+
+  // Fetch products from Stripe via Netlify function
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchProduct = async () => {
+      try {
+        console.log("Fetching product with id:", id);
+        const response = await fetch("/.netlify/functions/get-products");
+        const data = await response.json();
+
+        console.log("Netlify function response:", data);
+
+        if (!isMounted) return; // Prevent state update if component unmounted
+
+        if (response.ok && data.products && data.products.length > 0) {
+          console.log("Products from Stripe:", data.products);
+
+          // Find the specific product by id or stripeProductId
+          const foundProduct = data.products.find(
+            (p: Product) => p.id === id || p.stripeProductId === id
+          );
+
+          console.log("Found product:", foundProduct);
+
+          if (foundProduct) {
+            setProduct(foundProduct);
+            setSelectedSize(findFirstAvailableSize(foundProduct));
+          } else {
+            // Fallback to local product
+            console.warn(
+              "Product not found in Stripe, checking local products"
+            );
+            const localProduct = storeProducts.find((p) => p.id === id);
+            console.log("Local product:", localProduct);
+            setProduct(localProduct);
+            if (localProduct) {
+              setSelectedSize(findFirstAvailableSize(localProduct));
+            }
+          }
+        } else {
+          // Fallback to local products if Stripe fetch fails
+          console.warn(
+            "Stripe fetch failed or returned no products, using local product as fallback"
+          );
+          console.log("Response status:", response.status, "Data:", data);
+          const localProduct = storeProducts.find((p) => p.id === id);
+          setProduct(localProduct);
+          if (localProduct) {
+            setSelectedSize(findFirstAvailableSize(localProduct));
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching product from Stripe:", error);
+        if (!isMounted) return;
+        // Fallback to local product
+        const localProduct = storeProducts.find((p) => p.id === id);
+        setProduct(localProduct);
+        if (localProduct) {
+          setSelectedSize(findFirstAvailableSize(localProduct));
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchProduct();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
+
+  // Show loading state while fetching
+  if (loading) {
+    return (
+      <div
+        className="min-h-screen text-white store-page flex items-center justify-center"
+        style={{
+          backgroundColor: "#f0f0f0",
+        }}
+      >
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4 text-black">Loading...</h1>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -58,10 +168,9 @@ const ProductDetail = () => {
           </h1>
           <button
             onClick={() => navigate("/")}
+            title="Back to Store"
             className="text-black hover:opacity-80"
-          >
-            Back to Store
-          </button>
+          ></button>
         </div>
 
         {/* Bottom Header - Replica of Top Header without Cart and Avatar */}
@@ -100,109 +209,14 @@ const ProductDetail = () => {
     );
   }
 
-  const [selectedSize, setSelectedSize] = useState<string | null>(
-    product.sizes?.[0] || null
-  );
-
-  // Load Stripe Buy Button script
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://js.stripe.com/v3/buy-button.js";
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      // Cleanup script on unmount
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
-  }, []);
-
-  // Style Stripe buy buttons to match other buttons
-  useEffect(() => {
-    const styleStripeButtons = () => {
-      const stripeButtons = document.querySelectorAll("stripe-buy-button");
-      stripeButtons.forEach((button) => {
-        const shadowRoot = button.shadowRoot;
-        if (shadowRoot) {
-          // Remove existing style if present
-          const existingStyle = shadowRoot.querySelector(
-            "style[data-custom-stripe-style]"
-          );
-          if (existingStyle) {
-            existingStyle.remove();
-          }
-
-          // Add custom styles
-          const style = document.createElement("style");
-          style.setAttribute("data-custom-stripe-style", "true");
-          style.textContent = `
-            .BuyButton-Button,
-            .is-buttonLayout,
-            button {
-              font-family: "Geist Mono", monospace !important;
-              font-size: 16px !important;
-              font-weight: 300 !important;
-              background-color: #f0f0f0 !important;
-              color: rgb(80, 80, 80) !important;
-              box-shadow: rgba(255, 255, 255, 0.9) -1px -1px 1px, 
-                          rgba(0, 0, 0, 0.2) 1px 1px 2px, 
-                          rgba(255, 255, 255, 0.5) 0px 0px 1px !important;
-              border-radius: 0.375rem !important;
-              padding: 0.75rem 0.5rem !important;
-              height: 45px !important;
-              min-height: 45px !important;
-              border: none !important;
-              transition: all 0.2s !important;
-              width: 100% !important;
-            }
-            
-            .BuyButton-Button:hover,
-            .is-buttonLayout:hover,
-            button:hover {
-              transform: scale(1.05) !important;
-            }
-          `;
-          shadowRoot.appendChild(style);
-        }
-      });
-    };
-
-    // Try to style immediately
-    styleStripeButtons();
-
-    // Also try after delays in case buttons load asynchronously
-    const timeoutId = setTimeout(styleStripeButtons, 500);
-    const timeoutId2 = setTimeout(styleStripeButtons, 1000);
-    const timeoutId3 = setTimeout(styleStripeButtons, 2000);
-    const timeoutId4 = setTimeout(styleStripeButtons, 3000);
-
-    // Use MutationObserver to watch for new buttons being added
-    const observer = new MutationObserver(() => {
-      styleStripeButtons();
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-
-    return () => {
-      clearTimeout(timeoutId);
-      clearTimeout(timeoutId2);
-      clearTimeout(timeoutId3);
-      clearTimeout(timeoutId4);
-      observer.disconnect();
-    };
-  }, []);
-
-  // Carousel state
+  // Rest of component (all hooks already declared above)
+  // Carousel state and handlers
   const images =
-    product.images && product.images.length > 0
+    product && product.images && product.images.length > 0
       ? product.images
-      : [product.image];
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+      : product
+      ? [product.image]
+      : [];
 
   const goToPrevious = () => {
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
@@ -225,7 +239,7 @@ const ProductDetail = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate(-1)}
           className="px-2 py-3 rounded-md transition-all hover:scale-105 mb-8 flex items-center gap-2"
           style={{
             fontFamily: '"Geist Mono", monospace',
@@ -238,7 +252,6 @@ const ProductDetail = () => {
           }}
         >
           <ArrowLeft className="h-5 w-5" />
-          Back to Store
         </button>
 
         {/* Product layout: two columns on tablet and desktop, single column on mobile */}
@@ -247,7 +260,7 @@ const ProductDetail = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="relative"
+            className="relative max-w-[350px] mx-auto"
           >
             <div
               className="aspect-square overflow-hidden rounded-xl bg-transparent relative group cursor-pointer"
@@ -281,7 +294,7 @@ const ProductDetail = () => {
                       e.stopPropagation();
                       goToPrevious();
                     }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-full p-2 opacity-70 hover:opacity-100 transition-opacity shadow-lg z-10"
                     aria-label="Previous image"
                   >
                     <ChevronLeft className="h-5 w-5 text-gray-900 dark:text-white" />
@@ -291,7 +304,7 @@ const ProductDetail = () => {
                       e.stopPropagation();
                       goToNext();
                     }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-full p-2 opacity-70 hover:opacity-100 transition-opacity shadow-lg z-10"
                     aria-label="Next image"
                   >
                     <ChevronRight className="h-5 w-5 text-gray-900 dark:text-white" />
@@ -299,7 +312,7 @@ const ProductDetail = () => {
 
                   {/* Dots Indicator */}
                   <div
-                    className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 opacity-70 hover:opacity-100 transition-opacity z-10"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {images.map((_, index) => (
@@ -356,6 +369,64 @@ const ProductDetail = () => {
                   </p>
                 </div>
 
+                {/* Important Notice */}
+                <div
+                  className="px-4 py-4 rounded-md mb-6"
+                  style={{
+                    backgroundColor: "#ffffff",
+                    boxShadow:
+                      "rgba(255, 255, 255, 1) -2px -2px 3px, rgba(0, 0, 0, 0.25) 2px 2px 4px, rgba(255, 255, 255, 0.8) 0px 0px 2px",
+                    border: "1px solid rgba(0, 0, 0, 0.08)",
+                  }}
+                >
+                  <p
+                    className="font-semibold mb-2"
+                    style={{
+                      fontFamily: '"Geist Mono", monospace',
+                      fontSize: "14px",
+                      color: "rgb(200, 60, 60)",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    ⚠️ IMPORTANT
+                  </p>
+                  <p
+                    className="leading-relaxed mb-4"
+                    style={{
+                      fontFamily: '"Geist Mono", monospace',
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      color: "rgb(60, 60, 60)",
+                      lineHeight: "1.6",
+                    }}
+                  >
+                    These shirts are one-of-a-kind DIY pieces made in very
+                    limited runs. All sales are final – no returns or exchanges.
+                  </p>
+
+                  {/* Checkbox */}
+                  <label
+                    className="flex items-center gap-2 cursor-pointer select-none"
+                    style={{
+                      fontFamily: '"Geist Mono", monospace',
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      color: "rgb(60, 60, 60)",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={termsAgreed}
+                      onChange={(e) => setTermsAgreed(e.target.checked)}
+                      className="w-4 h-4 cursor-pointer"
+                      style={{
+                        accentColor: "rgb(60, 60, 60)",
+                      }}
+                    />
+                    <span>I understand</span>
+                  </label>
+                </div>
+
                 <div>
                   <p
                     className="leading-relaxed"
@@ -385,53 +456,91 @@ const ProductDetail = () => {
                       Size
                     </label>
                     <div className="flex flex-wrap gap-3">
-                      {product.sizes.map((size: string) => (
-                        <button
-                          key={size}
-                          onClick={() => setSelectedSize(size)}
-                          className="px-6 py-3 rounded-md transition-all hover:scale-105"
-                          style={{
-                            fontFamily: '"Geist Mono", monospace',
-                            fontSize: "16px",
-                            fontWeight: selectedSize === size ? 600 : 300,
-                            backgroundColor:
-                              selectedSize === size ? "#ffffff" : "#f0f0f0",
-                            color:
-                              selectedSize === size
+                      {product.sizes.map((size: string) => {
+                        // Check inventory for this size
+                        const stock = product.inventory?.[size] ?? null;
+                        const isOutOfStock = stock === 0;
+                        const isLowStock =
+                          stock !== null && stock > 0 && stock <= 5;
+                        const isSelected = selectedSize === size;
+
+                        return (
+                          <button
+                            key={size}
+                            onClick={() =>
+                              !isOutOfStock && setSelectedSize(size)
+                            }
+                            disabled={isOutOfStock}
+                            className="px-6 py-3 rounded-md transition-all relative"
+                            style={{
+                              fontFamily: '"Geist Mono", monospace',
+                              fontSize: "16px",
+                              fontWeight: isSelected ? 600 : 300,
+                              backgroundColor: isOutOfStock
+                                ? "#e5e5e5"
+                                : isSelected
+                                ? "#ffffff"
+                                : "#f0f0f0",
+                              color: isOutOfStock
+                                ? "rgb(160, 160, 160)"
+                                : isSelected
                                 ? "rgb(20, 20, 20)"
                                 : "rgb(100, 100, 100)",
-                            boxShadow:
-                              selectedSize === size
+                              boxShadow: isOutOfStock
+                                ? "none"
+                                : isSelected
                                 ? "rgba(255, 255, 255, 1) -2px -2px 3px, rgba(0, 0, 0, 0.4) 2px 2px 4px, rgba(255, 255, 255, 0.8) 0px 0px 2px, inset 0 0 0 2px rgba(0, 0, 0, 0.1)"
                                 : "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                            border:
-                              selectedSize === size
+                              border: isOutOfStock
+                                ? "1px solid rgba(0, 0, 0, 0.1)"
+                                : isSelected
                                 ? "2px solid rgba(0, 0, 0, 0.15)"
                                 : "none",
-                            transform:
-                              selectedSize === size
+                              transform: isSelected
                                 ? "scale(1.05)"
                                 : "scale(1)",
-                          }}
-                        >
-                          {size}
-                        </button>
-                      ))}
+                              cursor: isOutOfStock ? "not-allowed" : "pointer",
+                              opacity: isOutOfStock ? 0.5 : 1,
+                              textDecoration: isOutOfStock
+                                ? "line-through"
+                                : "none",
+                            }}
+                          >
+                            <span>{size}</span>
+                            {isOutOfStock && (
+                              <span
+                                className="block text-xs mt-1"
+                                style={{
+                                  color: "#dc2626",
+                                  fontSize: "10px",
+                                  fontWeight: 500,
+                                }}
+                              >
+                                OUT
+                              </span>
+                            )}
+                            {!isOutOfStock && isLowStock && (
+                              <span
+                                className="block text-xs mt-1"
+                                style={{
+                                  color: "#ea580c",
+                                  fontSize: "10px",
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {stock} left
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
 
-                {/* Buy Now and Add to Cart Buttons */}
-                {/* Buy Button - Hidden
-                <div className="w-full mb-4 product-buy-button-wrapper">
-                  <stripe-buy-button
-                    buy-button-id={STRIPE_BUY_BUTTON_ID}
-                    publishable-key={STRIPE_PUBLISHABLE_KEY}
-                  />
-                </div>
-                */}
-                {/* All Buttons in One Row */}
-                <div className="w-full flex gap-2 flex-wrap">
+                {/* Add to Cart Button */}
+                <div className="w-full">
+                  {/* Venmo and PayPal - Hidden for now
                   <a
                     href="https://venmo.com/u/Dave-Melkonian"
                     target="_blank"
@@ -476,8 +585,34 @@ const ProductDetail = () => {
                     />
                     PayPal
                   </a>
+                  */}
                   <button
                     onClick={() => {
+                      // Check if size is selected and in stock
+                      const selectedSizeStock =
+                        product.inventory?.[selectedSize || ""] ?? null;
+                      const isSelectedSizeOutOfStock = selectedSizeStock === 0;
+
+                      if (!termsAgreed) return;
+                      if (!selectedSize) {
+                        toast({
+                          title: "Please select a size",
+                          description: "Choose a size before adding to cart",
+                          duration: 3000,
+                          variant: "destructive",
+                        });
+                        return;
+                      }
+                      if (isSelectedSizeOutOfStock) {
+                        toast({
+                          title: "Out of stock",
+                          description: `Size ${selectedSize} is currently out of stock`,
+                          duration: 3000,
+                          variant: "destructive",
+                        });
+                        return;
+                      }
+
                       addItem({
                         id: product.id,
                         title: product.title,
@@ -491,7 +626,18 @@ const ProductDetail = () => {
                         duration: 3000,
                       });
                     }}
-                    className="flex-1 min-w-[140px] px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2"
+                    disabled={
+                      !termsAgreed ||
+                      !selectedSize ||
+                      (product.inventory?.[selectedSize || ""] ?? null) === 0
+                    }
+                    className={`w-full px-2 py-3 rounded-md transition-all flex items-center justify-center gap-2 ${
+                      termsAgreed &&
+                      selectedSize &&
+                      (product.inventory?.[selectedSize] ?? null) !== 0
+                        ? "hover:scale-105 cursor-pointer"
+                        : "cursor-not-allowed opacity-50"
+                    }`}
                     style={{
                       fontFamily: '"Geist Mono", monospace',
                       fontSize: "16px",
@@ -499,11 +645,19 @@ const ProductDetail = () => {
                       backgroundColor: "#f0f0f0",
                       color: "rgb(80, 80, 80)",
                       boxShadow:
-                        "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                        termsAgreed &&
+                        selectedSize &&
+                        (product.inventory?.[selectedSize] ?? null) !== 0
+                          ? "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px"
+                          : "none",
                     }}
                   >
                     <ShoppingCart className="h-5 w-5" />
-                    Add to Cart
+                    {!selectedSize
+                      ? "Select a Size"
+                      : (product.inventory?.[selectedSize] ?? null) === 0
+                      ? "Out of Stock"
+                      : "Add to Cart"}
                   </button>
                 </div>
               </div>
@@ -645,6 +799,7 @@ const ProductDetail = () => {
       <StoreFooter
         onPrivacyClick={() => openLegalModal("privacy")}
         onTermsClick={() => openLegalModal("terms")}
+        hideUser={true}
       />
     </div>
   );

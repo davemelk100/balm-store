@@ -1,5 +1,6 @@
 """
-Initialize database with default admin user and store products
+Initialize database with default admin user
+Note: Products are now managed through Stripe, not the database
 """
 import sys
 from pathlib import Path
@@ -10,7 +11,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from sqlalchemy.orm import Session
 from app.db.database import SessionLocal, engine, Base
 from app.models.user import User
-from app.models.product import Product, Order, InventoryLog
 from app.core.security import get_password_hash
 from app.core.config import settings
 
@@ -36,50 +36,15 @@ def init_admin_user(db: Session):
         print(f"ℹ️  Admin user already exists: {settings.ADMIN_USERNAME}")
 
 
-def init_sample_products(db: Session):
-    """Create sample products if none exist"""
-    product_count = db.query(Product).count()
-    if product_count == 0:
-        sample_product = Product(
-            id="balm-shirt-1",
-            title="BALM Chest Print Button-Up Cursive",
-            main_category="buttonup",
-            price=22.00,
-            image="/img/balm-cursive.png",
-            images=[
-                "/img/balm-cursive.png",
-                "/img/balm-cluh-hooded-dude.png",
-                "/img/balm-skater-long-hair.png",
-                "/img/balm-cursive-club.png"
-            ],
-            description="",
-            full_description="Materials: 100% cotton. Fit: Regular fit. Care: Machine wash cold, tumble dry low. Do not bleach.",
-            sizes=["L", "XL"],
-            colors=["Black", "White", "Navy"],
-            stock_quantity=50,
-            low_stock_threshold=5,
-            sku="BALM-SHIRT-001",
-            visible=True,
-            featured=True,
-            order=0
-        )
-        db.add(sample_product)
-        db.commit()
-        print("✅ Created sample product: BALM Chest Print Button-Up")
-    else:
-        print(f"ℹ️  Products already exist: {product_count} products found")
-
-
 if __name__ == "__main__":
     print("\n🔧 Initializing BALM Store Database...\n")
     db = SessionLocal()
     try:
         init_admin_user(db)
-        init_sample_products(db)
         print("\n🎉 Database initialization complete!\n")
-        print("Admin Panel: http://localhost:8000/admin/store")
-        print(f"Username: {settings.ADMIN_USERNAME}")
-        print(f"Password: {settings.ADMIN_PASSWORD}\n")
+        print(f"Admin Username: {settings.ADMIN_USERNAME}")
+        print(f"Admin Password: {settings.ADMIN_PASSWORD}")
+        print("\nNote: Products are now managed through Stripe Dashboard\n")
     finally:
         db.close()
 

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Loader2, X, Plus, Minus, ShoppingCart } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import { LegalModal } from "../components/LegalModal";
 import { PrivacyPolicyContent } from "../../components/PrivacyPolicyContent";
 import { TermsOfServiceContent } from "../../components/TermsOfServiceContent";
@@ -13,6 +14,7 @@ const Checkout = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { items, getTotalPrice, removeItem, updateQuantity } = useCart();
+  const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,12 +28,6 @@ const Checkout = () => {
     setSearchParams(searchParams);
   };
 
-  useEffect(() => {
-    if (items.length === 0) {
-      navigate("/");
-    }
-  }, [items, navigate]);
-
   const handleCheckout = async (e?: React.MouseEvent) => {
     console.log("Button clicked! Items:", items.length, "Loading:", loading);
     e?.preventDefault();
@@ -40,6 +36,15 @@ const Checkout = () => {
     if (items.length === 0) {
       console.log("Cart is empty, cannot checkout");
       setError("Your cart is empty");
+      return;
+    }
+
+    // Check if user is authenticated before proceeding
+    if (!isAuthenticated) {
+      console.log("User not authenticated, redirecting to login");
+      // Store the checkout intent to redirect back after login
+      localStorage.setItem("checkout_after_login", "true");
+      navigate("/login");
       return;
     }
 
@@ -56,7 +61,7 @@ const Checkout = () => {
             quantity: item.quantity,
           };
         }
-        
+
         // Fallback: create price data on the fly (for legacy products)
         const productData: {
           name: string;
@@ -166,8 +171,56 @@ const Checkout = () => {
 
   const total = getTotalPrice();
 
+  // Show empty cart message if no items
   if (items.length === 0) {
-    return null;
+    return (
+      <div
+        className="min-h-screen text-gray-900 dark:text-white store-page pb-16 relative overflow-hidden"
+        style={{
+          backgroundColor: "#f0f0f0",
+        }}
+      >
+        <StoreHeader sticky={false} hideCart={false} />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <ShoppingCart className="h-16 w-16 mx-auto text-gray-400" />
+            <h1
+              className="font-bold text-black"
+              style={{
+                fontFamily: '"Geist Mono", monospace',
+                fontSize: "24px",
+              }}
+            >
+              Your cart is empty
+            </h1>
+            <button
+              onClick={() => navigate("/")}
+              className="px-6 py-3 rounded-md transition-all hover:scale-105"
+              style={{
+                fontFamily: '"Geist Mono", monospace',
+                fontSize: "16px",
+                fontWeight: 300,
+                backgroundColor: "#f0f0f0",
+                color: "rgb(80, 80, 80)",
+                boxShadow:
+                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+              }}
+            >
+              Continue Shopping
+            </button>
+          </motion.div>
+        </div>
+        <StoreFooter
+          onPrivacyClick={() => openLegalModal("privacy")}
+          onTermsClick={() => openLegalModal("terms")}
+          hideUser={true}
+        />
+      </div>
+    );
   }
 
   return (
@@ -553,6 +606,7 @@ const Checkout = () => {
       <StoreFooter
         onPrivacyClick={() => openLegalModal("privacy")}
         onTermsClick={() => openLegalModal("terms")}
+        hideUser={true}
       />
     </div>
   );

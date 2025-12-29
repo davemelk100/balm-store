@@ -1,26 +1,11 @@
 import { Product } from "../types";
 
 export const storeProducts: Product[] = [
-  // {
-  //   id: "balm-shirt-1",
-  //   mainCategory: "art",
-  //   title: "BALM Chest Print Button-Up Scrawl",
-  //   price: 22.0,
-  //   image: "/img/balm-scrawls.png",
-  //   images: [
-  //     "/img/balm-scrawls.png",
-  //     "/img/standing.png",
-  //     "/img/balm-scrawl-band.png",
-  //     "/img/balm-scrawl-hoodie.png",
-  //   ],
-  //   description: "",
-  //   fullDescription:
-  //     "Materials: 100% cotton. Fit: Regular fit. Care: Machine wash cold, tumble dry low. Do not bleach.",
-  //   sizes: ["L", "XL"],
-  //   colors: ["Black", "White", "Navy"],
-  // },
   {
-    id: "balm-shirt-2",
+    // Use your Stripe product ID here for proper integration
+    id: "prod_TgsPf8wZHkrZsZ", // Your actual Stripe product ID
+    stripeProductId: "prod_TgsPf8wZHkrZsZ",
+    stripePriceId: "price_1SjUf0FKiaEr26Zcds2Jb77m", // Your Stripe price ID
     mainCategory: "art",
     title: "BALM Chest Print Button-Up Cursive",
     price: 25.0,
@@ -30,6 +15,8 @@ export const storeProducts: Product[] = [
       "/img/products/balm-cursive.png",
       "/img/products/balm-cursive-1-longhair.png",
       "/img/products/balm-cursive-1-cream.png",
+      "/img/products/balm-cursive-1-white-chains.png",
+      "/img/products/balm-cursive-1-jeans.png",
     ],
     description: "",
     details: `2.9 oz./yd² (US), 4.8 oz./L yd (CA), 100% polyester

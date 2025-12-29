@@ -2,6 +2,7 @@
 
 export interface Product {
   id: string;
+  stripeProductId?: string; // Stripe Product ID when fetched from Stripe
   mainCategory: "art" | "music" | "sports";
   title: string;
   price: number;
@@ -22,9 +23,14 @@ export interface Product {
   };
   sizes?: string[];
   colors?: string[];
+  // Inventory tracking per size
+  inventory?: {
+    [size: string]: number; // e.g., { "S": 10, "M": 15, "L": 20 }
+  };
   // Stripe Integration
   stripePriceId?: string; // Stripe Price ID for checkout
   stripeBuyButtonId?: string; // Stripe Buy Button ID
+  metadata?: Record<string, any>; // Stripe metadata
 }
 
 export interface CartItem {
@@ -34,4 +40,5 @@ export interface CartItem {
   image: string;
   description: string;
   quantity: number;
+  size?: string; // Track which size was selected
 }

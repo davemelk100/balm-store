@@ -38,6 +38,16 @@ exports.handler = async (event, context) => {
       const price = product.default_price;
       const priceAmount = price ? (price.unit_amount / 100) : 0;
 
+      // Parse inventory from metadata
+      const sizes = product.metadata?.sizes ? product.metadata.sizes.split(',') : [];
+      const inventory = {};
+      sizes.forEach(size => {
+        const stockKey = `stock_${size.trim()}`;
+        if (product.metadata?.[stockKey]) {
+          inventory[size.trim()] = parseInt(product.metadata[stockKey], 10) || 0;
+        }
+      });
+
       return {
         id: product.id,
         stripeProductId: product.id,
@@ -49,9 +59,11 @@ exports.handler = async (event, context) => {
         images: product.images || [],
         // Extract metadata for custom fields
         mainCategory: product.metadata?.category || 'art',
-        sizes: product.metadata?.sizes ? product.metadata.sizes.split(',') : [],
+        sizes: sizes,
         colors: product.metadata?.colors ? product.metadata.colors.split(',') : [],
         details: product.metadata?.details || '',
+        // Include inventory tracking
+        inventory: Object.keys(inventory).length > 0 ? inventory : undefined,
         // Include full product metadata
         metadata: product.metadata || {},
       };
