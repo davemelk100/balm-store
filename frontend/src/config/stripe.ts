@@ -4,11 +4,11 @@
 const isDevelopment = import.meta.env.MODE === "development";
 
 // Stripe Publishable Keys
+// Note: Make sure to set VITE_STRIPE_PUBLISHABLE_KEY_TEST (dev) or VITE_STRIPE_PUBLISHABLE_KEY_LIVE (prod)
+// in your environment variables (Netlify UI or .env file for local development)
 export const STRIPE_PUBLISHABLE_KEY = isDevelopment
-  ? import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY_TEST ||
-    "pk_test_51SfaUuFKiaEr26Zc7BOy7iWmDZTlbxR8P4MU48q7SNhPAZo8JS84jtUYihIJgFGGzL4GTrgdCA6Shp6UbBAH3Ofs00paxt1Glz"
-  : import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY_LIVE ||
-    "pk_test_51SfaUuFKiaEr26Zc7BOy7iWmDZTlbxR8P4MU48q7SNhPAZo8JS84jtUYihIJgFGGzL4GTrgdCA6Shp6UbBAH3Ofs00paxt1Glz";
+  ? import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY_TEST || ""
+  : import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY_LIVE || "";
 
 // Stripe Buy Button IDs per product
 // Map product IDs to their corresponding Stripe Buy Button IDs
