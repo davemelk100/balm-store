@@ -41,6 +41,7 @@ Use this checklist to ensure everything is properly configured before going live
 ### Required Variables:
 
 #### Security & Database
+
 ```bash
 SECRET_KEY = "your-production-secret-key-make-it-long-and-random-minimum-32-chars"
 DATABASE_URL = "sqlite:///./store.db"  # or PostgreSQL URL for production
@@ -50,6 +51,7 @@ DATABASE_URL = "sqlite:///./store.db"  # or PostgreSQL URL for production
 - [ ] `DATABASE_URL` - Set database connection string
 
 #### Frontend Communication
+
 ```bash
 FRONTEND_URL = "https://balmsoothes.com"
 CORS_ORIGINS = "https://balmsoothes.com,https://www.balmsoothes.com,http://localhost:8888,http://localhost:5173"
@@ -59,6 +61,7 @@ CORS_ORIGINS = "https://balmsoothes.com,https://www.balmsoothes.com,http://local
 - [ ] `CORS_ORIGINS` - Include both production and local URLs
 
 #### Stripe (Start with TEST mode)
+
 ```bash
 STRIPE_SECRET_KEY = "sk_test_..."  # Use test key initially
 ```
@@ -67,6 +70,7 @@ STRIPE_SECRET_KEY = "sk_test_..."  # Use test key initially
 - [ ] Get key from: [Stripe Dashboard → Developers → API Keys](https://dashboard.stripe.com/test/apikeys)
 
 #### Email (Resend)
+
 ```bash
 RESEND_API_KEY = "re_..."
 EMAIL_FROM = "noreply@balmsoothes.com"
@@ -78,6 +82,7 @@ EMAIL_FROM_NAME = "BALM Store"
 - [ ] `EMAIL_FROM_NAME` - Set sender name
 
 #### Google OAuth (Optional)
+
 ```bash
 GOOGLE_CLIENT_ID = "your_client_id.apps.googleusercontent.com"
 GOOGLE_CLIENT_SECRET = "your_client_secret"
@@ -109,6 +114,7 @@ railway domain
 ### Required Variables:
 
 #### Backend Connection
+
 ```bash
 VITE_API_BASE = "https://your-backend.railway.app"
 ```
@@ -117,6 +123,7 @@ VITE_API_BASE = "https://your-backend.railway.app"
 - [ ] **Important:** Use `VITE_API_BASE` not `VITE_API_URL` (Netlify blocks "URL")
 
 #### Stripe Keys (Start with TEST mode)
+
 ```bash
 VITE_STRIPE_PUBLISHABLE_KEY_TEST = "pk_test_..."
 VITE_STRIPE_PUBLISHABLE_KEY_LIVE = "pk_live_..."
@@ -128,6 +135,7 @@ VITE_STRIPE_PUBLISHABLE_KEY_LIVE = "pk_live_..."
 - [ ] **Note:** Initially, site will use TEST key (safe for testing)
 
 #### Google OAuth (Optional)
+
 ```bash
 VITE_GOOGLE_CLIENT_ID = "your_client_id.apps.googleusercontent.com"
 VITE_GOOGLE_REDIRECT_URI = "https://your-backend.railway.app/api/auth/google/callback"
@@ -147,6 +155,7 @@ VITE_GOOGLE_REDIRECT_URI = "https://your-backend.railway.app/api/auth/google/cal
 - [ ] Click **"Edit"**
 
 ### Add Authorized JavaScript Origins:
+
 ```
 https://balmsoothes.com
 https://www.balmsoothes.com
@@ -156,6 +165,7 @@ http://localhost:8888
 - [ ] Add all three origins above
 
 ### Add Authorized Redirect URIs:
+
 ```
 https://your-backend.railway.app/api/auth/google/callback
 http://localhost:8000/api/auth/google/callback
@@ -238,16 +248,20 @@ http://localhost:8000/api/auth/google/callback
 ### Monitor Deployments
 
 **Netlify:**
+
 ```bash
 netlify open:site
 ```
+
 - [ ] Check deploy status (should be "Published")
 - [ ] Review build logs for errors
 
 **Railway:**
+
 ```bash
 railway logs
 ```
+
 - [ ] Check for startup errors
 - [ ] Verify environment variables loaded
 
@@ -292,9 +306,11 @@ railway logs
 ### Switch to Live Stripe Keys
 
 #### Railway Backend:
+
 - [ ] Change `STRIPE_SECRET_KEY` from `sk_test_...` to `sk_live_...`
 
 #### Netlify Frontend:
+
 - [ ] Verify `VITE_STRIPE_PUBLISHABLE_KEY_LIVE` is set to `pk_live_...`
 - [ ] Code automatically uses live key in production builds
 
@@ -364,29 +380,34 @@ railway logs
 ## 🚨 Troubleshooting
 
 ### Site won't load
+
 - Check Netlify deployment status
 - Verify DNS settings
 - Check SSL certificate
 
 ### Can't connect to backend
+
 - Verify `VITE_API_BASE` is correct
 - Check Railway deployment status
 - Review CORS settings
 - Check Railway logs: `railway logs`
 
 ### Payment not working
+
 - Verify Stripe keys are correct (test vs live)
 - Check webhook is configured
 - Review Netlify function logs
 - Test with Stripe test card first
 
 ### Email not sending
+
 - Verify domain in Resend
 - Check `RESEND_API_KEY`
 - Review Railway logs for errors
 - Test email sending manually
 
 ### Google OAuth not working
+
 - Verify redirect URIs in Google Console
 - Check `GOOGLE_CLIENT_ID` matches
 - Ensure `GOOGLE_REDIRECT_URI` is correct
@@ -407,17 +428,20 @@ railway logs
 ## ✨ Post-Launch
 
 ### Announce Launch
+
 - [ ] Update social media
 - [ ] Send announcement email
 - [ ] Update any marketing materials
 
 ### Monitor First Week
+
 - [ ] Check analytics daily
 - [ ] Monitor for errors
 - [ ] Respond to customer issues quickly
 - [ ] Gather feedback
 
 ### Iterate
+
 - [ ] Review user feedback
 - [ ] Plan improvements
 - [ ] Update documentation
@@ -454,8 +478,8 @@ railway variables
 ---
 
 **Need help?** Review the specific guide documents:
+
 - `STRIPE_CONFIGURATION_GUIDE.md` - Stripe setup
 - `GOOGLE_OAUTH_SETUP.md` - Google OAuth setup
 - `RESEND_EMAIL_SETUP.md` - Email configuration
 - `setup-production-domain.sh` - Automated Railway setup
-
