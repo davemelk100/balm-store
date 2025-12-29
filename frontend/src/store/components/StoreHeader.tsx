@@ -54,7 +54,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
 
   return (
     <section
-      className={`${sticky ? "sticky top-0 z-50" : ""} pt-[20px] pb-[0]`}
+      className={`${sticky ? "sticky top-0 z-50" : ""} pt-[10px] pb-[0]`}
       style={{ backgroundColor: "rgba(240, 240, 240, 0.75)" }}
     >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -65,12 +65,12 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           className="flex flex-col items-center justify-center relative"
         >
           {/* Centered Logo - All Viewports */}
-          <div className="mb-4">
+          <div className="mb-2">
             <Link to="/" className="hover:opacity-80 transition-opacity">
               <img
                 src="/img/logos/balm-varsity.svg"
                 alt="BALM Varsity"
-                className="w-[40px] h-auto"
+                className="w-[32px] h-auto"
               />
             </Link>
           </div>

@@ -7,10 +7,13 @@
   functions = "../netlify/functions"
 
 # Local development configuration
-# This will proxy your existing Vite server (port 5173) and add Netlify functions
+# Force Netlify to proxy to Vite on port 5173
 [dev]
+  framework = "#custom"
+  command = "npm run dev --prefix frontend"
   targetPort = 5173
   port = 8888
+  autoLaunch = false
 
 # Environment variables for local development
 [context.dev.environment]

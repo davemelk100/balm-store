@@ -2,6 +2,7 @@
 
 export interface Product {
   id: string;
+  stripeProductId?: string; // Stripe Product ID when fetched from Stripe
   mainCategory: "art" | "music" | "sports";
   title: string;
   price: number;
@@ -25,6 +26,7 @@ export interface Product {
   // Stripe Integration
   stripePriceId?: string; // Stripe Price ID for checkout
   stripeBuyButtonId?: string; // Stripe Buy Button ID
+  metadata?: Record<string, any>; // Stripe metadata
 }
 
 export interface CartItem {
