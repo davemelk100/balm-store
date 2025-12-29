@@ -4,7 +4,7 @@ import {
   Link,
   useSearchParams,
 } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -103,6 +103,99 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(
     product.sizes?.[0] || null
   );
+
+  // Load Stripe Buy Button script
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://js.stripe.com/v3/buy-button.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup script on unmount
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
+  // Style Stripe buy buttons to match other buttons
+  useEffect(() => {
+    const styleStripeButtons = () => {
+      const stripeButtons = document.querySelectorAll("stripe-buy-button");
+      stripeButtons.forEach((button) => {
+        const shadowRoot = button.shadowRoot;
+        if (shadowRoot) {
+          // Remove existing style if present
+          const existingStyle = shadowRoot.querySelector(
+            "style[data-custom-stripe-style]"
+          );
+          if (existingStyle) {
+            existingStyle.remove();
+          }
+
+          // Add custom styles
+          const style = document.createElement("style");
+          style.setAttribute("data-custom-stripe-style", "true");
+          style.textContent = `
+            .BuyButton-Button,
+            .is-buttonLayout,
+            button {
+              font-family: "Geist Mono", monospace !important;
+              font-size: 16px !important;
+              font-weight: 300 !important;
+              background-color: #f0f0f0 !important;
+              color: rgb(80, 80, 80) !important;
+              box-shadow: rgba(255, 255, 255, 0.9) -1px -1px 1px, 
+                          rgba(0, 0, 0, 0.2) 1px 1px 2px, 
+                          rgba(255, 255, 255, 0.5) 0px 0px 1px !important;
+              border-radius: 0.375rem !important;
+              padding: 0.75rem 0.5rem !important;
+              height: 45px !important;
+              min-height: 45px !important;
+              border: none !important;
+              transition: all 0.2s !important;
+              width: 100% !important;
+            }
+            
+            .BuyButton-Button:hover,
+            .is-buttonLayout:hover,
+            button:hover {
+              transform: scale(1.05) !important;
+            }
+          `;
+          shadowRoot.appendChild(style);
+        }
+      });
+    };
+
+    // Try to style immediately
+    styleStripeButtons();
+
+    // Also try after delays in case buttons load asynchronously
+    const timeoutId = setTimeout(styleStripeButtons, 500);
+    const timeoutId2 = setTimeout(styleStripeButtons, 1000);
+    const timeoutId3 = setTimeout(styleStripeButtons, 2000);
+    const timeoutId4 = setTimeout(styleStripeButtons, 3000);
+
+    // Use MutationObserver to watch for new buttons being added
+    const observer = new MutationObserver(() => {
+      styleStripeButtons();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearTimeout(timeoutId2);
+      clearTimeout(timeoutId3);
+      clearTimeout(timeoutId4);
+      observer.disconnect();
+    };
+  }, []);
 
   // Carousel state
   const images =
@@ -236,44 +329,8 @@ const ProductDetail = () => {
             animate={{ opacity: 1, x: 0 }}
             className="space-y-6 relative"
           >
-            {/* Clear Liquid Glass Background Blobs */}
-            <div className="absolute inset-0 overflow-hidden rounded-lg -z-10">
-              <div className="absolute -top-24 -left-24 w-80 h-80 bg-white/20 rounded-full blur-3xl opacity-40"></div>
-              <div className="absolute -bottom-28 -right-28 w-96 h-96 bg-white/15 rounded-full blur-3xl opacity-35"></div>
-            </div>
-
-            {/* Clear Liquid Glass Card */}
-            <div
-              className="relative rounded-lg backdrop-blur-2xl border border-white/40 shadow-[0_8px_32px_0_rgba(255,255,255,0.2)]"
-              style={{ padding: "10px" }}
-            >
-              {/* Fluid gradient overlays - muted colors */}
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-gray-400/8 via-transparent to-gray-300/5"></div>
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-tl from-transparent via-gray-500/6 to-gray-400/8"></div>
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-gray-300/4 via-transparent to-gray-400/6"></div>
-
-              {/* Flowing animated gradient */}
-              <div
-                className="absolute inset-0 rounded-lg opacity-20 pointer-events-none"
-                style={{
-                  background:
-                    "radial-gradient(ellipse at 30% 20%, rgba(100, 100, 100, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(120, 120, 120, 0.12) 0%, transparent 50%)",
-                  backgroundSize: "200% 200%",
-                  animation: "gradient 20s ease infinite",
-                }}
-              ></div>
-
-              {/* Reflective highlights - multiple angles */}
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></div>
-              <div className="absolute top-0 left-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/60 to-transparent"></div>
-              <div className="absolute top-0 right-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/40 to-transparent"></div>
-
-              {/* Inner glow effect - muted */}
-              <div className="absolute inset-[1px] rounded-lg bg-gradient-to-br from-gray-300/8 via-transparent to-transparent pointer-events-none"></div>
-
-              {/* Subtle inner shadow for depth */}
-              <div className="absolute inset-0 rounded-lg shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.2)] pointer-events-none"></div>
-
+            {/* Simple Card - No background */}
+            <div className="relative rounded-lg" style={{ padding: "10px" }}>
               <div className="relative z-10 space-y-6">
                 <div>
                   <h1
@@ -336,13 +393,25 @@ const ProductDetail = () => {
                           style={{
                             fontFamily: '"Geist Mono", monospace',
                             fontSize: "16px",
-                            fontWeight: 300,
+                            fontWeight: selectedSize === size ? 600 : 300,
                             backgroundColor:
-                              selectedSize === size ? "#f0f0f0" : "#f0f0f0",
-                            color: "rgb(80, 80, 80)",
+                              selectedSize === size ? "#ffffff" : "#f0f0f0",
+                            color:
+                              selectedSize === size
+                                ? "rgb(20, 20, 20)"
+                                : "rgb(100, 100, 100)",
                             boxShadow:
-                              "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                            opacity: selectedSize === size ? 1 : 0.7,
+                              selectedSize === size
+                                ? "rgba(255, 255, 255, 1) -2px -2px 3px, rgba(0, 0, 0, 0.4) 2px 2px 4px, rgba(255, 255, 255, 0.8) 0px 0px 2px, inset 0 0 0 2px rgba(0, 0, 0, 0.1)"
+                                : "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                            border:
+                              selectedSize === size
+                                ? "2px solid rgba(0, 0, 0, 0.15)"
+                                : "none",
+                            transform:
+                              selectedSize === size
+                                ? "scale(1.05)"
+                                : "scale(1)",
                           }}
                         >
                           {size}
@@ -362,12 +431,12 @@ const ProductDetail = () => {
                 </div>
                 */}
                 {/* All Buttons in One Row */}
-                <div className="w-full flex gap-2">
+                <div className="w-full flex gap-2 flex-wrap">
                   <a
                     href="https://venmo.com/u/Dave-Melkonian"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2 no-underline"
+                    className="flex-1 min-w-[140px] px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2 no-underline"
                     style={{
                       fontFamily: '"Geist Mono", monospace',
                       fontSize: "16px",
@@ -389,7 +458,7 @@ const ProductDetail = () => {
                     href="https://paypal.me/Balmsoothes"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2 no-underline"
+                    className="flex-1 min-w-[140px] px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2 no-underline"
                     style={{
                       fontFamily: '"Geist Mono", monospace',
                       fontSize: "16px",
@@ -422,7 +491,7 @@ const ProductDetail = () => {
                         duration: 3000,
                       });
                     }}
-                    className="flex-1 px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2"
+                    className="flex-1 min-w-[140px] px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2"
                     style={{
                       fontFamily: '"Geist Mono", monospace',
                       fontSize: "16px",
@@ -444,44 +513,8 @@ const ProductDetail = () => {
 
         {/* Product Details and Size Chart - Full Width Row */}
         <div className="mt-12 w-full">
-          {/* Clear Liquid Glass Background Blobs */}
-          <div className="absolute inset-0 overflow-hidden rounded-lg -z-10">
-            <div className="absolute -top-24 -left-24 w-80 h-80 bg-white/20 rounded-full blur-3xl opacity-40"></div>
-            <div className="absolute -bottom-28 -right-28 w-96 h-96 bg-white/15 rounded-full blur-3xl opacity-35"></div>
-          </div>
-
-          {/* Clear Liquid Glass Card */}
-          <div
-            className="relative rounded-lg backdrop-blur-2xl border border-white/40 shadow-[0_8px_32px_0_rgba(255,255,255,0.2)]"
-            style={{ padding: "10px" }}
-          >
-            {/* Fluid gradient overlays - muted colors */}
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-gray-400/8 via-transparent to-gray-300/5"></div>
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-tl from-transparent via-gray-500/6 to-gray-400/8"></div>
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-gray-300/4 via-transparent to-gray-400/6"></div>
-
-            {/* Flowing animated gradient */}
-            <div
-              className="absolute inset-0 rounded-lg opacity-20 pointer-events-none"
-              style={{
-                background:
-                  "radial-gradient(ellipse at 30% 20%, rgba(100, 100, 100, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(120, 120, 120, 0.12) 0%, transparent 50%)",
-                backgroundSize: "200% 200%",
-                animation: "gradient 20s ease infinite",
-              }}
-            ></div>
-
-            {/* Reflective highlights - multiple angles */}
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></div>
-            <div className="absolute top-0 left-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/60 to-transparent"></div>
-            <div className="absolute top-0 right-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/40 to-transparent"></div>
-
-            {/* Inner glow effect - muted */}
-            <div className="absolute inset-[1px] rounded-lg bg-gradient-to-br from-gray-300/8 via-transparent to-transparent pointer-events-none"></div>
-
-            {/* Subtle inner shadow for depth */}
-            <div className="absolute inset-0 rounded-lg shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.2)] pointer-events-none"></div>
-
+          {/* Simple Card - No background */}
+          <div className="relative rounded-lg" style={{ padding: "10px" }}>
             <div className="relative z-10 space-y-6">
               {/* Product Details */}
               {product.details && (
@@ -535,16 +568,16 @@ const ProductDetail = () => {
                     >
                       <thead>
                         <tr>
-                          <th className="border border-white/20 px-2 py-2 text-left font-semibold">
+                          <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
                             Size
                           </th>
-                          <th className="border border-white/20 px-2 py-2 text-left font-semibold">
+                          <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
                             Body Length
                           </th>
-                          <th className="border border-white/20 px-2 py-2 text-left font-semibold">
+                          <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
                             Chest Width (Laid Flat)
                           </th>
-                          <th className="border border-white/20 px-2 py-2 text-left font-semibold">
+                          <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
                             Sleeve Length
                           </th>
                         </tr>
@@ -555,16 +588,16 @@ const ProductDetail = () => {
                             product.sizeChart!.measurements[size];
                           return (
                             <tr key={size}>
-                              <td className="border border-white/20 px-2 py-2 font-semibold">
+                              <td className="border border-gray-200 px-2 py-2 font-semibold">
                                 {size}
                               </td>
-                              <td className="border border-white/20 px-2 py-2">
+                              <td className="border border-gray-200 px-2 py-2">
                                 {measurement.bodyLength}
                               </td>
-                              <td className="border border-white/20 px-2 py-2">
+                              <td className="border border-gray-200 px-2 py-2">
                                 {measurement.chestWidth}
                               </td>
-                              <td className="border border-white/20 px-2 py-2">
+                              <td className="border border-gray-200 px-2 py-2">
                                 {measurement.sleeveLength}
                               </td>
                             </tr>

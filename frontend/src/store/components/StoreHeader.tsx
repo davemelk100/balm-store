@@ -54,7 +54,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
 
   return (
     <section
-      className={`${sticky ? "sticky top-0 z-50" : ""} py-[19px]`}
+      className={`${sticky ? "sticky top-0 z-50" : ""} pt-[20px] pb-[0]`}
       style={{ backgroundColor: "rgba(240, 240, 240, 0.75)" }}
     >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">

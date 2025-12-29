@@ -76,5 +76,7 @@ Back yoke with side pleats`,
     },
     sizes: ["L", "XL"],
     colors: ["Black", "White", "Navy"],
+    // Stripe Integration
+    stripeBuyButtonId: "buy_btn_1SjUfNFKiaEr26ZcXyKu3pwe",
   },
 ];

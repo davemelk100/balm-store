@@ -1,11 +1,9 @@
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useCart } from "../context/CartContext";
 import { useStore } from "../context/StoreContext";
 import { storeProducts } from "../data/storeProducts";
-import { toast } from "@/hooks/use-toast";
 import { Product } from "../types";
 import { LegalModal } from "../components/LegalModal";
 import { PrivacyPolicyContent } from "../../components/PrivacyPolicyContent";
@@ -72,7 +70,6 @@ const ProductImageRow = ({
 // Product Card Component
 const ProductCard = ({ product }: { product: Product }) => {
   const navigate = useNavigate();
-  const { addItem } = useCart();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const images =
@@ -122,46 +119,20 @@ const ProductCard = ({ product }: { product: Product }) => {
         </>
       )}
 
-      {/* Clear Liquid Glass Background Blobs */}
-      <div className="absolute inset-0 overflow-hidden rounded-lg">
-        {/* Clear glass blobs for liquid effect */}
-        <div className="absolute -top-24 -left-24 w-80 h-80 bg-white/20 rounded-full blur-3xl opacity-40"></div>
-        <div className="absolute -bottom-28 -right-28 w-96 h-96 bg-white/15 rounded-full blur-3xl opacity-35"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-white/10 rounded-full blur-3xl opacity-30"></div>
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/18 rounded-full blur-3xl opacity-32"></div>
-      </div>
-
-      {/* Clear Liquid Glass Card */}
-      <div className="relative rounded-lg backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(255,255,255,0.2)] overflow-hidden flex flex-col">
-        {/* Fluid gradient overlays - muted colors */}
-        <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-gray-400/8 via-transparent to-gray-300/5"></div>
-        <div className="absolute inset-0 rounded-lg bg-gradient-to-tl from-transparent via-gray-500/6 to-gray-400/8"></div>
-        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-gray-300/4 via-transparent to-gray-400/6"></div>
-
-        {/* Flowing animated gradient */}
-        <div className="absolute inset-0 rounded-lg opacity-20 pointer-events-none bg-[radial-gradient(ellipse_at_30%_20%,rgba(100,100,100,0.15)_0%,transparent_50%),radial-gradient(ellipse_at_70%_80%,rgba(120,120,120,0.12)_0%,transparent_50%)] bg-[length:200%_200%] animate-[gradient_20s_ease_infinite]"></div>
-
-        {/* Reflective highlights - multiple angles */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-        <div className="absolute top-0 left-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
-        <div className="absolute top-0 right-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/15 to-transparent"></div>
-
-        {/* Inner glow effect - muted */}
-        <div className="absolute inset-[1px] rounded-lg bg-gradient-to-br from-gray-300/8 via-transparent to-transparent pointer-events-none"></div>
-
-        {/* Subtle inner shadow for depth */}
-        <div className="absolute inset-0 rounded-lg shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.2)] pointer-events-none"></div>
-
+      {/* Simple Card - No background */}
+      <div className="relative rounded-lg overflow-hidden flex flex-col">
         {/* Content */}
         <div className="relative z-10 flex flex-col">
-          {/* Product Image Row - Clickable */}
-          <ProductImageRow
-            product={product}
-            onImageClick={() => navigate(`/product/${product.id}`)}
-            currentImageIndex={currentImageIndex}
-          />
+          {/* Product Image Row - Clickable - Transparent background */}
+          <div className="bg-transparent">
+            <ProductImageRow
+              product={product}
+              onImageClick={() => navigate(`/product/${product.id}`)}
+              currentImageIndex={currentImageIndex}
+            />
+          </div>
 
-          {/* Product Info */}
+          {/* Product Info - Transparent background */}
           <div className="store-card-content flex flex-col flex-grow font-['Geist_Mono',monospace] p-2 text-center">
             <h3
               className="mb-1 cursor-pointer hover:underline text-black md:line-clamp-1"
@@ -192,76 +163,6 @@ const ProductCard = ({ product }: { product: Product }) => {
                 ${product.price}
               </span>
             </div>
-            <div
-              className="mt-auto mb-1.5"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* All Buttons in One Row */}
-              <div className="flex gap-1.5">
-                <a
-                  href="https://venmo.com/u/Dave-Melkonian"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex-1 px-2 rounded-md transition-all hover:scale-105 store-card-button font-['Geist_Mono',monospace] bg-[#f0f0f0] text-[rgb(80,80,80)] h-[45px] shadow-[rgba(255,255,255,0.9)_-1px_-1px_1px,rgba(0,0,0,0.2)_1px_1px_2px,rgba(255,255,255,0.5)_0px_0px_1px] flex items-center justify-center gap-2 no-underline"
-                  style={{
-                    fontWeight: 300,
-                    fontSize: "16px",
-                  }}
-                >
-                  <img
-                    src="/img/logos/venmo.svg"
-                    alt="Venmo"
-                    className="h-5 w-5"
-                  />
-                  Venmo
-                </a>
-                <a
-                  href="https://paypal.me/Balmsoothes"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex-1 px-2 rounded-md transition-all hover:scale-105 store-card-button font-['Geist_Mono',monospace] bg-[#f0f0f0] text-[rgb(80,80,80)] h-[45px] shadow-[rgba(255,255,255,0.9)_-1px_-1px_1px,rgba(0,0,0,0.2)_1px_1px_2px,rgba(255,255,255,0.5)_0px_0px_1px] flex items-center justify-center gap-2 no-underline"
-                  style={{
-                    fontWeight: 300,
-                    fontSize: "16px",
-                  }}
-                >
-                  <img
-                    src="/img/logos/paypal.svg"
-                    alt="PayPal"
-                    className="h-5 w-5"
-                  />
-                  PayPal
-                </a>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addItem({
-                      id: product.id,
-                      title: product.title,
-                      price: product.price,
-                      image: product.image,
-                      description: product.description,
-                    });
-                    toast({
-                      title: "Added to cart",
-                      description: product.title,
-                      duration: 5000,
-                      variant: "default",
-                    });
-                  }}
-                  className="flex-1 px-2 rounded-md transition-all hover:scale-105 store-card-button font-['Geist_Mono',monospace] bg-[#f0f0f0] text-[rgb(80,80,80)] h-[45px] shadow-[rgba(255,255,255,0.9)_-1px_-1px_1px,rgba(0,0,0,0.2)_1px_1px_2px,rgba(255,255,255,0.5)_0px_0px_1px] flex items-center justify-center gap-2"
-                  style={{
-                    fontWeight: 300,
-                    fontSize: "16px",
-                  }}
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Add to Cart
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -275,6 +176,21 @@ const Store = () => {
 
   // Products state
   const [products, setProducts] = useState<Product[]>(storeProducts);
+
+  // Load Stripe Buy Button script
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://js.stripe.com/v3/buy-button.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup script on unmount
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
 
   // Fetch products from Stripe via Netlify function
   useEffect(() => {
@@ -358,11 +274,43 @@ const Store = () => {
         if (shadowRoot) {
           // Remove existing style if present
           const existingStyle = shadowRoot.querySelector(
-            "style[data-stripe-button-style]"
+            "style[data-custom-stripe-style]"
           );
           if (existingStyle) {
             existingStyle.remove();
           }
+
+          // Add custom styles
+          const style = document.createElement("style");
+          style.setAttribute("data-custom-stripe-style", "true");
+          style.textContent = `
+            .BuyButton-Button,
+            .is-buttonLayout,
+            button {
+              font-family: "Geist Mono", monospace !important;
+              font-size: 16px !important;
+              font-weight: 300 !important;
+              background-color: #f0f0f0 !important;
+              color: rgb(80, 80, 80) !important;
+              box-shadow: rgba(255, 255, 255, 0.9) -1px -1px 1px, 
+                          rgba(0, 0, 0, 0.2) 1px 1px 2px, 
+                          rgba(255, 255, 255, 0.5) 0px 0px 1px !important;
+              border-radius: 0.375rem !important;
+              padding: 0.75rem 0.5rem !important;
+              height: 45px !important;
+              min-height: 45px !important;
+              border: none !important;
+              transition: all 0.2s !important;
+              width: 100% !important;
+            }
+            
+            .BuyButton-Button:hover,
+            .is-buttonLayout:hover,
+            button:hover {
+              transform: scale(1.05) !important;
+            }
+          `;
+          shadowRoot.appendChild(style);
         }
       });
     };
