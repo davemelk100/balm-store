@@ -323,13 +323,13 @@ const ProductDetail = () => {
             </div>
           </motion.div>
 
-          {/* Product Information */}
+          {/* Product Info */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="space-y-6 relative"
           >
-            {/* Simple Card - No background */}
+            {/* Simple Card No background */}
             <div className="relative rounded-lg" style={{ padding: "10px" }}>
               <div className="relative z-10 space-y-6">
                 <div>
