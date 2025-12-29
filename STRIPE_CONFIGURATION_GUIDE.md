@@ -31,10 +31,10 @@ Create a `.env` file in the `frontend/` directory:
 
 ```bash
 # Test Mode Keys (for development)
-VITE_STRIPE_PUBLISHABLE_KEY_TEST=pk_test_51SfaUuFKiaEr26Zc7BOy7iWmDZTlbxR8P4MU48q7SNhPAZo8JS84jtUYihIJgFGGzL4GTrgdCA6Shp6UbBAH3Ofs00paxt1Glz
+VITE_STRIPE_PUBLISHABLE_KEY_TEST=pk_test_your_test_key_here
 
 # Live Mode Keys (for production - get from Stripe dashboard)
-VITE_STRIPE_PUBLISHABLE_KEY_LIVE=pk_live_your_key_here
+VITE_STRIPE_PUBLISHABLE_KEY_LIVE=pk_live_your_live_key_here
 
 # API Configuration
 VITE_API_URL=http://localhost:8000
