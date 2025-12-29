@@ -24,12 +24,11 @@ export const storeProducts: Product[] = [
     mainCategory: "art",
     title: "BALM Chest Print Button-Up Cursive",
     price: 25.0,
-    image: "/img/products/balm-cursive.png",
+    image: "/img/products/balm-cursive-1-duo.png",
     images: [
+      "/img/products/balm-cursive-1-duo.png",
       "/img/products/balm-cursive.png",
       "/img/products/balm-cursive-1-longhair.png",
-      "/img/products/balm-cursive-1-sideways.png",
-      "/img/products/balm-cursive-1-duo.png",
       "/img/products/balm-cursive-1-cream.png",
     ],
     description: "",
@@ -77,5 +76,7 @@ Back yoke with side pleats`,
     },
     sizes: ["L", "XL"],
     colors: ["Black", "White", "Navy"],
+    // Stripe Integration
+    stripeBuyButtonId: "buy_btn_1SjUfNFKiaEr26ZcXyKu3pwe",
   },
 ];

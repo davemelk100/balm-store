@@ -22,6 +22,9 @@ export interface Product {
   };
   sizes?: string[];
   colors?: string[];
+  // Stripe Integration
+  stripePriceId?: string; // Stripe Price ID for checkout
+  stripeBuyButtonId?: string; // Stripe Buy Button ID
 }
 
 export interface CartItem {
