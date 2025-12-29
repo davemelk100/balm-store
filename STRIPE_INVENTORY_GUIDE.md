@@ -56,12 +56,12 @@ details: Full product details/materials/care instructions
 
 ### 4. Set Up Inventory (Optional)
 
-Stripe automatically tracks inventory if you enable it:
+**Important:** Stripe does NOT have built-in inventory tracking. To track inventory, use metadata fields:
 
-1. In the product editor, expand **Advanced options**
-2. Enable **Track inventory**
-3. Set initial stock quantity
-4. Configure low stock alerts
+1. In the **Metadata** section, add `sizes` (e.g., `S,M,L,XL`)
+2. For each size, add a stock field (e.g., `stock_S: 10`)
+3. You must **manually update** these values after sales
+4. See `INVENTORY_TRACKING_GUIDE.md` for complete setup
 
 ### 5. Create Buy Buttons (Optional)
 
@@ -185,9 +185,12 @@ curl http://localhost:8888/.netlify/functions/get-products
 
 ### Stock Tracking
 
-1. Enable inventory tracking in Stripe product settings
-2. Stripe automatically decrements stock on successful checkout
-3. Set up low stock alerts in Stripe Dashboard
+**Important:** Stripe does NOT automatically track inventory. You must:
+
+1. Store inventory in metadata fields (`stock_S`, `stock_M`, etc.)
+2. **Manually update** these values after each sale
+3. Consider using webhooks for automation (see `INVENTORY_TRACKING_GUIDE.md`)
+4. Monitor sales and update metadata regularly to prevent overselling
 
 ### Updating Prices
 

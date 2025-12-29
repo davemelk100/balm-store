@@ -553,6 +553,7 @@ const Checkout = () => {
       <StoreFooter
         onPrivacyClick={() => openLegalModal("privacy")}
         onTermsClick={() => openLegalModal("terms")}
+        hideUser={true}
       />
     </div>
   );

@@ -40,6 +40,17 @@ exports.handler = async (event, context) => {
       };
     }
 
+    // Build metadata for inventory tracking
+    // Store size information for each line item so webhook can decrement inventory
+    const metadata = {};
+    items.forEach((item, index) => {
+      if (item.size) {
+        metadata[`item_${index}_size`] = item.size;
+        metadata[`item_${index}_product_id`] = item.stripeProductId || item.productId || '';
+        metadata[`item_${index}_quantity`] = String(item.quantity || 1);
+      }
+    });
+
     // Transform items to Stripe format
     // Items should be either:
     // 1. { price: 'price_xxx', quantity: 1 } - if using Stripe price IDs
@@ -91,6 +102,8 @@ exports.handler = async (event, context) => {
         allowed_countries: ["US", "CA"], // Add more countries as needed
       },
       billing_address_collection: "required",
+      // Add metadata for inventory tracking (sizes and product IDs)
+      metadata: metadata,
       // Enable automatic tax calculation (optional)
       // automatic_tax: { enabled: true },
     });

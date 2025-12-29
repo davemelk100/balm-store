@@ -23,6 +23,10 @@ export interface Product {
   };
   sizes?: string[];
   colors?: string[];
+  // Inventory tracking per size
+  inventory?: {
+    [size: string]: number; // e.g., { "S": 10, "M": 15, "L": 20 }
+  };
   // Stripe Integration
   stripePriceId?: string; // Stripe Price ID for checkout
   stripeBuyButtonId?: string; // Stripe Buy Button ID
@@ -36,4 +40,5 @@ export interface CartItem {
   image: string;
   description: string;
   quantity: number;
+  size?: string; // Track which size was selected
 }

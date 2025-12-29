@@ -42,10 +42,12 @@
 
 ### Track Inventory
 
-1. Stripe Dashboard → Product → Advanced options
-2. Enable "Track inventory"
-3. Set initial stock
-4. Stripe auto-decrements on purchase
+**Note:** Stripe does NOT have built-in inventory tracking. See `INVENTORY_TRACKING_GUIDE.md` for metadata-based approach.
+
+1. Add metadata field `sizes`: S,M,L,XL
+2. Add metadata for each size: `stock_S`, `stock_M`, etc.
+3. Set quantity values (e.g., `stock_M: 15`)
+4. **Manually update** after each sale
 
 ### View Product in Store
 

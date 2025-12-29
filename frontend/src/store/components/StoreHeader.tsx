@@ -104,15 +104,14 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
               {/* User Avatar */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button
-                    className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
-                    style={{
-                      backgroundColor: "#f0f0f0",
-                      boxShadow:
-                        "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                    }}
-                  >
-                    <Avatar className="h-10 w-10">
+                  <button className="relative cursor-pointer">
+                    <Avatar
+                      className="h-10 w-10"
+                      style={{
+                        boxShadow:
+                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                      }}
+                    >
                       {user?.image ? (
                         <AvatarImage
                           src={user.image}
@@ -123,15 +122,16 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                       <AvatarFallback
                         style={{
                           backgroundColor: "#f0f0f0",
-                          boxShadow:
-                            "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                          color: "rgb(168, 168, 168)",
+                          fontSize: "14px",
+                          fontWeight: 500,
                         }}
                       >
-                        <img
-                          src="/img/products/avatar.png"
-                          alt="User avatar"
-                          className="h-[75%] w-auto object-cover rounded-full"
-                        />
+                        {user?.name
+                          ? user.name.charAt(0).toUpperCase()
+                          : user?.email
+                          ? user.email.charAt(0).toUpperCase()
+                          : "U"}
                       </AvatarFallback>
                     </Avatar>
                   </button>

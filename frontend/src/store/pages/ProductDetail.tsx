@@ -154,9 +154,7 @@ const ProductDetail = () => {
             onClick={() => navigate("/")}
             title="Back to Store"
             className="text-black hover:opacity-80"
-          >
-            
-          </button>
+          ></button>
         </div>
 
         {/* Bottom Header - Replica of Top Header without Cart and Avatar */}
@@ -702,6 +700,7 @@ const ProductDetail = () => {
       <StoreFooter
         onPrivacyClick={() => openLegalModal("privacy")}
         onTermsClick={() => openLegalModal("terms")}
+        hideUser={true}
       />
     </div>
   );
