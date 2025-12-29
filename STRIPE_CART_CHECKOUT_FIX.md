@@ -132,7 +132,7 @@ Use Stripe test cards:
 ```bash
 # In project root
 cd netlify
-echo 'STRIPE_SECRET_KEY=sk_test_your_key_here' > .env
+echo 'STRIPE_SECRET_KEY=sk_test_51SfaUuFKiaEr26ZcfbvuMzvhEppaDktng2q6i698rXtsdlwdquLFpPfJzczUbTkYCxnVzSdGlG3XGFU5FdyM3nbI00WebWCSeO' > .env
 
 # Test with Netlify CLI
 netlify dev
