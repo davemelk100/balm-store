@@ -1,6 +1,55 @@
 // Netlify Function to fetch products from Stripe
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+// Local product images fallback (when Stripe doesn't have images)
+const localProductImages = {
+  'prod_TgsPf8wZHkrZsZ': {
+    images: [
+      "/img/products/balm-cursive-1-duo.png",
+      "/img/products/balm-cursive.png",
+      "/img/products/balm-cursive-1-longhair.png",
+      "/img/products/balm-cursive-1-cream.png",
+      "/img/products/balm-cursive-1-white-chains.png",
+      "/img/products/balm-cursive-1-jeans.png",
+    ],
+    sizeChart: {
+      sizes: ["S", "M", "L", "XL", "2XL", "3XL"],
+      measurements: {
+        S: {
+          bodyLength: "27 1/2",
+          chestWidth: "21 1/2",
+          sleeveLength: "34",
+        },
+        M: {
+          bodyLength: "28 1/2",
+          chestWidth: "23",
+          sleeveLength: "35",
+        },
+        L: {
+          bodyLength: "29 1/2",
+          chestWidth: "24 1/2",
+          sleeveLength: "36",
+        },
+        XL: {
+          bodyLength: "30 1/2",
+          chestWidth: "26",
+          sleeveLength: "37",
+        },
+        "2XL": {
+          bodyLength: "31",
+          chestWidth: "27 1/2",
+          sleeveLength: "38",
+        },
+        "3XL": {
+          bodyLength: "31 1/2",
+          chestWidth: "29",
+          sleeveLength: "38 3/4",
+        },
+      },
+    }
+  }
+};
+
 exports.handler = async (event, context) => {
   // Allow GET requests
   if (event.httpMethod !== 'GET') {
@@ -48,6 +97,16 @@ exports.handler = async (event, context) => {
         }
       });
 
+      // Get local product data if available
+      const localData = localProductImages[product.id] || {};
+      
+      // Use Stripe images if available, otherwise fall back to local images
+      const productImages = product.images && product.images.length > 0 
+        ? product.images 
+        : (localData.images || []);
+      
+      const mainImage = productImages[0] || '/img/products/placeholder-product.svg';
+
       return {
         id: product.id,
         stripeProductId: product.id,
@@ -55,8 +114,8 @@ exports.handler = async (event, context) => {
         title: product.name,
         price: priceAmount,
         description: product.description || '',
-        image: product.images?.[0] || '/img/products/placeholder-product.svg',
-        images: product.images || [],
+        image: mainImage,
+        images: productImages,
         // Extract metadata for custom fields
         mainCategory: product.metadata?.category || 'art',
         sizes: sizes,
@@ -64,6 +123,8 @@ exports.handler = async (event, context) => {
         details: product.metadata?.details || '',
         // Include inventory tracking
         inventory: Object.keys(inventory).length > 0 ? inventory : undefined,
+        // Include size chart from local data if available
+        sizeChart: localData.sizeChart,
         // Include full product metadata
         metadata: product.metadata || {},
       };
