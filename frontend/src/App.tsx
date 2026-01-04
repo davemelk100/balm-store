@@ -18,12 +18,13 @@ import AuthCallback from "./store/pages/AuthCallback";
 import ComingSoon from "./store/pages/ComingSoon";
 
 function App() {
-  // Check for maintenance bypass token
+  // Check for maintenance mode from env and bypass token
+  const isMaintenanceMode = import.meta.env.VITE_MAINTENANCE_MODE === "true";
   const hasMaintenanceBypass =
     localStorage.getItem("maintenance_bypass") === "true";
 
   // MAINTENANCE MODE (enabled):
-  if (!hasMaintenanceBypass) {
+  if (isMaintenanceMode && !hasMaintenanceBypass) {
     return (
       <Router>
         <Routes>
