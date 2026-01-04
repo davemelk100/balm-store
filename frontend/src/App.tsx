@@ -21,7 +21,7 @@ function App() {
   // Check for maintenance mode from env and bypass token
   const isMaintenanceMode = import.meta.env.VITE_MAINTENANCE_MODE === "true";
   const hasMaintenanceBypass =
-    localStorage.getItem("maintenance_bypass") === "true";
+    localStorage.getItem("maintenance_bypass_v2") === "true";
 
   // MAINTENANCE MODE (enabled):
   if (isMaintenanceMode && !hasMaintenanceBypass) {

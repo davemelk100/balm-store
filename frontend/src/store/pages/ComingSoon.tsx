@@ -19,7 +19,7 @@ const ComingSoon = () => {
     e.preventDefault();
     if (pin === "heynow") {
       // Store the access token in localStorage
-      localStorage.setItem("maintenance_bypass", "true");
+      localStorage.setItem("maintenance_bypass_v2", "true");
       // Redirect to the store
       window.location.href = "/";
     } else {
