@@ -313,33 +313,20 @@ npm test
 
 ## 📚 Documentation
 
-### 🎯 Quick Start
+Detailed guides and references for the BALM Store.
 
-- **[CLI Index](CLI_INDEX.md)** - 🔥 Master hub for all CLI tools and automation
-- **[Getting Started](GETTING_STARTED.md)** - Quick setup guide
-- **[Setup Instructions](SETUP.md)** - Detailed setup walkthrough
+### 🏁 Getting Started
+- **[Installation & Setup](docs/SETUP.md)** - Get up and running in minutes.
 
-### 🛠️ CLI Tools & Automation
+### 🛠️ Development & Tools
+- **[CLI & Automation](docs/CLI.md)** - Master hub for all CLI tools and scripts.
+- **[Architecture Guide](docs/ARCHITECTURE.md)** - Technical overview and structural details.
 
-- **[CLI Cheatsheet](CLI_CHEATSHEET.md)** - Complete command reference for all CLIs
-- **[CLI Setup Guide](CLI_SETUP_GUIDE.md)** - Installation and configuration
-- **[Development Workflows](dev-workflows.sh)** - Interactive automation menu
-- **[Install All CLIs](install-all-clis.sh)** - One-command CLI installation
+### 💳 Payments & Integrations
+- **[Stripe Guide](docs/STRIPE.md)** - Quickstart for "Buy Now" and Cart Checkout.
 
 ### 🚀 Deployment
-
-- **[Railway Quickstart](RAILWAY_QUICKSTART.md)** - Railway CLI quick reference
-- **[Railway Setup](RAILWAY_CLI_SETUP.md)** - Detailed Railway configuration
-- **[Railway Comparison](RAILWAY_COMPARISON.md)** - Platform comparison
-- **[Deployment Guide](DEPLOYMENT.md)** - General deployment guide
-
-### 🔌 Integrations
-
-- **[Stripe Quickstart](STRIPE_QUICKSTART.md)** - 🔥 Quick Stripe setup (5 min)
-- **[Stripe Setup](STRIPE_SETUP.md)** - Complete Stripe integration
-- **[Resend Email Setup](RESEND_EMAIL_SETUP.md)** - 📧 Email configuration (Resend)
-- **[Inventory System](backend/INVENTORY_SYSTEM.md)** - Inventory API docs
-- **[Inventory Quickstart](backend/INVENTORY_QUICKSTART.md)** - Quick start guide
+- **[General Deployment](docs/DEPLOYMENT.md)** - Guides for Netlify, Railway, and Render.
 
 ## 🤝 Contributing
 
