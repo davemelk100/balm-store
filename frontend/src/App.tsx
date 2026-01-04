@@ -34,7 +34,7 @@ function App() {
     );
   }
 
-  // Normal mode (when bypass is active):
+  // Normal mode (when bypass active):
   return (
     <Router>
       <StoreProvider>
