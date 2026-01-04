@@ -10,6 +10,7 @@
 [build.environment]
   # Exclude VITE_API_BASE from secret scanning since API URLs are meant to be public
   SECRETS_SCAN_OMIT_KEYS = "VITE_API_BASE"
+  VITE_MAINTENANCE_MODE = "true"
 
 # Local development configuration
 # Force Netlify to proxy to Vite on port 5173
