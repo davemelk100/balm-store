@@ -5,6 +5,8 @@ from pathlib import Path
 
 from app.api.routes.auth import router as auth_router
 from app.api.routes.checkout import router as checkout_router
+from app.api.routes.products import router as products_router
+from app.api.routes.stripe_webhook import router as stripe_webhook_router
 from app.db.database import engine, Base
 from app.core.config import settings
 
@@ -30,6 +32,8 @@ if public_dir.exists():
 # Include routers
 app.include_router(auth_router)
 app.include_router(checkout_router)
+app.include_router(products_router)
+app.include_router(stripe_webhook_router)
 
 @app.get("/")
 def root():
