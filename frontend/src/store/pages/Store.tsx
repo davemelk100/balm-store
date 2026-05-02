@@ -11,6 +11,7 @@ import { PrivacyPolicyContent } from "../../components/PrivacyPolicyContent";
 import { TermsOfServiceContent } from "../../components/TermsOfServiceContent";
 import StoreHeader from "../components/StoreHeader";
 import { StoreFooter } from "../components/StoreFooter";
+import { API_ENDPOINTS } from "../../config/api";
 
 // Product Image Row Component
 const ProductImageRow = ({
@@ -280,11 +281,11 @@ const Store = () => {
 
     const fetchProducts = async () => {
       try {
-        console.log("Fetching products from Netlify function...");
-        const response = await fetch("/.netlify/functions/get-products");
+        console.log("Fetching products from API...");
+        const response = await fetch(API_ENDPOINTS.products);
         const data = await response.json();
 
-        console.log("Netlify function response:", response.status, data);
+        console.log("Products API response:", response.status, data);
 
         if (response.ok && data.products && data.products.length > 0) {
           console.log("Setting products from Stripe:", data.products);

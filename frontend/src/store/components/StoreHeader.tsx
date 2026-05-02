@@ -73,7 +73,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
               <img
                 src="/img/logos/balm-varsity.svg"
                 alt="BALM Varsity"
-                className="w-[32px] h-auto"
+                className="w-[48px] h-auto"
               />
             </Link>
           </div>

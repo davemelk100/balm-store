@@ -22,6 +22,7 @@ import { PrivacyPolicyContent } from "../../components/PrivacyPolicyContent";
 import { TermsOfServiceContent } from "../../components/TermsOfServiceContent";
 import StoreHeader from "../components/StoreHeader";
 import { StoreFooter } from "../components/StoreFooter";
+import { API_ENDPOINTS } from "../../config/api";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -71,10 +72,10 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         console.log("Fetching product with id:", id);
-        const response = await fetch("/.netlify/functions/get-products");
+        const response = await fetch(API_ENDPOINTS.products);
         const data = await response.json();
 
-        console.log("Netlify function response:", data);
+        console.log("Products API response:", data);
 
         if (!isMounted) return; // Prevent state update if component unmounted
 

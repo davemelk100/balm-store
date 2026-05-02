@@ -7,7 +7,8 @@ export const API_ENDPOINTS = {
   login: `${API_BASE_URL}/api/auth/login`,
   register: `${API_BASE_URL}/api/auth/register`,
   session: `${API_BASE_URL}/api/auth/session`,
+  // Products
+  products: `${API_BASE_URL}/api/products`,
+  // Checkout
+  createCheckoutSession: `${API_BASE_URL}/api/checkout/session`,
 } as const;
-
-// Note: Products are now fetched from Stripe via Netlify functions
-// Use: /.netlify/functions/get-products

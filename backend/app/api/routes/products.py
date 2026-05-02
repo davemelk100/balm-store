@@ -11,12 +11,7 @@ router = APIRouter(prefix="/api/products", tags=["products"])
 LOCAL_PRODUCT_IMAGES: dict[str, dict[str, Any]] = {
     "prod_TgsPf8wZHkrZsZ": {
         "images": [
-            "/img/products/balm-cursive-1-duo.png",
             "/img/products/balm-cursive.png",
-            "/img/products/balm-cursive-1-longhair.png",
-            "/img/products/balm-cursive-1-cream.png",
-            "/img/products/balm-cursive-1-white-chains.png",
-            "/img/products/balm-cursive-1-jeans.png",
         ],
         "sizeChart": {
             "sizes": ["S", "M", "L", "XL", "2XL", "3XL"],
@@ -51,8 +46,10 @@ def _format_product(product: Any) -> dict[str, Any]:
                 inventory[size] = 0
 
     local_data = LOCAL_PRODUCT_IMAGES.get(product["id"], {})
+    local_images = local_data.get("images") or []
     stripe_images = product.get("images") or []
-    product_images = stripe_images if stripe_images else local_data.get("images", [])
+    # Prefer local override so we control the canonical product imagery; fall back to Stripe.
+    product_images = local_images if local_images else stripe_images
     main_image = product_images[0] if product_images else "/img/products/placeholder-product.svg"
 
     colors_raw = metadata.get("colors", "")

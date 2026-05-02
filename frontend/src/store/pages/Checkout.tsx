@@ -9,6 +9,7 @@ import { PrivacyPolicyContent } from "../../components/PrivacyPolicyContent";
 import { TermsOfServiceContent } from "../../components/TermsOfServiceContent";
 import StoreHeader from "../components/StoreHeader";
 import { StoreFooter } from "../components/StoreFooter";
+import { API_ENDPOINTS } from "../../config/api";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -103,9 +104,8 @@ const Checkout = () => {
 
       console.log("Creating checkout session with items:", lineItems);
 
-      // Call Netlify function to create checkout session
       const response = await fetch(
-        "/.netlify/functions/create-checkout-session",
+        API_ENDPOINTS.createCheckoutSession,
         {
           method: "POST",
           headers: {
@@ -309,12 +309,11 @@ const Checkout = () => {
                         className="relative flex flex-row gap-2 pb-3 border-b border-white/20 last:border-0"
                       >
                         {/* Left Column - Image */}
-                        <div className="flex-shrink-0 overflow-visible">
+                        <div className="flex-shrink-0 w-40 overflow-visible">
                           <img
                             src={item.image}
                             alt={item.title}
-                            className="w-full object-contain rounded-lg"
-                            style={{ height: "120px", width: "100%" }}
+                            className="w-full h-40 object-contain rounded-lg"
                           />
                         </div>
                         {/* Right Column - Content */}
