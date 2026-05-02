@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
 from app.api.routes.auth import router as auth_router
+from app.api.routes.checkout import router as checkout_router
 from app.db.database import engine, Base
 from app.core.config import settings
 
@@ -28,6 +29,7 @@ if public_dir.exists():
 
 # Include routers
 app.include_router(auth_router)
+app.include_router(checkout_router)
 
 @app.get("/")
 def root():
