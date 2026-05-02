@@ -7,6 +7,7 @@ import React, {
   useCallback,
   ReactNode,
 } from "react";
+import { API_BASE_URL } from "../../config/api";
 
 interface User {
   id: string;
@@ -106,8 +107,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_BASE || "http://localhost:8000";
-      const response = await fetch(`${apiUrl}/api/auth/session`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/session`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -149,8 +149,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const loginWithEmail = useCallback(
     async (email: string, password: string) => {
-      const apiUrl = import.meta.env.VITE_API_BASE || "http://localhost:8000";
-      const response = await fetch(`${apiUrl}/api/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -7,6 +7,7 @@ import { PrivacyPolicyContent } from "../../components/PrivacyPolicyContent";
 import { TermsOfServiceContent } from "../../components/TermsOfServiceContent";
 import StoreHeader from "../components/StoreHeader";
 import { StoreFooter } from "../components/StoreFooter";
+import { API_BASE_URL } from "../../config/api";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -56,8 +57,7 @@ const Signup = () => {
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_BASE || "http://localhost:8000";
-      const response = await fetch(`${apiUrl}/api/auth/register`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

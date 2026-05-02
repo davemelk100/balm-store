@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
@@ -24,20 +25,46 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount static files directory
+# Mount the legacy backend public/ assets (kept for any backend-served images)
 public_dir = Path(__file__).parent.parent / "public"
 if public_dir.exists():
     app.mount("/static", StaticFiles(directory=str(public_dir)), name="static")
 
-# Include routers
+# API routers
 app.include_router(auth_router)
 app.include_router(checkout_router)
 app.include_router(products_router)
 app.include_router(stripe_webhook_router)
 
-@app.get("/")
-def root():
-    return {"message": "BALM Store API", "version": "1.0.0"}
+# Serve the built frontend (Vite output). When the build is missing (e.g. dev
+# where Vite serves the SPA itself), fall back to a JSON root so the API still
+# responds.
+frontend_dist = Path(__file__).parent.parent.parent / "frontend" / "dist"
+
+if frontend_dist.exists():
+    assets_dir = frontend_dist / "assets"
+    if assets_dir.exists():
+        app.mount(
+            "/assets",
+            StaticFiles(directory=str(assets_dir)),
+            name="frontend-assets",
+        )
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_spa(full_path: str):
+        # Don't let the SPA shell mask 404s on API consumers.
+        if full_path.startswith("api/"):
+            return JSONResponse({"detail": "Not Found"}, status_code=404)
+        # Real files in dist (favicon, /img/..., etc.) win over the shell.
+        candidate = frontend_dist / full_path
+        if full_path and candidate.is_file():
+            return FileResponse(candidate)
+        return FileResponse(frontend_dist / "index.html")
+else:
+    @app.get("/")
+    def root():
+        return {"message": "BALM Store API", "version": "1.0.0"}
+
 
 if __name__ == "__main__":
     import uvicorn

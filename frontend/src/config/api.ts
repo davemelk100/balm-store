@@ -1,6 +1,9 @@
 // API Configuration
-export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE || "http://localhost:8000";
+// In dev (Vite serves the SPA on a different port from FastAPI) we point at
+// localhost:8000. In prod (FastAPI serves both the SPA and the API on the same
+// origin), default to "" so requests stay same-origin.
+const defaultBase = import.meta.env.DEV ? "http://localhost:8000" : "";
+export const API_BASE_URL = import.meta.env.VITE_API_BASE ?? defaultBase;
 
 export const API_ENDPOINTS = {
   // Auth
