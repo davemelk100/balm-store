@@ -122,7 +122,6 @@ const ProductCard = ({ product }: { product: Product }) => {
   return (
     <motion.div
       variants={fadeInUp}
-      whileHover={{ y: -4, scale: 1.02 }}
       className="group relative overflow-visible rounded-lg flex flex-col w-full max-w-[250px]"
     >
       <Link
