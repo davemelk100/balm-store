@@ -220,6 +220,44 @@ const ProductCard = ({ product }: { product: Product }) => {
                 </div>
               )}
 
+              {/* Important Notice (shirts only) */}
+              {hasSizes && (
+                <div
+                  className="px-3 py-3 rounded-md mb-3 text-left"
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    backgroundColor: "#ffffff",
+                    boxShadow:
+                      "rgba(255, 255, 255, 1) -2px -2px 3px, rgba(0, 0, 0, 0.25) 2px 2px 4px, rgba(255, 255, 255, 0.8) 0px 0px 2px",
+                    border: "1px solid rgba(0, 0, 0, 0.08)",
+                  }}
+                >
+                  <p
+                    className="font-semibold mb-1"
+                    style={{
+                      fontFamily: '"Geist Mono", monospace',
+                      fontSize: "12px",
+                      color: "rgb(200, 60, 60)",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    ⚠️ IMPORTANT
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: '"Geist Mono", monospace',
+                      fontSize: "12px",
+                      fontWeight: 400,
+                      color: "rgb(60, 60, 60)",
+                      lineHeight: "1.5",
+                    }}
+                  >
+                    These shirts are one-of-a-kind DIY pieces made in very
+                    limited runs. All sales are final – no returns or exchanges.
+                  </p>
+                </div>
+              )}
+
               {/* Add to Cart Button or Quantity Toggler */}
               {quantity === 0 ? (
                 <button
