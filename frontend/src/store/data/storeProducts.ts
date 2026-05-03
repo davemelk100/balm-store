@@ -2,22 +2,14 @@ import { Product } from "../types";
 
 export const storeProducts: Product[] = [
   {
-    // Use your Stripe product ID here for proper integration
-    id: "prod_TgsPf8wZHkrZsZ", // Your actual Stripe product ID
-    stripeProductId: "prod_TgsPf8wZHkrZsZ",
-    stripePriceId: "price_1SjUf0FKiaEr26Zcds2Jb77m", // Your Stripe price ID
+    id: "prod_URjiesOVeb9YC9",
+    stripeProductId: "prod_URjiesOVeb9YC9",
+    stripePriceId: "price_1TSqFYFCguwn0NjeS48GisoI",
     mainCategory: "art",
-    title: "BALM Chest Print Button-Up Cursive",
+    title: "BALM Buttonup Screenprint Cursive",
     price: 25.0,
-    image: "/img/products/balm-cursive-1-duo.png",
-    images: [
-      "/img/products/balm-cursive-1-duo.png",
-      "/img/products/balm-cursive.png",
-      "/img/products/balm-cursive-1-longhair.png",
-      "/img/products/balm-cursive-1-cream.png",
-      "/img/products/balm-cursive-1-white-chains.png",
-      "/img/products/balm-cursive-1-jeans.png",
-    ],
+    image: "/img/products/balm-cursive.png",
+    images: ["/img/products/balm-cursive.png"],
     description: "",
     details: `2.9 oz./yd² (US), 4.8 oz./L yd (CA), 100% polyester
 Mechanical stretch two-tone mélange fabric
