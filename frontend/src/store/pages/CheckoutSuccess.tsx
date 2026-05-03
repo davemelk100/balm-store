@@ -79,7 +79,6 @@ const CheckoutSuccess = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  console.log("Continue Shopping clicked");
                   navigate("/");
                 }}
                 className="px-2 py-3 font-semibold rounded-md transition-all hover:scale-105 relative z-20"

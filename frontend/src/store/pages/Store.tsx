@@ -280,28 +280,16 @@ const Store = () => {
 
     const fetchProducts = async () => {
       try {
-        console.log("Fetching products from API...");
         const response = await fetch(API_ENDPOINTS.products);
         const data = await response.json();
 
-        console.log("Products API response:", response.status, data);
-
         if (response.ok && data.products && data.products.length > 0) {
-          console.log("Setting products from Stripe:", data.products);
           setProducts(data.products);
         } else {
-          // Fallback to local products if Stripe fetch fails
-          console.warn(
-            "Using local products as fallback. Response:",
-            response.status
-          );
-          console.warn("Data received:", data);
           setProducts(storeProducts);
         }
       } catch (error) {
-        console.error("Error fetching products from Stripe:", error);
-        // Fallback to local products
-        console.warn("Using local products as fallback due to error");
+        console.error("Error fetching products:", error);
         setProducts(storeProducts);
       } finally {
         setProductsLoaded(true);

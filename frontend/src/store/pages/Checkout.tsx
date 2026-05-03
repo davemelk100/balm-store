@@ -30,20 +30,15 @@ const Checkout = () => {
   };
 
   const handleCheckout = async (e?: React.MouseEvent) => {
-    console.log("Button clicked! Items:", items.length, "Loading:", loading);
     e?.preventDefault();
     e?.stopPropagation();
 
     if (items.length === 0) {
-      console.log("Cart is empty, cannot checkout");
       setError("Your cart is empty");
       return;
     }
 
-    // Check if user is authenticated before proceeding
     if (!isAuthenticated) {
-      console.log("User not authenticated, redirecting to login");
-      // Store the checkout intent to redirect back after login
       localStorage.setItem("checkout_after_login", "true");
       navigate("/login");
       return;
@@ -102,8 +97,6 @@ const Checkout = () => {
         };
       });
 
-      console.log("Creating checkout session with items:", lineItems);
-
       const response = await fetch(
         API_ENDPOINTS.createCheckoutSession,
         {
@@ -123,38 +116,29 @@ const Checkout = () => {
         }
       );
 
-      console.log("Response status:", response.status);
-
-      // Check if response has content before parsing
       const text = await response.text();
-      let data;
-
       if (!text) {
-        console.error("Empty response from server. Status:", response.status);
         throw new Error(
-          `Stripe checkout is not yet configured. Payment processing is currently unavailable.`
+          "Stripe checkout is not yet configured. Payment processing is currently unavailable."
         );
       }
 
+      let data;
       try {
         data = JSON.parse(text);
-      } catch (parseError) {
-        console.error("Failed to parse response:", text);
+      } catch {
         throw new Error(
           `Invalid response from server: ${text.substring(0, 100)}`
         );
       }
 
       if (!response.ok) {
-        const errorMsg =
-          data?.error || data?.message || `Server error (${response.status})`;
-        console.error("Checkout error response:", data);
-        throw new Error(errorMsg);
+        throw new Error(
+          data?.error || data?.message || `Server error (${response.status})`
+        );
       }
 
-      // Redirect to Stripe Checkout
       if (data.url) {
-        console.log("Redirecting to Stripe Checkout:", data.url);
         window.location.href = data.url;
       } else {
         throw new Error("No checkout URL received from server");
@@ -532,10 +516,7 @@ const Checkout = () => {
 
                 <button
                   type="button"
-                  onClick={(e) => {
-                    console.log("Button onClick fired");
-                    handleCheckout(e);
-                  }}
+                  onClick={handleCheckout}
                   disabled={loading || items.length === 0}
                   className="w-full px-2 py-3 rounded-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative z-20"
                   style={{

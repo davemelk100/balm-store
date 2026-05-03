@@ -65,61 +65,31 @@ const ProductDetail = () => {
     return availableSize || product.sizes[0];
   };
 
-  // Fetch products from Stripe via Netlify function
   useEffect(() => {
     let isMounted = true;
 
     const fetchProduct = async () => {
       try {
-        console.log("Fetching product with id:", id);
         const response = await fetch(API_ENDPOINTS.products);
         const data = await response.json();
 
-        console.log("Products API response:", data);
+        if (!isMounted) return;
 
-        if (!isMounted) return; // Prevent state update if component unmounted
+        const found =
+          response.ok && data.products
+            ? data.products.find(
+                (p: Product) => p.id === id || p.stripeProductId === id
+              )
+            : null;
 
-        if (response.ok && data.products && data.products.length > 0) {
-          console.log("Products from Stripe:", data.products);
-
-          // Find the specific product by id or stripeProductId
-          const foundProduct = data.products.find(
-            (p: Product) => p.id === id || p.stripeProductId === id
-          );
-
-          console.log("Found product:", foundProduct);
-
-          if (foundProduct) {
-            setProduct(foundProduct);
-            setSelectedSize(findFirstAvailableSize(foundProduct));
-          } else {
-            // Fallback to local product
-            console.warn(
-              "Product not found in Stripe, checking local products"
-            );
-            const localProduct = storeProducts.find((p) => p.id === id);
-            console.log("Local product:", localProduct);
-            setProduct(localProduct);
-            if (localProduct) {
-              setSelectedSize(findFirstAvailableSize(localProduct));
-            }
-          }
-        } else {
-          // Fallback to local products if Stripe fetch fails
-          console.warn(
-            "Stripe fetch failed or returned no products, using local product as fallback"
-          );
-          console.log("Response status:", response.status, "Data:", data);
-          const localProduct = storeProducts.find((p) => p.id === id);
-          setProduct(localProduct);
-          if (localProduct) {
-            setSelectedSize(findFirstAvailableSize(localProduct));
-          }
+        const resolved = found ?? storeProducts.find((p) => p.id === id);
+        setProduct(resolved);
+        if (resolved) {
+          setSelectedSize(findFirstAvailableSize(resolved));
         }
       } catch (error) {
-        console.error("Error fetching product from Stripe:", error);
+        console.error("Error fetching product:", error);
         if (!isMounted) return;
-        // Fallback to local product
         const localProduct = storeProducts.find((p) => p.id === id);
         setProduct(localProduct);
         if (localProduct) {

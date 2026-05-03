@@ -134,17 +134,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [checkSession]);
 
   const login = useCallback(() => {
-    // In development, navigate to login page
-    // In production with Netlify functions, redirect to auth endpoint
-    if (import.meta.env.DEV) {
-      console.warn("Auth: Redirecting to login page (dev mode)");
-      window.location.href = "/login";
-      return;
-    }
-
-    // Production: use Netlify function
-    const url = `${window.location.origin}/.netlify/functions/auth-login`;
-    window.location.href = url;
+    window.location.href = "/login";
   }, []);
 
   const loginWithEmail = useCallback(
