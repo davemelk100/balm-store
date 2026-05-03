@@ -340,64 +340,6 @@ const ProductDetail = () => {
                   </p>
                 </div>
 
-                {/* Important Notice */}
-                <div
-                  className="px-4 py-4 rounded-md mb-6"
-                  style={{
-                    backgroundColor: "#ffffff",
-                    boxShadow:
-                      "rgba(255, 255, 255, 1) -2px -2px 3px, rgba(0, 0, 0, 0.25) 2px 2px 4px, rgba(255, 255, 255, 0.8) 0px 0px 2px",
-                    border: "1px solid rgba(0, 0, 0, 0.08)",
-                  }}
-                >
-                  <p
-                    className="font-semibold mb-2"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "14px",
-                      color: "rgb(200, 60, 60)",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    ⚠️ IMPORTANT
-                  </p>
-                  <p
-                    className="leading-relaxed mb-4"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "14px",
-                      fontWeight: 400,
-                      color: "rgb(60, 60, 60)",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    These shirts are one-of-a-kind DIY pieces made in very
-                    limited runs. All sales are final – no returns or exchanges.
-                  </p>
-
-                  {/* Checkbox */}
-                  <label
-                    className="flex items-center gap-2 cursor-pointer select-none"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "14px",
-                      fontWeight: 400,
-                      color: "rgb(60, 60, 60)",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={termsAgreed}
-                      onChange={(e) => setTermsAgreed(e.target.checked)}
-                      className="w-4 h-4 cursor-pointer"
-                      style={{
-                        accentColor: "rgb(60, 60, 60)",
-                      }}
-                    />
-                    <span>I understand</span>
-                  </label>
-                </div>
-
                 <div>
                   <p
                     className="leading-relaxed"
@@ -508,6 +450,61 @@ const ProductDetail = () => {
                     </div>
                   </div>
                 )}
+
+                {/* Important Notice (between size selection and Add to Cart) */}
+                <div
+                  className="px-4 py-4 rounded-md mb-6"
+                  style={{
+                    backgroundColor: "#ffffff",
+                    boxShadow:
+                      "rgba(255, 255, 255, 1) -2px -2px 3px, rgba(0, 0, 0, 0.25) 2px 2px 4px, rgba(255, 255, 255, 0.8) 0px 0px 2px",
+                    border: "1px solid rgba(0, 0, 0, 0.08)",
+                  }}
+                >
+                  <p
+                    className="font-semibold mb-2"
+                    style={{
+                      fontFamily: '"Geist Mono", monospace',
+                      fontSize: "14px",
+                      color: "rgb(200, 60, 60)",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    ⚠️ IMPORTANT
+                  </p>
+                  <p
+                    className="leading-relaxed mb-4"
+                    style={{
+                      fontFamily: '"Geist Mono", monospace',
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      color: "rgb(60, 60, 60)",
+                      lineHeight: "1.6",
+                    }}
+                  >
+                    These shirts are one-of-a-kind DIY pieces made in very
+                    limited runs. All sales are final – no returns or exchanges.
+                  </p>
+
+                  <label
+                    className="flex items-center gap-2 cursor-pointer select-none"
+                    style={{
+                      fontFamily: '"Geist Mono", monospace',
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      color: "rgb(60, 60, 60)",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={termsAgreed}
+                      onChange={(e) => setTermsAgreed(e.target.checked)}
+                      className="w-4 h-4 cursor-pointer"
+                      style={{ accentColor: "rgb(60, 60, 60)" }}
+                    />
+                    <span>I understand</span>
+                  </label>
+                </div>
 
                 {/* Add to Cart Button */}
                 <div className="w-full">
