@@ -483,7 +483,9 @@ const ProductDetail = () => {
                     }}
                   >
                     These shirts are one-of-a-kind DIY pieces made in very
-                    limited runs. All sales are final – no returns or exchanges.
+                    limited runs. Each may have slight imperfections that are
+                    part of its character. All sales are final – no returns or
+                    exchanges.
                   </p>
 
                   <label
