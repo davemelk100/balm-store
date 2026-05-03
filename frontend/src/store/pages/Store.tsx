@@ -30,7 +30,7 @@ const ProductImageRow = ({
 
   return (
     <div className="relative overflow-hidden bg-transparent cursor-pointer rounded-t-lg p-1.5 pb-0">
-      <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-transparent max-h-[250px] mx-auto">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-transparent max-h-[480px] mx-auto">
         {/* Images */}
         <div className="relative w-full h-full flex items-center justify-center">
           {images.map((image, index) => (
@@ -77,25 +77,35 @@ const ProductImageRow = ({
 const ProductCard = ({ product }: { product: Product }) => {
   const { addItem, items, updateQuantity } = useCart();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleDotClick = (index: number) => {
     setCurrentImageIndex(index);
   };
 
-  // Find if product is in cart
   const cartItem = items.find((item) => item.id === product.id);
   const quantity = cartItem?.quantity || 0;
+  const hasSizes = (product.sizes?.length ?? 0) > 0;
+  const canAddToCart = !hasSizes || selectedSize !== null;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!canAddToCart) return;
     addItem({
       id: product.id,
       title: product.title,
       price: product.price,
       image: product.image,
       description: product.description,
+      ...(selectedSize ? { size: selectedSize } : {}),
+      ...(product.stripeProductId
+        ? ({ stripeProductId: product.stripeProductId } as any)
+        : {}),
+      ...(product.stripePriceId
+        ? ({ stripePriceId: product.stripePriceId } as any)
+        : {}),
     });
   };
 
@@ -123,7 +133,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   return (
     <motion.div
       variants={fadeInUp}
-      className="group relative overflow-visible rounded-lg flex flex-col w-full max-w-[250px]"
+      className="group relative overflow-visible rounded-lg flex flex-col w-full max-w-[400px]"
     >
       <Link
         to={`/product/${product.id}`}
@@ -175,11 +185,47 @@ const ProductCard = ({ product }: { product: Product }) => {
                 </span>
               </div>
 
+              {/* Size picker (only when product has sizes) */}
+              {hasSizes && (
+                <div
+                  className="mb-3 flex flex-wrap gap-1.5 justify-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {product.sizes!.map((size) => {
+                    const stock = product.inventory?.[size];
+                    const outOfStock = stock === 0;
+                    const isSelected = selectedSize === size;
+                    return (
+                      <button
+                        key={size}
+                        type="button"
+                        disabled={outOfStock}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setSelectedSize(size);
+                        }}
+                        className={`min-w-[36px] px-2 py-1 rounded-md text-xs font-['Geist_Mono',monospace] transition-all ${
+                          outOfStock
+                            ? "opacity-40 cursor-not-allowed line-through"
+                            : isSelected
+                            ? "bg-black text-white"
+                            : "bg-white text-black hover:bg-gray-200"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
               {/* Add to Cart Button or Quantity Toggler */}
               {quantity === 0 ? (
                 <button
                   onClick={handleAddToCart}
-                  className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-1.5"
+                  disabled={!canAddToCart}
+                  className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-1.5"
                   style={{
                     fontFamily: '"Geist Mono", monospace',
                     fontSize: "14px",
@@ -191,7 +237,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                   }}
                 >
                   <ShoppingCart className="h-4 w-4" />
-                  Add to Cart
+                  {hasSizes && !selectedSize ? "Select a size" : "Add to Cart"}
                 </button>
               ) : (
                 <div className="space-y-2">

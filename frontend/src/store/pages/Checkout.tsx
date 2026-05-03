@@ -48,17 +48,25 @@ const Checkout = () => {
     setError(null);
 
     try {
-      // Prepare line items for Stripe
+      // Prepare line items for Stripe. Always include size + stripeProductId
+      // when present so the backend can record them in checkout-session
+      // metadata for inventory decrements via the webhook.
       const lineItems = items.map((item) => {
-        // If product has a Stripe price ID, use it (preferred method)
+        const meta = {
+          ...(item.size ? { size: item.size } : {}),
+          ...((item as any).stripeProductId
+            ? { stripeProductId: (item as any).stripeProductId }
+            : {}),
+          quantity: item.quantity,
+        };
+
         if ((item as any).stripePriceId) {
           return {
             price: (item as any).stripePriceId,
-            quantity: item.quantity,
+            ...meta,
           };
         }
 
-        // Fallback: create price data on the fly (for legacy products)
         const productData: {
           name: string;
           description?: string;
@@ -67,14 +75,11 @@ const Checkout = () => {
           name: item.title,
         };
 
-        // Only include description if it's not empty
         if (item.description && item.description.trim() !== "") {
           productData.description = item.description;
         }
 
-        // Only include images if image exists and convert to absolute URL
         if (item.image) {
-          // Convert relative URLs to absolute URLs
           let imageUrl = item.image;
           if (imageUrl.startsWith("/")) {
             imageUrl = `${window.location.origin}${imageUrl}`;
@@ -91,9 +96,9 @@ const Checkout = () => {
           price_data: {
             currency: "usd",
             product_data: productData,
-            unit_amount: Math.round(item.price * 100), // Convert to cents
+            unit_amount: Math.round(item.price * 100),
           },
-          quantity: item.quantity,
+          ...meta,
         };
       });
 
@@ -323,6 +328,7 @@ const Checkout = () => {
                               }}
                             >
                               {item.title}
+                              {item.size ? ` — Size ${item.size}` : ""}
                             </h3>
                           </div>
                           {/* Price and Toggler */}
