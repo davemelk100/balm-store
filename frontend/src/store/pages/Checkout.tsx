@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Loader2, X, Plus, Minus, ShoppingCart } from "lucide-react";
 import { useCart } from "../context/CartContext";
@@ -169,7 +169,7 @@ const Checkout = () => {
           backgroundColor: "#f0f0f0",
         }}
       >
-        <StoreHeader sticky={false} hideCart={false} />
+        <StoreHeader hideCart={false} />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -220,7 +220,7 @@ const Checkout = () => {
       }}
     >
       {/* Top Header with DM, Nav, Cart, and Profile */}
-      <StoreHeader sticky={false} hideCart={false} />
+      <StoreHeader hideCart={false} />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-0 sm:py-0">
         <motion.div
@@ -245,8 +245,8 @@ const Checkout = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Order Summary */}
-            <div className="lg:col-span-2 flex justify-center">
-              <div className="w-full lg:max-w-md space-y-6">
+            <div className="lg:col-span-2 flex">
+              <div className="w-full space-y-6">
                 {/* <h2
                 className="text-2xl mb-6"
                 style={{
@@ -327,7 +327,12 @@ const Checkout = () => {
                                 fontFamily: '"Geist Mono", monospace',
                               }}
                             >
-                              {item.title}
+                              <Link
+                                to={`/product/${item.id}`}
+                                className="hover:underline"
+                              >
+                                {item.title}
+                              </Link>
                               {item.size ? ` — Size ${item.size}` : ""}
                             </h3>
                           </div>

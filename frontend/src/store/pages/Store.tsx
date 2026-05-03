@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, CheckSquare } from "lucide-react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useStore } from "../context/StoreContext";
 import { useCart } from "../context/CartContext";
 import { storeProducts } from "../data/storeProducts";
@@ -78,6 +78,9 @@ const ProductCard = ({ product }: { product: Product }) => {
   const { addItem, items, updateQuantity } = useCart();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [cartPhase, setCartPhase] = useState<0 | 1>(0);
+  const [isLaunching, setIsLaunching] = useState(false);
+  const hasStartedRef = useRef(false);
   const navigate = useNavigate();
 
   const handleDotClick = (index: number) => {
@@ -89,24 +92,45 @@ const ProductCard = ({ product }: { product: Product }) => {
   const hasSizes = (product.sizes?.length ?? 0) > 0;
   const canAddToCart = !hasSizes || selectedSize !== null;
 
+  useEffect(() => {
+    if (!canAddToCart || isLaunching) {
+      hasStartedRef.current = false;
+      return;
+    }
+    const delay = hasStartedRef.current ? 60000 : 50;
+    hasStartedRef.current = true;
+    const t = setTimeout(
+      () => setCartPhase((p) => (p === 0 ? 1 : 0)),
+      delay
+    );
+    return () => clearTimeout(t);
+  }, [canAddToCart, cartPhase, isLaunching]);
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!canAddToCart) return;
-    addItem({
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      image: product.image,
-      description: product.description,
-      ...(selectedSize ? { size: selectedSize } : {}),
-      ...(product.stripeProductId
-        ? ({ stripeProductId: product.stripeProductId } as any)
-        : {}),
-      ...(product.stripePriceId
-        ? ({ stripePriceId: product.stripePriceId } as any)
-        : {}),
-    });
+    setIsLaunching(true);
+    setTimeout(() => {
+      addItem({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+        description: product.description,
+        ...(selectedSize ? { size: selectedSize } : {}),
+        ...(product.stripeProductId
+          ? ({ stripeProductId: product.stripeProductId } as any)
+          : {}),
+        ...(product.stripePriceId
+          ? ({ stripePriceId: product.stripePriceId } as any)
+          : {}),
+      });
+    }, 250);
+    setTimeout(() => {
+      setIsLaunching(false);
+      setCartPhase(0);
+    }, 6000);
   };
 
   const handleIncrement = (e: React.MouseEvent) => {
@@ -211,7 +235,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             type="button"
             onClick={handleAddToCart}
             disabled={!canAddToCart}
-            className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-1.5"
+            className="w-full px-2 py-1.5 rounded-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             style={{
               fontFamily: '"Geist Mono", monospace',
               fontSize: "14px",
@@ -222,8 +246,39 @@ const ProductCard = ({ product }: { product: Product }) => {
                 "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
             }}
           >
-            <ShoppingCart className="h-4 w-4" />
-            {hasSizes && !selectedSize ? "Select a size" : "Add to Cart"}
+            <span>
+              {hasSizes && !selectedSize ? "Select a size" : "Add to Cart"}
+            </span>
+            <span
+              aria-hidden
+              style={{
+                flexShrink: 0,
+                width: "6px",
+                flexGrow: isLaunching ? 0 : canAddToCart ? cartPhase : 0,
+                transition: isLaunching
+                  ? "flex-grow 250ms ease-out"
+                  : !canAddToCart
+                  ? "none"
+                  : "flex-grow 60s linear",
+              }}
+            />
+            <span className="relative h-4 w-4 flex-shrink-0">
+              <ShoppingCart
+                className="absolute inset-0 h-4 w-4"
+                style={{
+                  opacity: isLaunching ? 0 : 1,
+                  transition: "opacity 800ms ease-in-out",
+                }}
+              />
+              <CheckSquare
+                className="absolute inset-0 h-4 w-4"
+                style={{
+                  color: "#22c55e",
+                  opacity: isLaunching ? 1 : 0,
+                  transition: "opacity 800ms ease-in-out",
+                }}
+              />
+            </span>
           </button>
         ) : (
           <div className="space-y-2">
@@ -311,15 +366,17 @@ const Store = () => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(API_ENDPOINTS.products);
+        if (!response.ok) {
+          setProducts(storeProducts);
+          return;
+        }
         const data = await response.json();
-
-        if (response.ok && data.products && data.products.length > 0) {
+        if (data.products && data.products.length > 0) {
           setProducts(data.products);
         } else {
           setProducts(storeProducts);
         }
-      } catch (error) {
-        console.error("Error fetching products:", error);
+      } catch {
         setProducts(storeProducts);
       } finally {
         setProductsLoaded(true);
@@ -386,10 +443,10 @@ const Store = () => {
   return (
     <div className="min-h-screen text-gray-900 dark:text-white store-page pb-16 relative bg-[#f0f0f0]">
       {/* Top Header with DM, Nav, Cart, and Profile */}
-      <StoreHeader sticky={true} />
+      <StoreHeader />
 
       {/* Store Content */}
-      <section className="py-2 sm:py-3 lg:py-4 xl:py-6 relative z-10">
+      <section className="pb-2 sm:pb-3 lg:pb-4 xl:pb-6 relative z-10">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial="initial"

@@ -32,7 +32,6 @@ export const StoreFooter = ({
 
   return (
     <footer
-      className="fixed bottom-0 left-0 right-0 z-50"
       style={{
         backgroundColor: "rgba(240, 240, 240, 1)",
         paddingTop: "2px",
@@ -55,7 +54,7 @@ export const StoreFooter = ({
                   "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
               }}
             >
-              BALM
+              BALM PRODUCTS AND SERVICES
             </span>
             <div className="flex items-center gap-3">
               <button

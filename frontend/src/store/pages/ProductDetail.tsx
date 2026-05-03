@@ -4,13 +4,14 @@ import {
   Link,
   useSearchParams,
 } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
   ShoppingCart,
+  CheckSquare,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { storeProducts } from "../data/storeProducts";
@@ -28,7 +29,7 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { addItem } = useCart();
+  const { addItem, items } = useCart();
   const [modalImage, setModalImage] = useState<{
     images: string[];
     currentIndex: number;
@@ -38,6 +39,10 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [termsAgreed, setTermsAgreed] = useState(false);
+  const [cartPhase, setCartPhase] = useState<0 | 1>(0);
+  const [isLaunching, setIsLaunching] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const hasStartedRef = useRef(false);
 
   // Legal modal management
   const legalModal = searchParams.get("legal");
@@ -49,21 +54,24 @@ const ProductDetail = () => {
     setSearchParams(searchParams);
   };
 
-  // Helper function to find first available (in-stock) size
-  const findFirstAvailableSize = (product: Product): string | null => {
-    if (!product.sizes || product.sizes.length === 0) return null;
+  const canAddToCart =
+    termsAgreed &&
+    !!selectedSize &&
+    (product?.inventory?.[selectedSize] ?? null) !== 0;
 
-    // If no inventory tracking, return first size
-    if (!product.inventory) return product.sizes[0];
-
-    // Find first size that's in stock
-    const availableSize = product.sizes.find(
-      (size) => (product.inventory?.[size] ?? null) !== 0
+  useEffect(() => {
+    if (!canAddToCart || isLaunching) {
+      hasStartedRef.current = false;
+      return;
+    }
+    const delay = hasStartedRef.current ? 60000 : 50;
+    hasStartedRef.current = true;
+    const t = setTimeout(
+      () => setCartPhase((p) => (p === 0 ? 1 : 0)),
+      delay
     );
-
-    // Return available size, or first size as fallback
-    return availableSize || product.sizes[0];
-  };
+    return () => clearTimeout(t);
+  }, [canAddToCart, cartPhase, isLaunching]);
 
   useEffect(() => {
     let isMounted = true;
@@ -71,30 +79,23 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         const response = await fetch(API_ENDPOINTS.products);
-        const data = await response.json();
-
         if (!isMounted) return;
 
-        const found =
-          response.ok && data.products
-            ? data.products.find(
-                (p: Product) => p.id === id || p.stripeProductId === id
-              )
-            : null;
+        let found: Product | undefined;
+        if (response.ok) {
+          const data = await response.json();
+          if (!isMounted) return;
+          found = data.products?.find(
+            (p: Product) => p.id === id || p.stripeProductId === id
+          );
+        }
 
         const resolved = found ?? storeProducts.find((p) => p.id === id);
         setProduct(resolved);
-        if (resolved) {
-          setSelectedSize(findFirstAvailableSize(resolved));
-        }
-      } catch (error) {
-        console.error("Error fetching product:", error);
+      } catch {
         if (!isMounted) return;
         const localProduct = storeProducts.find((p) => p.id === id);
         setProduct(localProduct);
-        if (localProduct) {
-          setSelectedSize(findFirstAvailableSize(localProduct));
-        }
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -205,9 +206,9 @@ const ProductDetail = () => {
       }}
     >
       {/* Top Header with DM, Nav, Cart, and Profile */}
-      <StoreHeader sticky={false} />
+      <StoreHeader />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto">
         {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
@@ -357,24 +358,37 @@ const ProductDetail = () => {
                 {/* Size Selection */}
                 {product.sizes && product.sizes.length > 1 && (
                   <div>
-                    <label
-                      className="block font-semibold mb-3"
-                      style={{
-                        fontFamily: '"Geist Mono", monospace',
-                        fontSize: "16px",
-                        fontWeight: 300,
-                        color: "black",
-                      }}
-                    >
-                      Size
-                    </label>
+                    <div className="flex items-center gap-3 mb-3">
+                      <label
+                        className="block font-semibold"
+                        style={{
+                          fontFamily: '"Geist Mono", monospace',
+                          fontSize: "16px",
+                          fontWeight: 300,
+                          color: "black",
+                        }}
+                      >
+                        Size
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setIsDetailsOpen(true)}
+                        className="underline hover:opacity-70"
+                        style={{
+                          fontFamily: '"Geist Mono", monospace',
+                          fontSize: "14px",
+                          fontWeight: 300,
+                          color: "rgb(80, 80, 80)",
+                        }}
+                      >
+                        Details &amp; Size Chart
+                      </button>
+                    </div>
                     <div className="flex flex-wrap gap-3">
                       {product.sizes.map((size: string) => {
                         // Check inventory for this size
                         const stock = product.inventory?.[size] ?? null;
                         const isOutOfStock = stock === 0;
-                        const isLowStock =
-                          stock !== null && stock > 0 && stock <= 5;
                         const isSelected = selectedSize === size;
 
                         return (
@@ -430,18 +444,6 @@ const ProductDetail = () => {
                                 }}
                               >
                                 OUT
-                              </span>
-                            )}
-                            {!isOutOfStock && isLowStock && (
-                              <span
-                                className="block text-xs mt-1"
-                                style={{
-                                  color: "#ea580c",
-                                  fontSize: "10px",
-                                  fontWeight: 500,
-                                }}
-                              >
-                                {stock} left
                               </span>
                             )}
                           </button>
@@ -582,29 +584,36 @@ const ProductDetail = () => {
                         return;
                       }
 
-                      addItem({
-                        id: product.id,
-                        title: product.title,
-                        price: product.price,
-                        image: product.image,
-                        description: product.description,
-                      });
-                      toast({
-                        title: "Added to cart",
-                        description: product.title,
-                        duration: 3000,
-                      });
+                      setIsLaunching(true);
+                      setTimeout(() => {
+                        addItem({
+                          id: product.id,
+                          title: product.title,
+                          price: product.price,
+                          image: product.image,
+                          description: product.description,
+                        });
+                        toast({
+                          title: "Added to cart",
+                          description: product.title,
+                          duration: 3000,
+                        });
+                      }, 250);
+                      setTimeout(() => {
+                        setIsLaunching(false);
+                        setCartPhase(0);
+                      }, 6000);
                     }}
                     disabled={
                       !termsAgreed ||
                       !selectedSize ||
                       (product.inventory?.[selectedSize || ""] ?? null) === 0
                     }
-                    className={`w-full px-2 py-3 rounded-md transition-all flex items-center justify-center gap-2 ${
+                    className={`w-full px-2 py-3 rounded-md flex items-center justify-start ${
                       termsAgreed &&
                       selectedSize &&
                       (product.inventory?.[selectedSize] ?? null) !== 0
-                        ? "hover:scale-105 cursor-pointer"
+                        ? "cursor-pointer"
                         : "cursor-not-allowed opacity-50"
                     }`}
                     style={{
@@ -621,119 +630,73 @@ const ProductDetail = () => {
                           : "none",
                     }}
                   >
-                    <ShoppingCart className="h-5 w-5" />
-                    {!selectedSize
-                      ? "Select a Size"
-                      : (product.inventory?.[selectedSize] ?? null) === 0
-                      ? "Out of Stock"
-                      : "Add to Cart"}
+                    <span>
+                      {!selectedSize
+                        ? "Select a Size"
+                        : (product.inventory?.[selectedSize] ?? null) === 0
+                        ? "Out of Stock"
+                        : "Add to Cart"}
+                    </span>
+                    <span
+                      aria-hidden
+                      style={{
+                        flexShrink: 0,
+                        width: "8px",
+                        flexGrow: isLaunching
+                          ? 0
+                          : canAddToCart
+                          ? cartPhase
+                          : 0,
+                        transition: isLaunching
+                          ? "flex-grow 250ms ease-out"
+                          : !canAddToCart
+                          ? "none"
+                          : "flex-grow 60s linear",
+                      }}
+                    />
+                    <span className="relative h-5 w-5 flex-shrink-0">
+                      <ShoppingCart
+                        className="absolute inset-0 h-5 w-5"
+                        style={{
+                          opacity: isLaunching ? 0 : 1,
+                          transition: "opacity 800ms ease-in-out",
+                        }}
+                      />
+                      <CheckSquare
+                        className="absolute inset-0 h-5 w-5"
+                        style={{
+                          color: "#22c55e",
+                          opacity: isLaunching ? 1 : 0,
+                          transition: "opacity 800ms ease-in-out",
+                        }}
+                      />
+                    </span>
                   </button>
+                  {items.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => navigate("/checkout")}
+                      className="w-full px-2 py-3 mt-3 rounded-md flex items-center justify-center gap-2 cursor-pointer"
+                      style={{
+                        fontFamily: '"Geist Mono", monospace',
+                        fontSize: "16px",
+                        fontWeight: 300,
+                        backgroundColor: "#f0f0f0",
+                        color: "rgb(80, 80, 80)",
+                        boxShadow:
+                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                      }}
+                    >
+                      <ShoppingCart className="h-5 w-5" />
+                      Go to Cart
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* Product Details and Size Chart - Full Width Row */}
-        <div className="mt-12 w-full">
-          {/* Simple Card - No background */}
-          <div className="relative rounded-lg" style={{ padding: "10px" }}>
-            <div className="relative z-10 space-y-6">
-              {/* Product Details */}
-              {product.details && (
-                <div className="pt-6">
-                  <h3
-                    className="font-semibold mb-3"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "16px",
-                      color: "black",
-                    }}
-                  >
-                    DETAILS
-                  </h3>
-                  <div
-                    className="space-y-2 whitespace-pre-line"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "16px",
-                      color: "black",
-                    }}
-                  >
-                    {product.details.split("\n").map((line, index) => (
-                      <div key={index}>{line}</div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Size Chart */}
-              {product.sizeChart && (
-                <div className="pt-6">
-                  <h3
-                    className="font-semibold mb-3"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "16px",
-                      color: "black",
-                    }}
-                  >
-                    SIZE CHART
-                  </h3>
-                  <div className="overflow-x-auto">
-                    <table
-                      className="w-full border-collapse"
-                      style={{
-                        fontFamily: '"Geist Mono", monospace',
-                        fontSize: "16px",
-                        color: "black",
-                      }}
-                    >
-                      <thead>
-                        <tr>
-                          <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
-                            Size
-                          </th>
-                          <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
-                            Body Length
-                          </th>
-                          <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
-                            Chest Width (Laid Flat)
-                          </th>
-                          <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
-                            Sleeve Length
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {product.sizeChart.sizes.map((size) => {
-                          const measurement =
-                            product.sizeChart!.measurements[size];
-                          return (
-                            <tr key={size}>
-                              <td className="border border-gray-200 px-2 py-2 font-semibold">
-                                {size}
-                              </td>
-                              <td className="border border-gray-200 px-2 py-2">
-                                {measurement.bodyLength}
-                              </td>
-                              <td className="border border-gray-200 px-2 py-2">
-                                {measurement.chestWidth}
-                              </td>
-                              <td className="border border-gray-200 px-2 py-2">
-                                {measurement.sleeveLength}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Image Modal */}
@@ -746,6 +709,106 @@ const ProductDetail = () => {
           productTitle={product?.title}
         />
       )}
+
+      {/* Details + Size Chart Modal */}
+      <LegalModal
+        isOpen={isDetailsOpen}
+        onClose={() => setIsDetailsOpen(false)}
+        title="Details & Size Chart"
+      >
+        <div className="space-y-6">
+          {product.details && (
+            <div>
+              <h3
+                className="font-semibold mb-3"
+                style={{
+                  fontFamily: '"Geist Mono", monospace',
+                  fontSize: "16px",
+                  color: "black",
+                }}
+              >
+                DETAILS
+              </h3>
+              <div
+                className="space-y-2 whitespace-pre-line"
+                style={{
+                  fontFamily: '"Geist Mono", monospace',
+                  fontSize: "16px",
+                  color: "black",
+                }}
+              >
+                {product.details.split("\n").map((line, index) => (
+                  <div key={index}>{line}</div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {product.sizeChart && (
+            <div>
+              <h3
+                className="font-semibold mb-3"
+                style={{
+                  fontFamily: '"Geist Mono", monospace',
+                  fontSize: "16px",
+                  color: "black",
+                }}
+              >
+                SIZE CHART
+              </h3>
+              <div className="overflow-x-auto">
+                <table
+                  className="w-full border-collapse"
+                  style={{
+                    fontFamily: '"Geist Mono", monospace',
+                    fontSize: "16px",
+                    color: "black",
+                  }}
+                >
+                  <thead>
+                    <tr>
+                      <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
+                        Size
+                      </th>
+                      <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
+                        Body Length
+                      </th>
+                      <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
+                        Chest Width (Laid Flat)
+                      </th>
+                      <th className="border border-gray-200 px-2 py-2 text-left font-semibold">
+                        Sleeve Length
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {product.sizeChart.sizes.map((size) => {
+                      const measurement =
+                        product.sizeChart!.measurements[size];
+                      return (
+                        <tr key={size}>
+                          <td className="border border-gray-200 px-2 py-2 font-semibold">
+                            {size}
+                          </td>
+                          <td className="border border-gray-200 px-2 py-2">
+                            {measurement.bodyLength}
+                          </td>
+                          <td className="border border-gray-200 px-2 py-2">
+                            {measurement.chestWidth}
+                          </td>
+                          <td className="border border-gray-200 px-2 py-2">
+                            {measurement.sleeveLength}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      </LegalModal>
 
       {/* Legal Modals */}
       <LegalModal

@@ -147,7 +147,7 @@ const Login = () => {
       }}
     >
       {/* Top Header */}
-      <StoreHeader sticky={false} hideCart={true} hideUser={true} />
+      <StoreHeader hideCart={true} hideUser={true} />
 
       {/* Login Content */}
       <div className="flex items-center justify-center min-h-[60vh]">

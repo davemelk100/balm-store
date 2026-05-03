@@ -42,7 +42,7 @@ const CheckoutSuccess = () => {
       }}
     >
       {/* Top Header with DM, Nav, Cart, and Profile */}
-      <StoreHeader sticky={false} />
+      <StoreHeader />
 
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
