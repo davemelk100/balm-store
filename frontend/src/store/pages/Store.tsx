@@ -138,13 +138,10 @@ const ProductCard = ({ product }: { product: Product }) => {
       <Link
         to={`/product/${product.id}`}
         className="block w-full cursor-pointer"
-        style={{ textDecoration: "none", pointerEvents: "auto" }}
+        style={{ textDecoration: "none" }}
       >
-        {/* Simple Card - No background */}
         <div className="relative rounded-lg overflow-hidden flex flex-col">
-          {/* Content */}
           <div className="relative z-10 flex flex-col">
-            {/* Product Image Row - Clickable - Transparent background */}
             <div className="bg-transparent">
               <ProductImageRow
                 product={product}
@@ -152,205 +149,149 @@ const ProductCard = ({ product }: { product: Product }) => {
                 onDotClick={handleDotClick}
               />
             </div>
-
-            {/* Product Info - Transparent background */}
-            <div className="store-card-content flex flex-col flex-grow font-['Geist_Mono',monospace] p-2 text-center">
+            <div className="flex flex-col flex-grow font-['Geist_Mono',monospace] p-2 text-center">
               <h3
-                className="mb-1 cursor-pointer hover:underline text-black md:line-clamp-1"
-                style={{
-                  fontSize: "16px",
-                  fontWeight: 300,
-                }}
+                className="mb-1 hover:underline text-black md:line-clamp-1"
+                style={{ fontSize: "16px", fontWeight: 300 }}
               >
                 {product.title}
               </h3>
               <p
-                className="mb-2 line-clamp-2 store-card-text font-['Geist_Mono',monospace] text-black"
-                style={{
-                  fontSize: "16px",
-                  fontWeight: 300,
-                }}
+                className="mb-2 line-clamp-2 font-['Geist_Mono',monospace] text-black"
+                style={{ fontSize: "16px", fontWeight: 300 }}
               >
                 {product.description}
               </p>
-              <div className="mb-3">
+              <div className="mb-1">
                 <span
-                  className="store-card-text font-['Geist_Mono',monospace] text-black"
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 300,
-                  }}
+                  className="font-['Geist_Mono',monospace] text-black"
+                  style={{ fontSize: "16px", fontWeight: 300 }}
                 >
                   ${product.price}
                 </span>
               </div>
-
-              {/* Size picker (only when product has sizes) */}
-              {hasSizes && (
-                <div
-                  className="mb-3 flex flex-wrap gap-1.5 justify-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {product.sizes!.map((size) => {
-                    const stock = product.inventory?.[size];
-                    const outOfStock = stock === 0;
-                    const isSelected = selectedSize === size;
-                    return (
-                      <button
-                        key={size}
-                        type="button"
-                        disabled={outOfStock}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setSelectedSize(size);
-                        }}
-                        className={`min-w-[36px] px-2 py-1 rounded-md text-xs font-['Geist_Mono',monospace] transition-all ${
-                          outOfStock
-                            ? "opacity-40 cursor-not-allowed line-through"
-                            : isSelected
-                            ? "bg-black text-white"
-                            : "bg-white text-black hover:bg-gray-200"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Important Notice (shirts only) */}
-              {hasSizes && (
-                <div
-                  className="px-3 py-3 rounded-md mb-3 text-left"
-                  onClick={(e) => e.stopPropagation()}
-                  style={{
-                    backgroundColor: "#ffffff",
-                    boxShadow:
-                      "rgba(255, 255, 255, 1) -2px -2px 3px, rgba(0, 0, 0, 0.25) 2px 2px 4px, rgba(255, 255, 255, 0.8) 0px 0px 2px",
-                    border: "1px solid rgba(0, 0, 0, 0.08)",
-                  }}
-                >
-                  <p
-                    className="font-semibold mb-1"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "12px",
-                      color: "rgb(200, 60, 60)",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    ⚠️ IMPORTANT
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "12px",
-                      fontWeight: 400,
-                      color: "rgb(60, 60, 60)",
-                      lineHeight: "1.5",
-                    }}
-                  >
-                    These shirts are one-of-a-kind DIY pieces made in very
-                    limited runs. All sales are final – no returns or exchanges.
-                  </p>
-                </div>
-              )}
-
-              {/* Add to Cart Button or Quantity Toggler */}
-              {quantity === 0 ? (
-                <button
-                  onClick={handleAddToCart}
-                  disabled={!canAddToCart}
-                  className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-1.5"
-                  style={{
-                    fontFamily: '"Geist Mono", monospace',
-                    fontSize: "14px",
-                    fontWeight: 300,
-                    backgroundColor: "#f0f0f0",
-                    color: "rgb(80, 80, 80)",
-                    boxShadow:
-                      "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                  }}
-                >
-                  <ShoppingCart className="h-4 w-4" />
-                  {hasSizes && !selectedSize ? "Select a size" : "Add to Cart"}
-                </button>
-              ) : (
-                <div className="space-y-2">
-                  {/* Quantity Toggler */}
-                  <div className="flex items-center justify-center gap-2">
-                    <button
-                      onClick={handleDecrement}
-                      className="w-8 h-8 rounded-md transition-all hover:scale-105 flex items-center justify-center"
-                      style={{
-                        fontFamily: '"Geist Mono", monospace',
-                        fontSize: "16px",
-                        fontWeight: 300,
-                        backgroundColor: "#f0f0f0",
-                        color: "rgb(80, 80, 80)",
-                        boxShadow:
-                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                      }}
-                    >
-                      −
-                    </button>
-                    <span
-                      className="min-w-[40px] text-center"
-                      style={{
-                        fontFamily: '"Geist Mono", monospace',
-                        fontSize: "14px",
-                        fontWeight: 400,
-                        color: "rgb(80, 80, 80)",
-                      }}
-                    >
-                      {quantity}
-                    </span>
-                    <button
-                      onClick={handleIncrement}
-                      className="w-8 h-8 rounded-md transition-all hover:scale-105 flex items-center justify-center"
-                      style={{
-                        fontFamily: '"Geist Mono", monospace',
-                        fontSize: "16px",
-                        fontWeight: 300,
-                        backgroundColor: "#f0f0f0",
-                        color: "rgb(80, 80, 80)",
-                        boxShadow:
-                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                      }}
-                    >
-                      +
-                    </button>
-                  </div>
-                  {/* View Cart */}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      navigate("/checkout");
-                    }}
-                    className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-1.5"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "14px",
-                      fontWeight: 300,
-                      backgroundColor: "#f0f0f0",
-                      color: "rgb(80, 80, 80)",
-                      boxShadow:
-                        "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                    }}
-                  >
-                    <ShoppingCart className="h-4 w-4" />
-                    View Cart
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         </div>
       </Link>
+
+      {/* Interactive controls live OUTSIDE the Link to avoid nesting
+          interactive elements inside <a>, which breaks click and
+          back/forward behavior. */}
+      <div className="font-['Geist_Mono',monospace] p-2 text-center">
+        {hasSizes && (
+          <div className="mb-3 flex flex-wrap gap-1.5 justify-center">
+            {product.sizes!.map((size) => {
+              const stock = product.inventory?.[size];
+              const outOfStock = stock === 0;
+              const isSelected = selectedSize === size;
+              return (
+                <button
+                  key={size}
+                  type="button"
+                  disabled={outOfStock}
+                  onClick={() => setSelectedSize(size)}
+                  className={`min-w-[36px] px-2 py-1 rounded-md text-xs font-['Geist_Mono',monospace] transition-all ${
+                    outOfStock
+                      ? "opacity-40 cursor-not-allowed line-through"
+                      : isSelected
+                      ? "bg-black text-white"
+                      : "bg-white text-black hover:bg-gray-200"
+                  }`}
+                >
+                  {size}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {quantity === 0 ? (
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={!canAddToCart}
+            className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-1.5"
+            style={{
+              fontFamily: '"Geist Mono", monospace',
+              fontSize: "14px",
+              fontWeight: 300,
+              backgroundColor: "#f0f0f0",
+              color: "rgb(80, 80, 80)",
+              boxShadow:
+                "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+            }}
+          >
+            <ShoppingCart className="h-4 w-4" />
+            {hasSizes && !selectedSize ? "Select a size" : "Add to Cart"}
+          </button>
+        ) : (
+          <div className="space-y-2">
+            <div className="flex items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={handleDecrement}
+                className="w-8 h-8 rounded-md transition-all hover:scale-105 flex items-center justify-center"
+                style={{
+                  fontFamily: '"Geist Mono", monospace',
+                  fontSize: "16px",
+                  fontWeight: 300,
+                  backgroundColor: "#f0f0f0",
+                  color: "rgb(80, 80, 80)",
+                  boxShadow:
+                    "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                }}
+              >
+                −
+              </button>
+              <span
+                className="min-w-[40px] text-center"
+                style={{
+                  fontFamily: '"Geist Mono", monospace',
+                  fontSize: "14px",
+                  fontWeight: 400,
+                  color: "rgb(80, 80, 80)",
+                }}
+              >
+                {quantity}
+              </span>
+              <button
+                type="button"
+                onClick={handleIncrement}
+                className="w-8 h-8 rounded-md transition-all hover:scale-105 flex items-center justify-center"
+                style={{
+                  fontFamily: '"Geist Mono", monospace',
+                  fontSize: "16px",
+                  fontWeight: 300,
+                  backgroundColor: "#f0f0f0",
+                  color: "rgb(80, 80, 80)",
+                  boxShadow:
+                    "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                }}
+              >
+                +
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate("/checkout")}
+              className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-1.5"
+              style={{
+                fontFamily: '"Geist Mono", monospace',
+                fontSize: "14px",
+                fontWeight: 300,
+                backgroundColor: "#f0f0f0",
+                color: "rgb(80, 80, 80)",
+                boxShadow:
+                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+              }}
+            >
+              <ShoppingCart className="h-4 w-4" />
+              View Cart
+            </button>
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 };
