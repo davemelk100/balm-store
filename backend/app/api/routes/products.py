@@ -9,7 +9,7 @@ router = APIRouter(prefix="/api/products", tags=["products"])
 
 
 LOCAL_PRODUCT_IMAGES: dict[str, dict[str, Any]] = {
-    "prod_TgsPf8wZHkrZsZ": {
+    "prod_URjiesOVeb9YC9": {
         "images": [
             "/img/products/balm-cursive.png",
         ],
