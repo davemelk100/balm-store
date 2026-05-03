@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { useStore } from "../context/StoreContext";
 import { useCart } from "../context/CartContext";
@@ -77,6 +77,7 @@ const ProductImageRow = ({
 const ProductCard = ({ product }: { product: Product }) => {
   const { addItem, items, updateQuantity } = useCart();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const navigate = useNavigate();
 
   const handleDotClick = (index: number) => {
     setCurrentImageIndex(index);
@@ -238,11 +239,15 @@ const ProductCard = ({ product }: { product: Product }) => {
                       +
                     </button>
                   </div>
-                  {/* View Cart Link */}
-                  <Link
-                    to="/checkout"
-                    onClick={(e) => e.stopPropagation()}
-                    className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-1.5 no-underline"
+                  {/* View Cart */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      navigate("/checkout");
+                    }}
+                    className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-1.5"
                     style={{
                       fontFamily: '"Geist Mono", monospace',
                       fontSize: "14px",
@@ -255,7 +260,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                   >
                     <ShoppingCart className="h-4 w-4" />
                     View Cart
-                  </Link>
+                  </button>
                 </div>
               )}
             </div>

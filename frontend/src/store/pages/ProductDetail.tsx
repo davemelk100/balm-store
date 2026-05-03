@@ -231,7 +231,7 @@ const ProductDetail = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="relative max-w-[350px] mx-auto"
+            className="relative w-full max-w-[350px] mx-auto"
           >
             <div
               className="aspect-square overflow-hidden rounded-xl bg-transparent relative group cursor-pointer"
