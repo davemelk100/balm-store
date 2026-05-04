@@ -125,3 +125,15 @@ stripe-buy-button .is-buttonLayout {
     height: 45px !important;
     border: none !important;
 }
+
+@keyframes go-to-cart-drift {
+    0% {
+        flex-grow: 0;
+    }
+    50% {
+        flex-grow: 1;
+    }
+    100% {
+        flex-grow: 0;
+    }
+}

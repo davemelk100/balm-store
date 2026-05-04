@@ -31,6 +31,14 @@ export interface Product {
   stripePriceId?: string; // Stripe Price ID for checkout
   stripeBuyButtonId?: string; // Stripe Buy Button ID
   metadata?: Record<string, any>; // Stripe metadata
+  // When set, the product is stream-only (no checkout); the product
+  // detail page renders a "Stream" button that opens a modal with
+  // links to the platforms below.
+  streamUrl?: string;
+  spotifyUrl?: string;
+  bandcampUrl?: string;
+  // Track listing for albums / EPs / singles.
+  tracks?: { title: string; duration: string }[];
 }
 
 export interface CartItem {

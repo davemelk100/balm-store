@@ -4,7 +4,7 @@ import {
   Link,
   useSearchParams,
 } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -39,10 +39,11 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [termsAgreed, setTermsAgreed] = useState(false);
-  const [cartPhase, setCartPhase] = useState<0 | 1>(0);
   const [isLaunching, setIsLaunching] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const hasStartedRef = useRef(false);
+  // Bumped on every Add to Cart click so the Go to Cart drift animation
+  // can be replayed by remounting the spacer via the `key` prop.
+  const [addClickCount, setAddClickCount] = useState(0);
 
   // Legal modal management
   const legalModal = searchParams.get("legal");
@@ -61,20 +62,6 @@ const ProductDetail = () => {
     termsAgreed &&
     !!selectedSize &&
     (product?.inventory?.[selectedSize] ?? 0) > 0;
-
-  useEffect(() => {
-    if (!canAddToCart || isLaunching) {
-      hasStartedRef.current = false;
-      return;
-    }
-    const delay = hasStartedRef.current ? 60000 : 50;
-    hasStartedRef.current = true;
-    const t = setTimeout(
-      () => setCartPhase((p) => (p === 0 ? 1 : 0)),
-      delay
-    );
-    return () => clearTimeout(t);
-  }, [canAddToCart, cartPhase, isLaunching]);
 
   useEffect(() => {
     let isMounted = true;
@@ -238,7 +225,7 @@ const ProductDetail = () => {
             className="relative w-full max-w-[350px] mx-auto"
           >
             <div
-              className="aspect-square overflow-hidden rounded-xl bg-transparent relative group cursor-pointer"
+              className="h-[500px] overflow-hidden rounded-xl bg-transparent relative group cursor-pointer"
               onClick={() =>
                 setModalImage({
                   images,
@@ -253,7 +240,7 @@ const ProductDetail = () => {
                     key={index}
                     src={image}
                     alt={`${product.title} - Image ${index + 1}`}
-                    className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${
+                    className={`absolute inset-0 w-full h-full object-contain object-top transition-opacity duration-300 ${
                       index === currentImageIndex ? "opacity-100" : "opacity-0"
                     }`}
                     loading={index === 0 ? "eager" : "lazy"}
@@ -309,6 +296,35 @@ const ProductDetail = () => {
                 </>
               )}
             </div>
+
+            {/* Track listing — rendered below the artwork for albums /
+                singles that supply a `tracks` array. */}
+            {product.tracks && product.tracks.length > 0 && (
+              <ol
+                className="mt-6 space-y-2"
+                style={{
+                  fontFamily: '"Geist Mono", monospace',
+                  fontSize: "14px",
+                  fontWeight: 300,
+                  color: "rgb(60, 60, 60)",
+                }}
+              >
+                {product.tracks.map((track, index) => (
+                  <li
+                    key={index}
+                    className="flex items-baseline gap-3"
+                  >
+                    <span style={{ color: "rgb(140, 140, 140)" }}>
+                      {index + 1}.
+                    </span>
+                    <span className="flex-1">{track.title}</span>
+                    <span style={{ color: "rgb(140, 140, 140)" }}>
+                      {track.duration}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            )}
           </motion.div>
 
           {/* Product Info */}
@@ -322,7 +338,7 @@ const ProductDetail = () => {
               <div className="relative z-10 space-y-6">
                 <div>
                   <h1
-                    className="mb-4"
+                    className="mb-4 text-center md:text-left"
                     style={{
                       fontFamily: '"Geist Mono", monospace',
                       fontSize: "16px",
@@ -332,16 +348,18 @@ const ProductDetail = () => {
                   >
                     {product.title}
                   </h1>
-                  <p
-                    className="font-bold mb-6"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "18px",
-                      color: "black",
-                    }}
-                  >
-                    ${product.price}
-                  </p>
+                  {!product.streamUrl && (
+                    <p
+                      className="font-bold mb-6 text-center md:text-left"
+                      style={{
+                        fontFamily: '"Geist Mono", monospace',
+                        fontSize: "18px",
+                        color: "black",
+                      }}
+                    >
+                      ${product.price}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -361,7 +379,7 @@ const ProductDetail = () => {
                 {/* Size Selection */}
                 {product.sizes && product.sizes.length > 1 && (
                   <div>
-                    <div className="flex items-center gap-3 mb-3">
+                    <div className="flex items-center gap-3 mb-3 justify-center md:justify-start">
                       <label
                         className="block font-semibold"
                         style={{
@@ -401,39 +419,22 @@ const ProductDetail = () => {
                               !isOutOfStock && setSelectedSize(size)
                             }
                             disabled={isOutOfStock}
-                            className="px-6 py-3 rounded-md transition-all relative"
+                            className={`px-6 py-3 relative bg-transparent border-b ${
+                              isOutOfStock
+                                ? "cursor-not-allowed opacity-50 line-through border-transparent"
+                                : isSelected
+                                ? "border-[rgb(80,80,80)]"
+                                : "cursor-pointer border-transparent hover:border-[rgb(80,80,80)]"
+                            }`}
                             style={{
                               fontFamily: '"Geist Mono", monospace',
-                              fontSize: "16px",
+                              fontSize: "22px",
                               fontWeight: isSelected ? 600 : 300,
-                              backgroundColor: isOutOfStock
-                                ? "#e5e5e5"
-                                : isSelected
-                                ? "#ffffff"
-                                : "#f0f0f0",
                               color: isOutOfStock
                                 ? "rgb(160, 160, 160)"
                                 : isSelected
                                 ? "rgb(20, 20, 20)"
                                 : "rgb(100, 100, 100)",
-                              boxShadow: isOutOfStock
-                                ? "none"
-                                : isSelected
-                                ? "rgba(255, 255, 255, 1) -2px -2px 3px, rgba(0, 0, 0, 0.4) 2px 2px 4px, rgba(255, 255, 255, 0.8) 0px 0px 2px, inset 0 0 0 2px rgba(0, 0, 0, 0.1)"
-                                : "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                              border: isOutOfStock
-                                ? "1px solid rgba(0, 0, 0, 0.1)"
-                                : isSelected
-                                ? "2px solid rgba(0, 0, 0, 0.15)"
-                                : "none",
-                              transform: isSelected
-                                ? "scale(1.05)"
-                                : "scale(1)",
-                              cursor: isOutOfStock ? "not-allowed" : "pointer",
-                              opacity: isOutOfStock ? 0.5 : 1,
-                              textDecoration: isOutOfStock
-                                ? "line-through"
-                                : "none",
                             }}
                           >
                             <span>{size}</span>
@@ -456,6 +457,55 @@ const ProductDetail = () => {
                   </div>
                 )}
 
+                {/* Stream-only products: render Spotify + Bandcamp
+                    icon links directly (no modal). */}
+                {product.streamUrl ? (
+                  <div className="flex items-center gap-3">
+                    {product.spotifyUrl && (
+                      <a
+                        href={product.spotifyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Stream on Spotify"
+                        className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                        style={{
+                          backgroundColor: "#f0f0f0",
+                          boxShadow:
+                            "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                          color: "rgb(168, 168, 168)",
+                        }}
+                      >
+                        <img
+                          src="/img/logos/spotify.svg"
+                          alt="Spotify"
+                          className="h-5 w-5"
+                        />
+                      </a>
+                    )}
+                    {product.bandcampUrl && (
+                      <a
+                        href={product.bandcampUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Stream on Bandcamp"
+                        className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                        style={{
+                          backgroundColor: "#f0f0f0",
+                          boxShadow:
+                            "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                          color: "rgb(168, 168, 168)",
+                        }}
+                      >
+                        <img
+                          src="/img/logos/bandcamp.svg"
+                          alt="Bandcamp"
+                          className="h-5 w-5"
+                        />
+                      </a>
+                    )}
+                  </div>
+                ) : (
+                <>
                 {/* Important Notice (between size selection and Add to Cart) */}
                 <div
                   className="px-4 py-4 rounded-md mb-6"
@@ -513,7 +563,7 @@ const ProductDetail = () => {
                 </div>
 
                 {/* Add to Cart Button */}
-                <div className="w-full">
+                <div className="w-full flex gap-3">
                   {/* Venmo and PayPal - Hidden for now
                   <a
                     href="https://venmo.com/u/Dave-Melkonian"
@@ -590,6 +640,14 @@ const ProductDetail = () => {
                       }
 
                       setIsLaunching(true);
+                      // Bump click count so the Go to Cart drift spacer
+                      // remounts (via key) and replays the CSS animation.
+                      setAddClickCount((c) => c + 1);
+                      // Reset isLaunching after the Go to Cart drift animation
+                      // window so it can re-trigger on the next click.
+                      setTimeout(() => {
+                        setIsLaunching(false);
+                      }, 6000);
                       setTimeout(() => {
                         addItem({
                           id: product.id,
@@ -615,35 +673,18 @@ const ProductDetail = () => {
                           duration: 3000,
                         });
                       }, 250);
-                      setTimeout(() => {
-                        setIsLaunching(false);
-                        setCartPhase(0);
-                      }, 6000);
                     }}
-                    disabled={
-                      !termsAgreed ||
-                      !selectedSize ||
-                      (product.inventory?.[selectedSize || ""] ?? 0) <= 0
-                    }
-                    className={`w-full px-2 py-3 rounded-md flex items-center justify-start ${
-                      termsAgreed &&
-                      selectedSize &&
-                      (product.inventory?.[selectedSize] ?? 0) > 0
-                        ? "cursor-pointer"
+                    disabled={!canAddToCart}
+                    className={`flex-1 min-w-0 px-2 py-3 flex items-center justify-start gap-2 bg-transparent border-b border-transparent ${
+                      canAddToCart
+                        ? "cursor-pointer hover:border-[rgb(80,80,80)]"
                         : "cursor-not-allowed opacity-50"
                     }`}
                     style={{
                       fontFamily: '"Geist Mono", monospace',
                       fontSize: "16px",
                       fontWeight: 300,
-                      backgroundColor: "#f0f0f0",
                       color: "rgb(80, 80, 80)",
-                      boxShadow:
-                        termsAgreed &&
-                        selectedSize &&
-                        (product.inventory?.[selectedSize] ?? 0) > 0
-                          ? "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px"
-                          : "none",
                     }}
                   >
                     <span>
@@ -653,29 +694,14 @@ const ProductDetail = () => {
                         ? "Out of Stock"
                         : "Add to Cart"}
                     </span>
-                    <span
-                      aria-hidden
-                      style={{
-                        flexShrink: 0,
-                        width: "8px",
-                        flexGrow: isLaunching
-                          ? 0
-                          : canAddToCart
-                          ? cartPhase
-                          : 0,
-                        transition: isLaunching
-                          ? "flex-grow 250ms ease-out"
-                          : !canAddToCart
-                          ? "none"
-                          : "flex-grow 60s linear",
-                      }}
-                    />
+                    {/* Icon swaps from cart to green check during the
+                        isLaunching window after a click. */}
                     <span className="relative h-5 w-5 flex-shrink-0">
                       <ShoppingCart
                         className="absolute inset-0 h-5 w-5"
                         style={{
                           opacity: isLaunching ? 0 : 1,
-                          transition: "opacity 800ms ease-in-out",
+                          transition: "opacity 300ms ease-in-out",
                         }}
                       />
                       <CheckSquare
@@ -683,7 +709,7 @@ const ProductDetail = () => {
                         style={{
                           color: "#22c55e",
                           opacity: isLaunching ? 1 : 0,
-                          transition: "opacity 800ms ease-in-out",
+                          transition: "opacity 300ms ease-in-out",
                         }}
                       />
                     </span>
@@ -692,22 +718,40 @@ const ProductDetail = () => {
                     <button
                       type="button"
                       onClick={() => navigate("/checkout")}
-                      className="w-full px-2 py-3 mt-3 rounded-md flex items-center justify-center gap-2 cursor-pointer"
+                      className="flex-1 min-w-0 px-2 py-3 flex items-center justify-start cursor-pointer bg-transparent border-b border-transparent hover:border-[rgb(80,80,80)]"
                       style={{
                         fontFamily: '"Geist Mono", monospace',
                         fontSize: "16px",
                         fontWeight: 300,
-                        backgroundColor: "#f0f0f0",
                         color: "rgb(80, 80, 80)",
-                        boxShadow:
-                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
                       }}
                     >
-                      <ShoppingCart className="h-5 w-5" />
-                      Go to Cart
+                      <span>Go to Cart</span>
+                      {/* Animated spacer: rests at flex-grow:0 so the
+                          icon sits immediately right of the text. On
+                          each Add to Cart click, addClickCount bumps,
+                          this span remounts (via key), and the keyframe
+                          plays once — drifting the icon to the right
+                          edge and back. The animation does NOT play on
+                          page load (addClickCount is 0). */}
+                      <span
+                        key={addClickCount}
+                        aria-hidden
+                        style={{
+                          flexShrink: 0,
+                          width: "8px",
+                          animation:
+                            addClickCount > 0
+                              ? "go-to-cart-drift 30s linear"
+                              : "none",
+                        }}
+                      />
+                      <ShoppingCart className="h-5 w-5 flex-shrink-0" />
                     </button>
                   )}
                 </div>
+                </>
+                )}
               </div>
             </div>
           </motion.div>
@@ -725,6 +769,7 @@ const ProductDetail = () => {
           productTitle={product?.title}
         />
       )}
+
 
       {/* Details + Size Chart Modal */}
       <LegalModal

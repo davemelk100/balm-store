@@ -1,9 +1,7 @@
 import { motion } from "framer-motion";
-import { ShoppingCart, CheckSquare } from "lucide-react";
-import { useSearchParams, Link, useNavigate } from "react-router-dom";
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useSearchParams, Link } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
 import { useStore } from "../context/StoreContext";
-import { useCart } from "../context/CartContext";
 import { storeProducts } from "../data/storeProducts";
 import { Product } from "../types";
 import { LegalModal } from "../components/LegalModal";
@@ -75,78 +73,10 @@ const ProductImageRow = ({
 
 // Product Card Component
 const ProductCard = ({ product }: { product: Product }) => {
-  const { addItem, items, updateQuantity } = useCart();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [cartPhase, setCartPhase] = useState<0 | 1>(0);
-  const [isLaunching, setIsLaunching] = useState(false);
-  const hasStartedRef = useRef(false);
-  const navigate = useNavigate();
 
   const handleDotClick = (index: number) => {
     setCurrentImageIndex(index);
-  };
-
-  const cartItem = items.find((item) => item.id === product.id);
-  const quantity = cartItem?.quantity || 0;
-  const hasSizes = (product.sizes?.length ?? 0) > 0;
-  const canAddToCart = !hasSizes || selectedSize !== null;
-
-  useEffect(() => {
-    if (!canAddToCart || isLaunching) {
-      hasStartedRef.current = false;
-      return;
-    }
-    const delay = hasStartedRef.current ? 60000 : 50;
-    hasStartedRef.current = true;
-    const t = setTimeout(
-      () => setCartPhase((p) => (p === 0 ? 1 : 0)),
-      delay
-    );
-    return () => clearTimeout(t);
-  }, [canAddToCart, cartPhase, isLaunching]);
-
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!canAddToCart) return;
-    setIsLaunching(true);
-    setTimeout(() => {
-      addItem({
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        image: product.image,
-        description: product.description,
-        ...(selectedSize ? { size: selectedSize } : {}),
-        ...(product.stripeProductId
-          ? ({ stripeProductId: product.stripeProductId } as any)
-          : {}),
-        ...(product.stripePriceId
-          ? ({ stripePriceId: product.stripePriceId } as any)
-          : {}),
-      });
-    }, 250);
-    setTimeout(() => {
-      setIsLaunching(false);
-      setCartPhase(0);
-    }, 6000);
-  };
-
-  const handleIncrement = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (cartItem) {
-      updateQuantity(product.id, cartItem.quantity + 1);
-    }
-  };
-
-  const handleDecrement = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (cartItem) {
-      updateQuantity(product.id, cartItem.quantity - 1);
-    }
   };
 
   const fadeInUp = {
@@ -157,7 +87,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   return (
     <motion.div
       variants={fadeInUp}
-      className="group relative overflow-visible rounded-lg flex flex-col w-full max-w-[400px]"
+      className="group relative overflow-visible rounded-lg flex flex-col w-full max-w-[230px]"
     >
       <Link
         to={`/product/${product.id}`}
@@ -175,178 +105,80 @@ const ProductCard = ({ product }: { product: Product }) => {
             </div>
             <div className="flex flex-col flex-grow font-['Geist_Mono',monospace] p-2 text-center">
               <h3
-                className="mb-1 hover:underline text-black md:line-clamp-1"
+                className="mb-1 hover:underline text-black"
                 style={{ fontSize: "16px", fontWeight: 300 }}
               >
                 {product.title}
               </h3>
               <p
-                className="mb-2 line-clamp-2 font-['Geist_Mono',monospace] text-black"
+                className="mb-2 font-['Geist_Mono',monospace] text-black"
                 style={{ fontSize: "16px", fontWeight: 300 }}
               >
                 {product.description}
               </p>
-              <div className="mb-1">
-                <span
-                  className="font-['Geist_Mono',monospace] text-black"
-                  style={{ fontSize: "16px", fontWeight: 300 }}
-                >
-                  ${product.price}
-                </span>
-              </div>
+              {!product.streamUrl && (
+                <div className="mb-1">
+                  <span
+                    className="font-['Geist_Mono',monospace] text-black"
+                    style={{ fontSize: "16px", fontWeight: 300 }}
+                  >
+                    ${product.price}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </Link>
 
-      {/* Interactive controls live OUTSIDE the Link to avoid nesting
-          interactive elements inside <a>, which breaks click and
-          back/forward behavior. */}
-      <div className="font-['Geist_Mono',monospace] p-2 text-center">
-        {hasSizes && (
-          <div className="mb-3 flex flex-wrap gap-1.5 justify-center">
-            {product.sizes!.map((size) => {
-              const stock = product.inventory?.[size];
-              const outOfStock = (stock ?? 0) <= 0;
-              const isSelected = selectedSize === size;
-              return (
-                <button
-                  key={size}
-                  type="button"
-                  disabled={outOfStock}
-                  onClick={() => setSelectedSize(size)}
-                  className={`min-w-[36px] px-2 py-1 rounded-md text-xs font-['Geist_Mono',monospace] transition-all ${
-                    outOfStock
-                      ? "opacity-40 cursor-not-allowed line-through"
-                      : isSelected
-                      ? "bg-black text-white"
-                      : "bg-white text-black hover:bg-gray-200"
-                  }`}
-                >
-                  {size}
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {quantity === 0 ? (
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            disabled={!canAddToCart}
-            className="w-full px-2 py-1.5 rounded-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            style={{
-              fontFamily: '"Geist Mono", monospace',
-              fontSize: "14px",
-              fontWeight: 300,
-              backgroundColor: "#f0f0f0",
-              color: "rgb(80, 80, 80)",
-              boxShadow:
-                "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-            }}
-          >
-            <span>
-              {hasSizes && !selectedSize ? "Select a size" : "Add to Cart"}
-            </span>
-            <span
-              aria-hidden
+      {/* Streaming-platform icon links — kept outside the <Link> so the
+          nested anchors stay valid. */}
+      {product.streamUrl && (
+        <div className="flex items-center justify-center gap-3 pb-2">
+          {product.spotifyUrl && (
+            <a
+              href={product.spotifyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Stream on Spotify"
+              className="relative flex items-center justify-center w-9 h-9 rounded-full transition-colors cursor-pointer"
               style={{
-                flexShrink: 0,
-                width: "6px",
-                flexGrow: isLaunching ? 0 : canAddToCart ? cartPhase : 0,
-                transition: isLaunching
-                  ? "flex-grow 250ms ease-out"
-                  : !canAddToCart
-                  ? "none"
-                  : "flex-grow 60s linear",
-              }}
-            />
-            <span className="relative h-4 w-4 flex-shrink-0">
-              <ShoppingCart
-                className="absolute inset-0 h-4 w-4"
-                style={{
-                  opacity: isLaunching ? 0 : 1,
-                  transition: "opacity 800ms ease-in-out",
-                }}
-              />
-              <CheckSquare
-                className="absolute inset-0 h-4 w-4"
-                style={{
-                  color: "#22c55e",
-                  opacity: isLaunching ? 1 : 0,
-                  transition: "opacity 800ms ease-in-out",
-                }}
-              />
-            </span>
-          </button>
-        ) : (
-          <div className="space-y-2">
-            <div className="flex items-center justify-center gap-2">
-              <button
-                type="button"
-                onClick={handleDecrement}
-                className="w-8 h-8 rounded-md transition-all hover:scale-105 flex items-center justify-center"
-                style={{
-                  fontFamily: '"Geist Mono", monospace',
-                  fontSize: "16px",
-                  fontWeight: 300,
-                  backgroundColor: "#f0f0f0",
-                  color: "rgb(80, 80, 80)",
-                  boxShadow:
-                    "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                }}
-              >
-                −
-              </button>
-              <span
-                className="min-w-[40px] text-center"
-                style={{
-                  fontFamily: '"Geist Mono", monospace',
-                  fontSize: "14px",
-                  fontWeight: 400,
-                  color: "rgb(80, 80, 80)",
-                }}
-              >
-                {quantity}
-              </span>
-              <button
-                type="button"
-                onClick={handleIncrement}
-                className="w-8 h-8 rounded-md transition-all hover:scale-105 flex items-center justify-center"
-                style={{
-                  fontFamily: '"Geist Mono", monospace',
-                  fontSize: "16px",
-                  fontWeight: 300,
-                  backgroundColor: "#f0f0f0",
-                  color: "rgb(80, 80, 80)",
-                  boxShadow:
-                    "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                }}
-              >
-                +
-              </button>
-            </div>
-            <button
-              type="button"
-              onClick={() => navigate("/checkout")}
-              className="w-full px-2 py-1.5 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-1.5"
-              style={{
-                fontFamily: '"Geist Mono", monospace',
-                fontSize: "14px",
-                fontWeight: 300,
                 backgroundColor: "#f0f0f0",
-                color: "rgb(80, 80, 80)",
                 boxShadow:
                   "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                color: "rgb(168, 168, 168)",
               }}
             >
-              <ShoppingCart className="h-4 w-4" />
-              View Cart
-            </button>
-          </div>
-        )}
-      </div>
+              <img
+                src="/img/logos/spotify.svg"
+                alt="Spotify"
+                className="h-4 w-4"
+              />
+            </a>
+          )}
+          {product.bandcampUrl && (
+            <a
+              href={product.bandcampUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Stream on Bandcamp"
+              className="relative flex items-center justify-center w-9 h-9 rounded-full transition-colors cursor-pointer"
+              style={{
+                backgroundColor: "#f0f0f0",
+                boxShadow:
+                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                color: "rgb(168, 168, 168)",
+              }}
+            >
+              <img
+                src="/img/logos/bandcamp.svg"
+                alt="Bandcamp"
+                className="h-4 w-4"
+              />
+            </a>
+          )}
+        </div>
+      )}
     </motion.div>
   );
 };
@@ -375,7 +207,15 @@ const Store = () => {
         }
         const data = await response.json();
         if (data.products && data.products.length > 0) {
-          setProducts(data.products);
+          // Merge any static products whose IDs aren't already in the
+          // Stripe response. This covers stream-only items (albums,
+          // singles) and any static-only variants that don't live in
+          // Stripe yet.
+          const apiIds = new Set(
+            (data.products as Product[]).map((p) => p.id)
+          );
+          const extras = storeProducts.filter((p) => !apiIds.has(p.id));
+          setProducts([...data.products, ...extras]);
         } else {
           setProducts(storeProducts);
         }
@@ -459,7 +299,7 @@ const Store = () => {
           >
             {/* Products Grid */}
             <motion.section variants={fadeInUp} className="space-y-6">
-              <div className="flex justify-center">
+              <div className="flex flex-wrap justify-center gap-4">
                 {filteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}

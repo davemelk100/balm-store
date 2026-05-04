@@ -62,19 +62,64 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           {/* Left spacer for balance */}
           <div className="flex-1"></div>
 
-          {/* Centered Logo */}
+          {/* Centered Logo — "BALM" wordmark styled the same as the
+              footer's "BALM PRODUCTS AND SERVICES" line. */}
           <div className="flex-shrink-0">
-            <Link to="/" className="hover:opacity-80 transition-opacity">
-              <img
-                src="/img/logos/balm-varsity.svg"
-                alt="BALM Varsity"
-                className="w-[160px] h-auto"
-              />
+            <Link
+              to="/"
+              className="font-bold tracking-tight balm-logo hover:opacity-80 transition-opacity"
+              style={{
+                color: "#d0d0d0",
+                fontSize: "56px",
+                textShadow:
+                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+              }}
+            >
+              BALM
             </Link>
           </div>
 
           {/* User Avatar and Cart - Right Side */}
           <div className="flex-1 flex items-center justify-end gap-2">
+            {/* Bandcamp + Spotify links — far right */}
+            <a
+              href="https://balmsoothes.bandcamp.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="BALM on Bandcamp"
+              className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+              style={{
+                backgroundColor: "#f0f0f0",
+                boxShadow:
+                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                color: "rgb(168, 168, 168)",
+              }}
+            >
+              <img
+                src="/img/logos/bandcamp.svg"
+                alt="Bandcamp"
+                className="h-5 w-5"
+              />
+            </a>
+            <a
+              href="https://open.spotify.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="BALM on Spotify (placeholder)"
+              className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+              style={{
+                backgroundColor: "#f0f0f0",
+                boxShadow:
+                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                color: "rgb(168, 168, 168)",
+              }}
+            >
+              <img
+                src="/img/logos/spotify.svg"
+                alt="Spotify"
+                className="h-5 w-5"
+              />
+            </a>
             {!minimal && !hideUser && isAuthenticated && (
               <>
                 {/* Cart Icon */}
