@@ -597,6 +597,17 @@ const ProductDetail = () => {
                           price: product.price,
                           image: product.image,
                           description: product.description,
+                          ...(selectedSize ? { size: selectedSize } : {}),
+                          ...(product.stripeProductId
+                            ? ({
+                                stripeProductId: product.stripeProductId,
+                              } as any)
+                            : {}),
+                          ...(product.stripePriceId
+                            ? ({
+                                stripePriceId: product.stripePriceId,
+                              } as any)
+                            : {}),
                         });
                         toast({
                           title: "Added to cart",
