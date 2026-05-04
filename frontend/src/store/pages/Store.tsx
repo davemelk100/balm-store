@@ -207,7 +207,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           <div className="mb-3 flex flex-wrap gap-1.5 justify-center">
             {product.sizes!.map((size) => {
               const stock = product.inventory?.[size];
-              const outOfStock = stock === 0;
+              const outOfStock = (stock ?? 0) <= 0;
               const isSelected = selectedSize === size;
               return (
                 <button
@@ -355,11 +355,11 @@ const Store = () => {
   const { activeCategory } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Products state
-  const [products, setProducts] = useState<Product[]>(storeProducts);
+  // Products state — start empty so we never flash stale stock from the
+  // static fallback. Live data comes from Stripe via /api/products.
+  const [products, setProducts] = useState<Product[]>([]);
   const [productsLoaded, setProductsLoaded] = useState(false);
 
-  // Fetch products from Stripe via Netlify function
   useEffect(() => {
     if (productsLoaded) return; // Only fetch once
 
@@ -367,6 +367,9 @@ const Store = () => {
       try {
         const response = await fetch(API_ENDPOINTS.products);
         if (!response.ok) {
+          // API down — fall back to static metadata (no inventory),
+          // so sizes will render as unavailable rather than risking
+          // a sale on stale numbers.
           setProducts(storeProducts);
           return;
         }

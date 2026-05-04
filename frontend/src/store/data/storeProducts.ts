@@ -54,14 +54,9 @@ Back yoke with side pleats`,
       },
     },
     sizes: ["S", "M", "L", "XL", "2XL", "3XL"],
-    inventory: {
-      S: 2,
-      M: 2,
-      L: 0,
-      XL: 3,
-      "2XL": 0,
-      "3XL": 0,
-    },
+    // Inventory intentionally omitted here — stock comes live from Stripe
+    // metadata via /api/products. If that fetch fails, sizes are treated
+    // as unavailable rather than risking stale numbers.
     colors: ["Black", "White", "Navy"],
     // Stripe Integration
     stripeBuyButtonId: "buy_btn_1SjUfNFKiaEr26ZcXyKu3pwe",

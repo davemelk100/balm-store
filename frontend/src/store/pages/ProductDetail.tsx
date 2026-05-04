@@ -54,10 +54,13 @@ const ProductDetail = () => {
     setSearchParams(searchParams);
   };
 
+  // Treat unknown stock (undefined inventory) as unavailable. Inventory
+  // is sourced live from Stripe via /api/products; when that fetch fails
+  // we'd rather block a sale than risk overselling.
   const canAddToCart =
     termsAgreed &&
     !!selectedSize &&
-    (product?.inventory?.[selectedSize] ?? null) !== 0;
+    (product?.inventory?.[selectedSize] ?? 0) > 0;
 
   useEffect(() => {
     if (!canAddToCart || isLaunching) {
@@ -386,9 +389,9 @@ const ProductDetail = () => {
                     </div>
                     <div className="flex flex-wrap gap-3">
                       {product.sizes.map((size: string) => {
-                        // Check inventory for this size
-                        const stock = product.inventory?.[size] ?? null;
-                        const isOutOfStock = stock === 0;
+                        // Check inventory for this size — undefined = unavailable.
+                        const stock = product.inventory?.[size];
+                        const isOutOfStock = (stock ?? 0) <= 0;
                         const isSelected = selectedSize === size;
 
                         return (
@@ -559,10 +562,12 @@ const ProductDetail = () => {
                   */}
                   <button
                     onClick={() => {
-                      // Check if size is selected and in stock
+                      // Check if size is selected and in stock.
+                      // Undefined inventory is treated as unavailable.
                       const selectedSizeStock =
-                        product.inventory?.[selectedSize || ""] ?? null;
-                      const isSelectedSizeOutOfStock = selectedSizeStock === 0;
+                        product.inventory?.[selectedSize || ""];
+                      const isSelectedSizeOutOfStock =
+                        (selectedSizeStock ?? 0) <= 0;
 
                       if (!termsAgreed) return;
                       if (!selectedSize) {
@@ -607,12 +612,12 @@ const ProductDetail = () => {
                     disabled={
                       !termsAgreed ||
                       !selectedSize ||
-                      (product.inventory?.[selectedSize || ""] ?? null) === 0
+                      (product.inventory?.[selectedSize || ""] ?? 0) <= 0
                     }
                     className={`w-full px-2 py-3 rounded-md flex items-center justify-start ${
                       termsAgreed &&
                       selectedSize &&
-                      (product.inventory?.[selectedSize] ?? null) !== 0
+                      (product.inventory?.[selectedSize] ?? 0) > 0
                         ? "cursor-pointer"
                         : "cursor-not-allowed opacity-50"
                     }`}
@@ -625,7 +630,7 @@ const ProductDetail = () => {
                       boxShadow:
                         termsAgreed &&
                         selectedSize &&
-                        (product.inventory?.[selectedSize] ?? null) !== 0
+                        (product.inventory?.[selectedSize] ?? 0) > 0
                           ? "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px"
                           : "none",
                     }}
@@ -633,7 +638,7 @@ const ProductDetail = () => {
                     <span>
                       {!selectedSize
                         ? "Select a Size"
-                        : (product.inventory?.[selectedSize] ?? null) === 0
+                        : (product.inventory?.[selectedSize] ?? 0) <= 0
                         ? "Out of Stock"
                         : "Add to Cart"}
                     </span>
