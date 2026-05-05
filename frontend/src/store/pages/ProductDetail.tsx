@@ -225,7 +225,9 @@ const ProductDetail = () => {
             className="relative w-full max-w-[350px] mx-auto"
           >
             <div
-              className="h-[500px] overflow-hidden rounded-xl bg-transparent relative group cursor-pointer"
+              className={`${
+                product.streamUrl ? "aspect-square" : "h-[500px]"
+              } overflow-hidden rounded-xl bg-transparent relative group cursor-pointer`}
               onClick={() =>
                 setModalImage({
                   images,
@@ -301,7 +303,7 @@ const ProductDetail = () => {
                 singles that supply a `tracks` array. */}
             {product.tracks && product.tracks.length > 0 && (
               <ol
-                className="mt-6 space-y-2"
+                className="mt-2 space-y-2"
                 style={{
                   fontFamily: '"Geist Mono", monospace',
                   fontSize: "14px",

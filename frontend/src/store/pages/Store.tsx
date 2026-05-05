@@ -130,6 +130,19 @@ const ProductCard = ({ product }: { product: Product }) => {
         </div>
       </Link>
 
+      {/* View Details — for purchasable products (shirts/etc), not stream-only. */}
+      {!product.streamUrl && (
+        <div className="flex items-center justify-center pb-2">
+          <Link
+            to={`/product/${product.id}`}
+            className="font-['Geist_Mono',monospace] text-black border-b border-transparent hover:border-[rgb(80,80,80)] cursor-pointer"
+            style={{ fontSize: "14px", fontWeight: 300, textDecoration: "none" }}
+          >
+            View Details
+          </Link>
+        </div>
+      )}
+
       {/* Streaming-platform icon links — kept outside the <Link> so the
           nested anchors stay valid. */}
       {product.streamUrl && (
