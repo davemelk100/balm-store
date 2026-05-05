@@ -34,8 +34,8 @@ export const StoreFooter = ({
     <footer
       style={{
         backgroundColor: "rgba(240, 240, 240, 1)",
-        paddingTop: "2px",
-        paddingBottom: "2px",
+        paddingTop: "27px",
+        paddingBottom: "27px",
       }}
     >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">

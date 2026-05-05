@@ -59,18 +59,18 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           transition={{ duration: 0.6 }}
           className="flex items-center"
         >
-          {/* Left spacer for balance */}
-          <div className="flex-1"></div>
+          {/* Left spacer for balance — desktop only so the logo can sit
+              flush-left on mobile. */}
+          <div className="hidden md:block flex-1"></div>
 
-          {/* Centered Logo — "BALM" wordmark styled the same as the
-              footer's "BALM PRODUCTS AND SERVICES" line. */}
+          {/* Logo — "BALM" wordmark. Centered on desktop (between spacers),
+              left-aligned and smaller on mobile. */}
           <div className="flex-shrink-0">
             <Link
               to="/"
-              className="font-bold tracking-tight balm-logo hover:opacity-80 transition-opacity"
+              className="font-bold tracking-tight balm-logo hover:opacity-80 transition-opacity text-[30px] md:text-[56px]"
               style={{
                 color: "#d0d0d0",
-                fontSize: "56px",
                 textShadow:
                   "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
               }}
@@ -127,7 +127,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                 {!hideCart && getTotalItems() > 0 && (
                   <button
                     onClick={() => navigate("/checkout")}
-                    className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                    className="relative flex items-center justify-center w-7 h-7 md:w-10 md:h-10 rounded-full transition-colors cursor-pointer"
                     style={{
                       backgroundColor: "#f0f0f0",
                       boxShadow:
@@ -135,11 +135,11 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                     }}
                   >
                     <ShoppingCart
-                      className="h-5 w-5"
+                      className="h-3.5 w-3.5 md:h-5 md:w-5"
                       style={{ color: "rgb(168, 168, 168)" }}
                     />
                     {getTotalItems() > 0 && (
-                      <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                      <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[9px] md:text-xs font-bold rounded-full h-3.5 w-3.5 md:h-5 md:w-5 flex items-center justify-center">
                         {getTotalItems()}
                       </span>
                     )}
@@ -151,7 +151,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                   <DropdownMenuTrigger asChild>
                     <button className="relative cursor-pointer">
                       <Avatar
-                        className="h-10 w-10"
+                        className="h-7 w-7 md:h-10 md:w-10"
                         style={{
                           boxShadow:
                             "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
@@ -165,10 +165,10 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                           />
                         ) : null}
                         <AvatarFallback
+                          className="text-[11px] md:text-[14px]"
                           style={{
                             backgroundColor: "#f0f0f0",
                             color: "rgb(168, 168, 168)",
-                            fontSize: "14px",
                             fontWeight: 500,
                           }}
                         >
