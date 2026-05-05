@@ -3,7 +3,7 @@
 export interface Product {
   id: string;
   stripeProductId?: string; // Stripe Product ID when fetched from Stripe
-  mainCategory: "art" | "music" | "sports";
+  mainCategory: "art" | "music" | "sports" | "clothing";
   title: string;
   price: number;
   image: string;

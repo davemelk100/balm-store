@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useLocation } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
-import { useStore } from "../context/StoreContext";
 import { storeProducts } from "../data/storeProducts";
 import { Product } from "../types";
 import { LegalModal } from "../components/LegalModal";
@@ -184,8 +183,16 @@ const ProductCard = ({ product }: { product: Product }) => {
 };
 
 const Store = () => {
-  const { activeCategory } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  // Category is driven by the URL path so refreshing /shirts or /music
+  // keeps the user on that filter.
+  const routeCategory: string | null =
+    location.pathname === "/shirts"
+      ? "clothing"
+      : location.pathname === "/music"
+      ? "music"
+      : null;
 
   // Products state — start empty so we never flash stale stock from the
   // static fallback. Live data comes from Stripe via /api/products.
@@ -275,10 +282,10 @@ const Store = () => {
   // ];
 
   const filteredProducts = useMemo(() => {
-    return activeCategory
-      ? products.filter((product) => product.mainCategory === activeCategory)
+    return routeCategory
+      ? products.filter((product) => product.mainCategory === routeCategory)
       : products;
-  }, [products, activeCategory]);
+  }, [products, routeCategory]);
 
   // Note: Stripe button styling removed from home page as it's not needed here
   // It's only used on the ProductDetail page
@@ -287,6 +294,39 @@ const Store = () => {
     <div className="min-h-screen text-gray-900 dark:text-white store-page pb-16 relative bg-[#f0f0f0]">
       {/* Top Header with DM, Nav, Cart, and Profile */}
       <StoreHeader />
+
+      {/* Category Nav — uses route-based filtering so a refresh on
+          /shirts or /music stays on the current filter. */}
+      <nav
+        className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-6 flex items-center justify-center gap-8"
+        style={{ fontFamily: '"Geist Mono", monospace' }}
+      >
+        {[
+          { label: "Shirts", to: "/shirts" },
+          { label: "Music", to: "/music" },
+        ].map((item) => {
+          const isActive = location.pathname === item.to;
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`px-2 py-1 bg-transparent border-b ${
+                isActive
+                  ? "border-[rgb(80,80,80)]"
+                  : "border-transparent hover:border-[rgb(80,80,80)]"
+              }`}
+              style={{
+                fontSize: "16px",
+                fontWeight: isActive ? 600 : 300,
+                color: isActive ? "rgb(20, 20, 20)" : "rgb(100, 100, 100)",
+                textDecoration: "none",
+              }}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
 
       {/* Store Content */}
       <section className="pb-2 sm:pb-3 lg:pb-4 xl:pb-6 relative z-10">

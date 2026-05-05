@@ -53,6 +53,8 @@ function App() {
                 <Route path="/auth-callback" element={<AuthCallback />} />
                 <Route path="/auth/auth/callback" element={<AuthCallback />} />
                 <Route path="/" element={<Store />} />
+                <Route path="/shirts" element={<Store />} />
+                <Route path="/music" element={<Store />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route
