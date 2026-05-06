@@ -81,14 +81,13 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
 
           {/* User Avatar and Cart - Right Side */}
           <div className="flex-1 flex items-center justify-end gap-2">
-            {/* Bandcamp + Spotify links — far right (desktop only;
-                mobile renders these below the logo on their own row). */}
+            {/* Bandcamp + Spotify links — far right; smaller on mobile. */}
             <a
               href="https://balmsoothes.bandcamp.com/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="BALM on Bandcamp"
-              className="relative hidden md:flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+              className="relative flex items-center justify-center w-7 h-7 md:w-10 md:h-10 rounded-full transition-colors cursor-pointer"
               style={{
                 backgroundColor: "#f0f0f0",
                 boxShadow:
@@ -99,7 +98,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
               <img
                 src="/img/logos/bandcamp.svg"
                 alt="Bandcamp"
-                className="h-5 w-5"
+                className="h-3.5 w-3.5 md:h-5 md:w-5"
               />
             </a>
             <a
@@ -107,7 +106,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               aria-label="BALM on Spotify (placeholder)"
-              className="relative hidden md:flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+              className="relative flex items-center justify-center w-7 h-7 md:w-10 md:h-10 rounded-full transition-colors cursor-pointer"
               style={{
                 backgroundColor: "#f0f0f0",
                 boxShadow:
@@ -118,16 +117,16 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
               <img
                 src="/img/logos/spotify.svg"
                 alt="Spotify"
-                className="h-5 w-5"
+                className="h-3.5 w-3.5 md:h-5 md:w-5"
               />
             </a>
             {!minimal && !hideUser && isAuthenticated && (
               <>
-                {/* Cart Icon — desktop only; mobile renders below the logo. */}
+                {/* Cart Icon — smaller on mobile. */}
                 {!hideCart && getTotalItems() > 0 && (
                   <button
                     onClick={() => navigate("/checkout")}
-                    className="relative hidden md:flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                    className="relative flex items-center justify-center w-7 h-7 md:w-10 md:h-10 rounded-full transition-colors cursor-pointer"
                     style={{
                       backgroundColor: "#f0f0f0",
                       boxShadow:
@@ -135,23 +134,23 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                     }}
                   >
                     <ShoppingCart
-                      className="h-5 w-5"
+                      className="h-3.5 w-3.5 md:h-5 md:w-5"
                       style={{ color: "rgb(168, 168, 168)" }}
                     />
                     {getTotalItems() > 0 && (
-                      <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                      <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[9px] md:text-xs font-bold rounded-full h-3.5 w-3.5 md:h-5 md:w-5 flex items-center justify-center">
                         {getTotalItems()}
                       </span>
                     )}
                   </button>
                 )}
 
-                {/* User Avatar — desktop only; mobile renders below the logo. */}
+                {/* User Avatar — smaller on mobile. */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="relative cursor-pointer hidden md:block">
+                    <button className="relative cursor-pointer">
                       <Avatar
-                        className="h-10 w-10"
+                        className="h-7 w-7 md:h-10 md:w-10"
                         style={{
                           boxShadow:
                             "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
@@ -165,7 +164,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                           />
                         ) : null}
                         <AvatarFallback
-                          className="text-[14px]"
+                          className="text-[11px] md:text-[14px]"
                           style={{
                             backgroundColor: "#f0f0f0",
                             color: "rgb(168, 168, 168)",
@@ -224,14 +223,14 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
               </>
             )}
 
-            {/* Cart Only - Right Side (When not authenticated) — desktop only. */}
+            {/* Cart Only - Right Side (When not authenticated) — smaller on mobile. */}
             {!minimal &&
               !hideCart &&
               getTotalItems() > 0 &&
               !isAuthenticated && (
                 <button
                   onClick={() => navigate("/checkout")}
-                  className="relative hidden md:flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                  className="relative flex items-center justify-center w-7 h-7 md:w-10 md:h-10 rounded-full transition-colors cursor-pointer"
                   style={{
                     backgroundColor: "#f0f0f0",
                     boxShadow:
@@ -239,11 +238,11 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                   }}
                 >
                   <ShoppingCart
-                    className="h-5 w-5"
+                    className="h-3.5 w-3.5 md:h-5 md:w-5"
                     style={{ color: "rgb(168, 168, 168)" }}
                   />
                   {getTotalItems() > 0 && (
-                    <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[9px] md:text-xs font-bold rounded-full h-3.5 w-3.5 md:h-5 md:w-5 flex items-center justify-center">
                       {getTotalItems()}
                     </span>
                   )}
@@ -251,149 +250,6 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
               )}
           </div>
         </motion.div>
-
-        {/* Mobile-only: Bandcamp + Spotify + Cart + Avatar all on one row
-            below the BALM logo, left-aligned to match the flush-left logo,
-            all sized to match. */}
-        <div className="flex md:hidden items-center justify-start gap-2 mt-2">
-          <a
-            href="https://balmsoothes.bandcamp.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="BALM on Bandcamp"
-            className="relative flex items-center justify-center w-7 h-7 rounded-full transition-colors cursor-pointer"
-            style={{
-              backgroundColor: "#f0f0f0",
-              boxShadow:
-                "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-              color: "rgb(168, 168, 168)",
-            }}
-          >
-            <img
-              src="/img/logos/bandcamp.svg"
-              alt="Bandcamp"
-              className="h-3.5 w-3.5"
-            />
-          </a>
-          <a
-            href="https://open.spotify.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="BALM on Spotify (placeholder)"
-            className="relative flex items-center justify-center w-7 h-7 rounded-full transition-colors cursor-pointer"
-            style={{
-              backgroundColor: "#f0f0f0",
-              boxShadow:
-                "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-              color: "rgb(168, 168, 168)",
-            }}
-          >
-            <img
-              src="/img/logos/spotify.svg"
-              alt="Spotify"
-              className="h-3.5 w-3.5"
-            />
-          </a>
-
-          {/* Cart (mobile) — shown when there are items. */}
-          {!minimal && !hideCart && getTotalItems() > 0 && (
-            <button
-              onClick={() => navigate("/checkout")}
-              className="relative flex items-center justify-center w-7 h-7 rounded-full transition-colors cursor-pointer"
-              style={{
-                backgroundColor: "#f0f0f0",
-                boxShadow:
-                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-              }}
-            >
-              <ShoppingCart
-                className="h-3.5 w-3.5"
-                style={{ color: "rgb(168, 168, 168)" }}
-              />
-              <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[9px] font-bold rounded-full h-3.5 w-3.5 flex items-center justify-center">
-                {getTotalItems()}
-              </span>
-            </button>
-          )}
-
-          {/* Avatar (mobile) — only when authenticated. */}
-          {!minimal && !hideUser && isAuthenticated && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="relative cursor-pointer">
-                  <Avatar
-                    className="h-7 w-7"
-                    style={{
-                      boxShadow:
-                        "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                    }}
-                  >
-                    {user?.image ? (
-                      <AvatarImage
-                        src={user.image}
-                        alt={user.name || user.email}
-                        className="object-cover"
-                      />
-                    ) : null}
-                    <AvatarFallback
-                      className="text-[11px]"
-                      style={{
-                        backgroundColor: "#f0f0f0",
-                        color: "rgb(168, 168, 168)",
-                        fontWeight: 500,
-                      }}
-                    >
-                      {user?.name
-                        ? user.name.charAt(0).toUpperCase()
-                        : user?.email
-                        ? user.email.charAt(0).toUpperCase()
-                        : "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-56"
-                style={{ fontFamily: '"Geist Mono", monospace' }}
-              >
-                <DropdownMenuLabel
-                  style={{ fontFamily: '"Geist Mono", monospace' }}
-                >
-                  {user ? (
-                    <div>
-                      <p
-                        className="font-medium text-sm"
-                        style={{ fontFamily: '"Geist Mono", monospace' }}
-                      >
-                        {user.name || "User"}
-                      </p>
-                      <p
-                        className="text-gray-500"
-                        style={{
-                          fontFamily: '"Geist Mono", monospace',
-                          fontSize: "14px",
-                          fontWeight: 300,
-                        }}
-                      >
-                        {user.email}
-                      </p>
-                    </div>
-                  ) : (
-                    "My Account"
-                  )}
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  style={{ fontFamily: '"Geist Mono", monospace' }}
-                >
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </div>
       </div>
     </section>
   );
