@@ -50,7 +50,7 @@ if frontend_dist.exists():
             name="frontend-assets",
         )
 
-    @app.get("/{full_path:path}", include_in_schema=False)
+    @app.api_route("/{full_path:path}", methods=["GET", "HEAD"], include_in_schema=False)
     async def serve_spa(full_path: str):
         # Don't let the SPA shell mask 404s on API consumers.
         if full_path.startswith("api/"):
