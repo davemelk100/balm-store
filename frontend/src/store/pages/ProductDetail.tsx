@@ -71,16 +71,35 @@ const ProductDetail = () => {
         const response = await fetch(API_ENDPOINTS.products);
         if (!isMounted) return;
 
-        let found: Product | undefined;
+        const localProduct = storeProducts.find((p) => p.id === id);
+
+        let apiProduct: Product | undefined;
         if (response.ok) {
           const data = await response.json();
           if (!isMounted) return;
-          found = data.products?.find(
-            (p: Product) => p.id === id || p.stripeProductId === id
+          apiProduct = data.products?.find(
+            (p: Product) =>
+              p.id === id ||
+              p.stripeProductId === id ||
+              (localProduct?.stripeProductId &&
+                p.stripeProductId === localProduct.stripeProductId)
           );
         }
 
-        const resolved = found ?? storeProducts.find((p) => p.id === id);
+        // Static-only variants (e.g. "-v2" of an existing Stripe product)
+        // need the live inventory + price from the API product they share
+        // a stripeProductId with — otherwise every size renders as
+        // unavailable. Keep the static title/images/etc.
+        const resolved: Product | undefined =
+          localProduct && apiProduct
+            ? {
+                ...apiProduct,
+                ...localProduct,
+                price: apiProduct.price,
+                inventory: apiProduct.inventory,
+                stripePriceId: apiProduct.stripePriceId,
+              }
+            : apiProduct ?? localProduct;
         setProduct(resolved);
       } catch {
         if (!isMounted) return;

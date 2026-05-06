@@ -229,7 +229,7 @@ const Checkout = () => {
           className="space-y-8"
         >
           {/* Header */}
-          <div className="text-center">
+          <div className="text-left md:text-center">
             <h1 className="font-bold mb-2 text-black">CHECKOUT</h1>
             {/* <p className="text-black">
               Review your order and complete your purchase
@@ -529,7 +529,7 @@ const Checkout = () => {
                   type="button"
                   onClick={handleCheckout}
                   disabled={loading || items.length === 0}
-                  className="w-full px-2 py-3 rounded-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative z-20"
+                  className="w-full px-2 py-3 rounded-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-start md:justify-center gap-2 relative z-20"
                   style={{
                     fontFamily: '"Geist Mono", monospace',
                     fontSize: "16px",
