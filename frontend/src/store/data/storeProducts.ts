@@ -111,6 +111,9 @@ Back yoke with side pleats`,
     spotifyUrl: "https://open.spotify.com/",
     bandcampUrl:
       "https://balmsoothes.bandcamp.com/album/hallucination-season-2",
+    bandcampEmbedUrl:
+      "https://bandcamp.com/EmbeddedPlayer/album=3360325143/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/",
+    bandcampEmbedHeight: 470,
     tracks: [
       { title: "I'm Just Hearing Of This Now", duration: "02:12" },
       { title: "Vokey SM10 Raw", duration: "04:36" },
@@ -139,6 +142,9 @@ Back yoke with side pleats`,
     spotifyUrl: "https://open.spotify.com/",
     bandcampUrl:
       "https://balmsoothes.bandcamp.com/track/horseless-miscarriage",
+    bandcampEmbedUrl:
+      "https://bandcamp.com/EmbeddedPlayer/track=4041168687/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/",
+    bandcampEmbedHeight: 442,
   },
   {
     id: "balm-single-2",
@@ -153,5 +159,8 @@ Back yoke with side pleats`,
     spotifyUrl: "https://open.spotify.com/",
     bandcampUrl:
       "https://balmsoothes.bandcamp.com/album/egyptian-shumbah-the-tammys",
+    bandcampEmbedUrl:
+      "https://bandcamp.com/EmbeddedPlayer/album=3165747959/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/",
+    bandcampEmbedHeight: 470,
   },
 ];

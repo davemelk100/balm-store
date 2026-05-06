@@ -32,14 +32,15 @@ export const StoreFooter = ({
 
   return (
     <footer
+      className="mt-auto"
       style={{
         backgroundColor: "rgba(240, 240, 240, 1)",
-        paddingTop: "27px",
-        paddingBottom: "27px",
+        paddingTop: "52px",
+        paddingBottom: "2px",
       }}
     >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between relative">
+        <div className="flex items-end justify-between relative">
           {/* Left side spacer for balance */}
           <div className="w-10 h-10 md:hidden"></div>
 

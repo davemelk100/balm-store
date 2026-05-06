@@ -190,7 +190,7 @@ const ProductDetail = () => {
 
   return (
     <div
-      className="min-h-screen text-gray-900 dark:text-white store-page pb-16 relative overflow-hidden"
+      className="min-h-screen flex flex-col text-gray-900 dark:text-white store-page pb-16 relative overflow-hidden"
       style={{
         backgroundColor: "#f0f0f0",
       }}
@@ -216,14 +216,85 @@ const ProductDetail = () => {
           <ArrowLeft className="h-5 w-5" />
         </button>
 
-        {/* Product layout: two columns on tablet and desktop, single column on mobile */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        {/* Product layout: two columns on tablet and desktop, single column on mobile.
+            For Bandcamp-embed products (e.g. singles) we collapse to a single
+            centered column. */}
+        <div
+          className={`grid gap-12 ${
+            product.bandcampEmbedUrl
+              ? "grid-cols-1 place-items-center"
+              : "grid-cols-1 md:grid-cols-2"
+          }`}
+        >
           {/* Product Image Carousel */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="relative w-full max-w-[350px] mx-auto"
           >
+            {product.bandcampEmbedUrl ? (
+              <div className="flex flex-col items-center gap-3">
+                {/* Streaming icons above the embedded player. */}
+                <div className="flex items-center justify-center gap-3">
+                  {product.spotifyUrl && (
+                    <a
+                      href={product.spotifyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Stream on Spotify"
+                      className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                      style={{
+                        backgroundColor: "#f0f0f0",
+                        boxShadow:
+                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                        color: "rgb(168, 168, 168)",
+                      }}
+                    >
+                      <img
+                        src="/img/logos/spotify.svg"
+                        alt="Spotify"
+                        className="h-5 w-5"
+                      />
+                    </a>
+                  )}
+                  {product.bandcampUrl && (
+                    <a
+                      href={product.bandcampUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Stream on Bandcamp"
+                      className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
+                      style={{
+                        backgroundColor: "#f0f0f0",
+                        boxShadow:
+                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                        color: "rgb(168, 168, 168)",
+                      }}
+                    >
+                      <img
+                        src="/img/logos/bandcamp.svg"
+                        alt="Bandcamp"
+                        className="h-5 w-5"
+                      />
+                    </a>
+                  )}
+                </div>
+                <iframe
+                  title={`${product.title} — Bandcamp player`}
+                  src={product.bandcampEmbedUrl}
+                  seamless
+                  style={{
+                    border: 0,
+                    width: "350px",
+                    height: `${product.bandcampEmbedHeight ?? 442}px`,
+                  }}
+                >
+                  <a href={product.bandcampUrl}>
+                    {product.title} on Bandcamp
+                  </a>
+                </iframe>
+              </div>
+            ) : (
             <div
               className={`${
                 product.streamUrl ? "aspect-square" : "h-[500px]"
@@ -298,6 +369,7 @@ const ProductDetail = () => {
                 </>
               )}
             </div>
+            )}
 
             {/* Track listing — rendered below the artwork for albums /
                 singles that supply a `tracks` array. */}
@@ -338,45 +410,49 @@ const ProductDetail = () => {
             {/* Simple Card No background */}
             <div className="relative rounded-lg" style={{ padding: "10px" }}>
               <div className="relative z-10 space-y-6">
-                <div>
-                  <h1
-                    className="mb-4 text-center md:text-left"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "16px",
-                      color: "black",
-                      fontWeight: 400,
-                    }}
-                  >
-                    {product.title}
-                  </h1>
-                  {!product.streamUrl && (
-                    <p
-                      className="font-bold mb-6 text-center md:text-left"
+                {!product.bandcampEmbedUrl && (
+                  <div>
+                    <h1
+                      className="mb-4 text-center md:text-left"
                       style={{
                         fontFamily: '"Geist Mono", monospace',
-                        fontSize: "18px",
+                        fontSize: "16px",
+                        color: "black",
+                        fontWeight: 400,
+                      }}
+                    >
+                      {product.title}
+                    </h1>
+                    {!product.streamUrl && (
+                      <p
+                        className="font-bold mb-6 text-center md:text-left"
+                        style={{
+                          fontFamily: '"Geist Mono", monospace',
+                          fontSize: "18px",
+                          color: "black",
+                        }}
+                      >
+                        ${product.price}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {!product.bandcampEmbedUrl && (
+                  <div>
+                    <p
+                      className="leading-relaxed"
+                      style={{
+                        fontFamily: '"Geist Mono", monospace',
+                        fontSize: "16px",
+                        fontWeight: 300,
                         color: "black",
                       }}
                     >
-                      ${product.price}
+                      {product.fullDescription || product.description}
                     </p>
-                  )}
-                </div>
-
-                <div>
-                  <p
-                    className="leading-relaxed"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "16px",
-                      fontWeight: 300,
-                      color: "black",
-                    }}
-                  >
-                    {product.fullDescription || product.description}
-                  </p>
-                </div>
+                  </div>
+                )}
 
                 {/* Size Selection */}
                 {product.sizes && product.sizes.length > 1 && (
@@ -460,8 +536,11 @@ const ProductDetail = () => {
                 )}
 
                 {/* Stream-only products: render Spotify + Bandcamp
-                    icon links directly (no modal). */}
+                    icon links directly (no modal). When bandcampEmbedUrl
+                    is set the icons render above the embedded player
+                    instead, so we skip them here. */}
                 {product.streamUrl ? (
+                  product.bandcampEmbedUrl ? null : (
                   <div className="flex items-center gap-3">
                     {product.spotifyUrl && (
                       <a
@@ -506,6 +585,7 @@ const ProductDetail = () => {
                       </a>
                     )}
                   </div>
+                  )
                 ) : (
                 <>
                 {/* Important Notice (between size selection and Add to Cart) */}

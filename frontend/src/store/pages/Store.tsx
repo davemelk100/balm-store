@@ -304,7 +304,7 @@ const Store = () => {
   // It's only used on the ProductDetail page
 
   return (
-    <div className="min-h-screen text-gray-900 dark:text-white store-page pb-16 relative bg-[#f0f0f0]">
+    <div className="min-h-screen flex flex-col text-gray-900 dark:text-white store-page pb-16 relative bg-[#f0f0f0]">
       {/* Top Header with DM, Nav, Cart, and Profile */}
       <StoreHeader />
 

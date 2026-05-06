@@ -164,7 +164,7 @@ const Checkout = () => {
   if (items.length === 0) {
     return (
       <div
-        className="min-h-screen text-gray-900 dark:text-white store-page pb-16 relative overflow-hidden"
+        className="min-h-screen flex flex-col text-gray-900 dark:text-white store-page pb-16 relative overflow-hidden"
         style={{
           backgroundColor: "#f0f0f0",
         }}
@@ -214,7 +214,7 @@ const Checkout = () => {
 
   return (
     <div
-      className="min-h-screen text-gray-900 dark:text-white store-page pb-16 relative overflow-hidden"
+      className="min-h-screen flex flex-col text-gray-900 dark:text-white store-page pb-16 relative overflow-hidden"
       style={{
         backgroundColor: "#f0f0f0",
       }}
