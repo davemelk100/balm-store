@@ -1,0 +1,16 @@
+# Netlify build config. The repo is a monorepo with the SPA in
+# `frontend/`; without `base` Netlify runs `npm run build` from the
+# repo root and fails with ENOENT (no package.json there).
+
+[build]
+  base    = "frontend"
+  command = "npm run build"
+  publish = "dist"
+
+# SPA fallback: React Router owns client-side routes (e.g. /artists,
+# /artists/:slug, /product/:id). Without this, hitting those URLs
+# directly 404s on Netlify's static host.
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
