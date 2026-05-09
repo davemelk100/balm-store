@@ -81,45 +81,6 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
 
           {/* User Avatar and Cart - Right Side */}
           <div className="flex-1 flex items-center justify-end gap-2">
-            {/* Bandcamp + Spotify links — far right; smaller on mobile. */}
-            <a
-              href="https://balmsoothes.bandcamp.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="BALM on Bandcamp"
-              className="relative flex items-center justify-center w-7 h-7 md:w-10 md:h-10 rounded-full transition-colors cursor-pointer"
-              style={{
-                backgroundColor: "#f0f0f0",
-                boxShadow:
-                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                color: "rgb(168, 168, 168)",
-              }}
-            >
-              <img
-                src="/img/logos/bandcamp.svg"
-                alt="Bandcamp"
-                className="h-3.5 w-3.5 md:h-5 md:w-5"
-              />
-            </a>
-            <a
-              href="https://open.spotify.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="BALM on Spotify (placeholder)"
-              className="relative flex items-center justify-center w-7 h-7 md:w-10 md:h-10 rounded-full transition-colors cursor-pointer"
-              style={{
-                backgroundColor: "#f0f0f0",
-                boxShadow:
-                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                color: "rgb(168, 168, 168)",
-              }}
-            >
-              <img
-                src="/img/logos/spotify.svg"
-                alt="Spotify"
-                className="h-3.5 w-3.5 md:h-5 md:w-5"
-              />
-            </a>
             {!minimal && !hideUser && isAuthenticated && (
               <>
                 {/* Cart Icon — smaller on mobile. */}

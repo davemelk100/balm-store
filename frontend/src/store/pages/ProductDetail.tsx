@@ -663,54 +663,83 @@ const ProductDetail = () => {
                   </label>
                 </div>
 
+                {/* Direct payment buttons (PayPal, Venmo) — rendered for
+                    products that supply those URLs, e.g. artist merch
+                    where Stripe products may not exist yet. Disabled
+                    until terms are agreed and a size is selected so the
+                    buyer commits to the same in-stock check as the cart
+                    flow. */}
+                {(product.paypalUrl || product.venmoUrl) && (
+                  <div className="w-full flex gap-3 mb-3">
+                    {product.venmoUrl && (
+                      <a
+                        href={canAddToCart ? product.venmoUrl : undefined}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-disabled={!canAddToCart}
+                        onClick={(e) => {
+                          if (!canAddToCart) e.preventDefault();
+                        }}
+                        className={`flex-1 min-w-[140px] px-2 py-3 rounded-md transition-all flex items-center justify-center gap-2 no-underline ${
+                          canAddToCart
+                            ? "hover:scale-105 cursor-pointer"
+                            : "cursor-not-allowed opacity-50"
+                        }`}
+                        style={{
+                          fontFamily: '"Geist Mono", monospace',
+                          fontSize: "16px",
+                          fontWeight: 300,
+                          backgroundColor: "#f0f0f0",
+                          color: "rgb(80, 80, 80)",
+                          boxShadow:
+                            "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                        }}
+                      >
+                        <img
+                          src="/img/logos/venmo.svg"
+                          alt="Venmo"
+                          className="h-5 w-5"
+                        />
+                        Venmo
+                      </a>
+                    )}
+                    {product.paypalUrl && (
+                      <a
+                        href={canAddToCart ? product.paypalUrl : undefined}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-disabled={!canAddToCart}
+                        onClick={(e) => {
+                          if (!canAddToCart) e.preventDefault();
+                        }}
+                        className={`flex-1 min-w-[140px] px-2 py-3 rounded-md transition-all flex items-center justify-center gap-2 no-underline ${
+                          canAddToCart
+                            ? "hover:scale-105 cursor-pointer"
+                            : "cursor-not-allowed opacity-50"
+                        }`}
+                        style={{
+                          fontFamily: '"Geist Mono", monospace',
+                          fontSize: "16px",
+                          fontWeight: 300,
+                          backgroundColor: "#f0f0f0",
+                          color: "rgb(80, 80, 80)",
+                          boxShadow:
+                            "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                        }}
+                      >
+                        <img
+                          src="/img/logos/paypal.svg"
+                          alt="PayPal"
+                          className="h-5 w-5"
+                        />
+                        PayPal
+                      </a>
+                    )}
+                  </div>
+                )}
+
                 {/* Add to Cart Button */}
                 <div className="w-full flex gap-3">
-                  {/* Venmo and PayPal - Hidden for now
-                  <a
-                    href="https://venmo.com/u/Dave-Melkonian"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 min-w-[140px] px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2 no-underline"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "16px",
-                      fontWeight: 300,
-                      backgroundColor: "#f0f0f0",
-                      color: "rgb(80, 80, 80)",
-                      boxShadow:
-                        "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                    }}
-                  >
-                    <img
-                      src="/img/logos/venmo.svg"
-                      alt="Venmo"
-                      className="h-5 w-5"
-                    />
-                    Venmo
-                  </a>
-                  <a
-                    href="https://paypal.me/Balmsoothes"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 min-w-[140px] px-2 py-3 rounded-md transition-all hover:scale-105 flex items-center justify-center gap-2 no-underline"
-                    style={{
-                      fontFamily: '"Geist Mono", monospace',
-                      fontSize: "16px",
-                      fontWeight: 300,
-                      backgroundColor: "#f0f0f0",
-                      color: "rgb(80, 80, 80)",
-                      boxShadow:
-                        "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                    }}
-                  >
-                    <img
-                      src="/img/logos/paypal.svg"
-                      alt="PayPal"
-                      className="h-5 w-5"
-                    />
-                    PayPal
-                  </a>
-                  */}
                   <button
                     onClick={() => {
                       // Check if size is selected and in stock.

@@ -10,6 +10,8 @@ import { ProtectedRoute } from "./store/components/ProtectedRoute";
 import { Toaster } from "@/components/ui/toaster";
 import Store from "./store/pages/Store";
 import ProductDetail from "./store/pages/ProductDetail";
+import Artists from "./store/pages/Artists";
+import ArtistDetail from "./store/pages/ArtistDetail";
 import Checkout from "./store/pages/Checkout";
 import CheckoutSuccess from "./store/pages/CheckoutSuccess";
 import Login from "./store/pages/Login";
@@ -54,7 +56,8 @@ function App() {
                 <Route path="/auth/auth/callback" element={<AuthCallback />} />
                 <Route path="/" element={<Store />} />
                 <Route path="/shirts" element={<Store />} />
-                <Route path="/music" element={<Store />} />
+                <Route path="/artists" element={<Artists />} />
+                <Route path="/artists/:slug" element={<ArtistDetail />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route

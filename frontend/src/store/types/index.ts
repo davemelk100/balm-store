@@ -1,8 +1,50 @@
 // Store Types - Centralized type definitions for the store module
 
+export interface Show {
+  // ISO date (YYYY-MM-DD). Used for sorting and to filter past shows.
+  date: string;
+  venue: string;
+  city: string;
+  ticketUrl?: string;
+}
+
+export interface Release {
+  // ISO date (YYYY-MM-DD). Drives sort order.
+  date: string;
+  // Optional display override — use when the release date is approximate
+  // (e.g. "Fall 2026") rather than a known day.
+  dateLabel?: string;
+  title: string;
+  // E.g. "LP", "EP", "Single".
+  type: string;
+  url?: string;
+}
+
+export interface Artist {
+  slug: string;
+  name: string;
+  image: string;
+  bio?: string;
+  websiteUrl?: string;
+  bandcampUrl?: string;
+  spotifyUrl?: string;
+  paypalUrl?: string;
+  venmoUrl?: string;
+  shows?: Show[];
+  releases?: Release[];
+}
+
 export interface Product {
   id: string;
   stripeProductId?: string; // Stripe Product ID when fetched from Stripe
+  // When set, the product belongs to a featured artist and is shown on
+  // /artists/:slug rather than the main BALM grid.
+  artistSlug?: string;
+  // Direct payment links surfaced on the product page alongside Stripe
+  // checkout. Used for artist merch where Stripe products may not exist
+  // yet — buyers can pay via PayPal/Venmo directly.
+  paypalUrl?: string;
+  venmoUrl?: string;
   mainCategory: "art" | "music" | "sports" | "clothing";
   title: string;
   price: number;
