@@ -253,29 +253,9 @@ const ProductDetail = () => {
           >
             {product.bandcampEmbedUrl ? (
               <div className="flex flex-col items-center gap-3">
-                {/* Streaming icons above the embedded player. */}
+                {/* Streaming icons above the embedded player.
+                    Spotify hidden for now. */}
                 <div className="flex items-center justify-center gap-3">
-                  {product.spotifyUrl && (
-                    <a
-                      href={product.spotifyUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Stream on Spotify"
-                      className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
-                      style={{
-                        backgroundColor: "#f0f0f0",
-                        boxShadow:
-                          "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                        color: "rgb(168, 168, 168)",
-                      }}
-                    >
-                      <img
-                        src="/img/logos/spotify.svg"
-                        alt="Spotify"
-                        className="h-5 w-5"
-                      />
-                    </a>
-                  )}
                   {product.bandcampUrl && (
                     <a
                       href={product.bandcampUrl}
@@ -554,34 +534,13 @@ const ProductDetail = () => {
                   </div>
                 )}
 
-                {/* Stream-only products: render Spotify + Bandcamp
-                    icon links directly (no modal). When bandcampEmbedUrl
-                    is set the icons render above the embedded player
-                    instead, so we skip them here. */}
+                {/* Stream-only products: render Bandcamp icon link
+                    directly (no modal). When bandcampEmbedUrl is set
+                    the icons render above the embedded player instead,
+                    so we skip them here. Spotify hidden for now. */}
                 {product.streamUrl ? (
                   product.bandcampEmbedUrl ? null : (
                   <div className="flex items-center gap-3">
-                    {product.spotifyUrl && (
-                      <a
-                        href={product.spotifyUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Stream on Spotify"
-                        className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
-                        style={{
-                          backgroundColor: "#f0f0f0",
-                          boxShadow:
-                            "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                          color: "rgb(168, 168, 168)",
-                        }}
-                      >
-                        <img
-                          src="/img/logos/spotify.svg"
-                          alt="Spotify"
-                          className="h-5 w-5"
-                        />
-                      </a>
-                    )}
                     {product.bandcampUrl && (
                       <a
                         href={product.bandcampUrl}

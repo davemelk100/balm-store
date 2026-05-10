@@ -129,27 +129,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
 
       {product.streamUrl && (
         <div className="flex items-center justify-center gap-3 pb-2">
-          {product.spotifyUrl && (
-            <a
-              href={product.spotifyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Stream on Spotify"
-              className="relative flex items-center justify-center w-9 h-9 rounded-full transition-colors cursor-pointer"
-              style={{
-                backgroundColor: "#f0f0f0",
-                boxShadow:
-                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                color: "rgb(168, 168, 168)",
-              }}
-            >
-              <img
-                src="/img/logos/spotify.svg"
-                alt="Spotify"
-                className="h-4 w-4"
-              />
-            </a>
-          )}
+          {/* Spotify icon hidden for now. */}
           {product.bandcampUrl && (
             <a
               href={product.bandcampUrl}

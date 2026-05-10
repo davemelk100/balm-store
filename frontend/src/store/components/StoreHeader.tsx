@@ -68,7 +68,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           <div className="flex-shrink-0">
             <Link
               to="/"
-              className="font-bold tracking-tight balm-logo hover:opacity-80 transition-opacity text-[30px] md:text-[56px]"
+              className="font-bold balm-logo hover:opacity-80 transition-opacity text-[18px] md:text-[56px]"
               style={{
                 color: "#d0d0d0",
                 textShadow:

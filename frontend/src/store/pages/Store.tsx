@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { storeProducts } from "../data/storeProducts";
 import { Product } from "../types";
@@ -14,6 +14,10 @@ import { API_ENDPOINTS } from "../../config/api";
 
 const Store = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  // The home route renders a bio block instead of the merch grid;
+  // /shirts keeps the catalog.
+  const isHome = location.pathname === "/";
 
   // Products state — start empty so we never flash stale stock from the
   // static fallback. Live data comes from Stripe via /api/products.
@@ -103,10 +107,12 @@ const Store = () => {
   // ];
 
   const filteredProducts = useMemo(() => {
-    // Merch grid: clothing products from every artist (Balm + featured
-    // artists like Full Time Bionic). Music lives only under
-    // /artists/:slug pages — there's no top-level music route.
-    return products.filter((p) => p.mainCategory === "clothing");
+    // Merch grid: clothing + music from every artist. Music releases
+    // also surface on /artists/:slug, but the top-level Merch page
+    // shows everything purchasable/streamable.
+    return products.filter(
+      (p) => p.mainCategory === "clothing" || p.mainCategory === "music"
+    );
   }, [products]);
 
   // Note: Stripe button styling removed from home page as it's not needed here
@@ -128,14 +134,50 @@ const Store = () => {
             variants={staggerContainer}
             className="space-y-12"
           >
-            {/* Products Grid */}
-            <motion.section variants={fadeInUp} className="space-y-6">
-              <div className="flex flex-wrap justify-center gap-4">
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            </motion.section>
+            {isHome ? (
+              <motion.section
+                variants={fadeInUp}
+                className="text-left max-w-3xl"
+                style={{ fontFamily: '"Geist Mono", monospace' }}
+              >
+                <p
+                  className="text-black"
+                  style={{ fontSize: "14px", fontWeight: 300 }}
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Sed do eiusmod tempor incididunt ut labore et dolore
+                  magna aliqua. Ut enim ad minim veniam, quis nostrud
+                  exercitation ullamco laboris nisi ut aliquip ex ea
+                  commodo consequat.
+                </p>
+                <p
+                  className="mt-2 text-black"
+                  style={{ fontSize: "14px", fontWeight: 300 }}
+                >
+                  Duis aute irure dolor in reprehenderit in voluptate
+                  velit esse cillum dolore eu fugiat nulla pariatur.
+                  Excepteur sint occaecat cupidatat non proident, sunt in
+                  culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+                <p
+                  className="mt-2 text-black"
+                  style={{ fontSize: "14px", fontWeight: 300 }}
+                >
+                  Sed ut perspiciatis unde omnis iste natus error sit
+                  voluptatem accusantium doloremque laudantium, totam rem
+                  aperiam, eaque ipsa quae ab illo inventore veritatis et
+                  quasi architecto beatae vitae dicta sunt explicabo.
+                </p>
+              </motion.section>
+            ) : (
+              <motion.section variants={fadeInUp} className="space-y-6">
+                <div className="flex flex-wrap justify-center gap-4">
+                  {filteredProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              </motion.section>
+            )}
           </motion.div>
         </div>
       </section>
