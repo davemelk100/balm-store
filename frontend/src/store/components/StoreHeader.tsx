@@ -63,7 +63,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
               flush-left on mobile. */}
           <div className="hidden md:block flex-1"></div>
 
-          {/* Logo — "BALM" wordmark. Centered on desktop (between spacers),
+          {/* Header title. Centered on desktop (between spacers),
               left-aligned and smaller on mobile. */}
           <div className="flex-shrink-0">
             <Link
@@ -75,7 +75,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                   "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
               }}
             >
-              BALM
+              BALM PRODUCTS AND SERVICES
             </Link>
           </div>
 

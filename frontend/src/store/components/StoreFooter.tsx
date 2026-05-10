@@ -44,19 +44,8 @@ export const StoreFooter = ({
           {/* Left side spacer for balance */}
           <div className="w-10 h-10 md:hidden"></div>
 
-          {/* Center - BALM logo and links */}
+          {/* Center - footer links */}
           <div className="flex-1 flex flex-col items-center gap-1">
-            <span
-              className="font-bold tracking-tight balm-logo"
-              style={{
-                color: "#d0d0d0",
-                fontSize: "24px",
-                textShadow:
-                  "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-              }}
-            >
-              BALM &nbsp;PRODUCTS &nbsp;AND &nbsp;SERVICES
-            </span>
             <div className="flex items-center gap-3">
               <button
                 onClick={onPrivacyClick}
@@ -71,33 +60,6 @@ export const StoreFooter = ({
               >
                 TOS
               </button>
-              <span className="text-xs text-gray-400 px-2">|</span>
-              <a
-                href="https://balmsoothes.bandcamp.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="BALM on Bandcamp"
-                className="text-gray-600 hover:text-gray-900 transition-colors cursor-pointer flex items-center"
-              >
-                <img
-                  src="/img/logos/bandcamp.svg"
-                  alt="Bandcamp"
-                  className="h-3.5 w-3.5"
-                />
-              </a>
-              <a
-                href="https://open.spotify.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="BALM on Spotify (placeholder)"
-                className="text-gray-600 hover:text-gray-900 transition-colors cursor-pointer flex items-center"
-              >
-                <img
-                  src="/img/logos/spotify.svg"
-                  alt="Spotify"
-                  className="h-3.5 w-3.5"
-                />
-              </a>
             </div>
           </div>
 
