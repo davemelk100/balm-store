@@ -138,6 +138,12 @@ const ArtistDetail = () => {
                 <ArrowLeft className="h-4 w-4" />
                 Back to Artists
               </Link>
+              <img
+                src={artist.image}
+                alt={`${artist.name} logo`}
+                className="block w-40 h-auto mb-3"
+                loading="eager"
+              />
               <h1
                 className="text-black"
                 style={{ fontSize: "24px", fontWeight: 400 }}

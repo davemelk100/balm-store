@@ -12,6 +12,7 @@ import Store from "./store/pages/Store";
 import ProductDetail from "./store/pages/ProductDetail";
 import Artists from "./store/pages/Artists";
 import ArtistDetail from "./store/pages/ArtistDetail";
+import Art from "./store/pages/Art";
 import Checkout from "./store/pages/Checkout";
 import CheckoutSuccess from "./store/pages/CheckoutSuccess";
 import Login from "./store/pages/Login";
@@ -57,6 +58,7 @@ function App() {
                 <Route path="/" element={<Store />} />
                 <Route path="/clothing" element={<Store />} />
                 <Route path="/music" element={<Store />} />
+                <Route path="/art" element={<Art />} />
                 {/* Legacy alias — old links to /shirts still work. */}
                 <Route path="/shirts" element={<Store />} />
                 <Route path="/artists" element={<Artists />} />

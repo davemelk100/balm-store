@@ -4,6 +4,7 @@ const items = [
   { label: "Home", to: "/" },
   { label: "Clothing", to: "/clothing" },
   { label: "Music", to: "/music" },
+  { label: "Art", to: "/art" },
   { label: "Artists", to: "/artists" },
 ];
 

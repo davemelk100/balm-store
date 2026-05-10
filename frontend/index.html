@@ -23,19 +23,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <!--
-      Hidden static form for Netlify Forms detection. Netlify's HTML
-      parser scans the built site for <form> tags at build time; SPA
-      forms rendered via React aren't visible, so we mirror the
-      submitted shape here once. The real form lives in the SPA and
-      POSTs to "/" with the same field names.
-    -->
-    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
-      <input type="text" name="name" />
-      <input type="email" name="email" />
-      <textarea name="message"></textarea>
-      <input type="text" name="bot-field" />
-    </form>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
