@@ -1,0 +1,39 @@
+# Allow social previews (Facebook, Twitter/X, LinkedIn, Slack, Discord,
+# WhatsApp, etc.) — these crawlers fetch OG/Twitter meta tags so links
+# render with image + title cards.
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: facebookcatalog
+Allow: /
+
+User-agent: Facebot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: Slackbot-LinkExpanding
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# Default: allow everything else too.
+User-agent: *
+Allow: /

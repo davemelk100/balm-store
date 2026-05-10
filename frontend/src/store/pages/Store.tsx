@@ -192,6 +192,8 @@ const Store = () => {
                       // inline instead of a thumbnail card linking out.
                       // Falls back to ProductCard for any music product
                       // that doesn't carry an embed URL.
+                      // Uniform 350x470 for every embed regardless of
+                      // per-product overrides, so the grid stays even.
                       <iframe
                         key={product.id}
                         title={`${product.title} — embedded player`}
@@ -200,8 +202,8 @@ const Store = () => {
                         allow="autoplay"
                         style={{
                           border: 0,
-                          width: `${product.bandcampEmbedWidth ?? 350}px`,
-                          height: `${product.bandcampEmbedHeight ?? 442}px`,
+                          width: "350px",
+                          height: "470px",
                         }}
                       >
                         <a href={product.bandcampUrl}>
