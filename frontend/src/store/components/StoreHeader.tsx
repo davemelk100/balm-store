@@ -1,23 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Menu, ShoppingCart, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { storeNavItems, isStoreNavActive } from "./StoreNav";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../components/ui/avatar";
+
+// Lazy-loaded — radix dropdown + avatar are ~30KB gzipped and only
+// matter once the user logs in. Anonymous visitors never download them.
+const UserMenu = lazy(() => import("./UserMenu"));
 
 interface StoreHeaderProps {
   /**
@@ -145,81 +136,10 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                   </button>
                 )}
 
-                {/* User Avatar — smaller on mobile. */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="relative cursor-pointer">
-                      <Avatar
-                        className="h-7 w-7 md:h-10 md:w-10"
-                        style={{
-                          boxShadow:
-                            "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
-                        }}
-                      >
-                        {user?.image ? (
-                          <AvatarImage
-                            src={user.image}
-                            alt={user.name || user.email}
-                            className="object-cover"
-                          />
-                        ) : null}
-                        <AvatarFallback
-                          className="text-[11px] md:text-[14px]"
-                          style={{
-                            backgroundColor: "#f0f0f0",
-                            color: "rgb(168, 168, 168)",
-                            fontWeight: 500,
-                          }}
-                        >
-                          {user?.name
-                            ? user.name.charAt(0).toUpperCase()
-                            : user?.email
-                            ? user.email.charAt(0).toUpperCase()
-                            : "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="end"
-                    className="w-56"
-                    style={{ fontFamily: '"Geist Mono", monospace' }}
-                  >
-                    <DropdownMenuLabel
-                      style={{ fontFamily: '"Geist Mono", monospace' }}
-                    >
-                      {isAuthenticated && user ? (
-                        <div>
-                          <p
-                            className="font-medium text-sm"
-                            style={{ fontFamily: '"Geist Mono", monospace' }}
-                          >
-                            {user.name || "User"}
-                          </p>
-                          <p
-                            className="text-gray-500"
-                            style={{
-                              fontFamily: '"Geist Mono", monospace',
-                              fontSize: "14px",
-                              fontWeight: 300,
-                            }}
-                          >
-                            {user.email}
-                          </p>
-                        </div>
-                      ) : (
-                        "My Account"
-                      )}
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={handleLogout}
-                      style={{ fontFamily: '"Geist Mono", monospace' }}
-                    >
-                      Sign Out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {/* User Avatar — lazy radix bundle loads on first authed render. */}
+                <Suspense fallback={null}>
+                  <UserMenu user={user} onLogout={handleLogout} />
+                </Suspense>
               </>
             )}
 

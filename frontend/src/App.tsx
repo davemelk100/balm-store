@@ -7,7 +7,12 @@ import {
 import { Suspense, lazy } from "react";
 import { CartProvider, StoreProvider, AuthProvider } from "./store";
 import { ProtectedRoute } from "./store/components/ProtectedRoute";
-import { Toaster } from "@/components/ui/toaster";
+
+// Lazy — Toaster pulls in @radix-ui/react-toast (~12KB gzipped) and is
+// only ever visible after a toast is fired.
+const Toaster = lazy(() =>
+  import("@/components/ui/toaster").then((m) => ({ default: m.Toaster }))
+);
 
 // Route-level code splitting — each page ships as its own chunk so the
 // initial bundle stays small. Without this we shipped ~515KB upfront
@@ -82,7 +87,9 @@ function App() {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Suspense>
-            <Toaster />
+            <Suspense fallback={null}>
+              <Toaster />
+            </Suspense>
           </CartProvider>
         </AuthProvider>
       </StoreProvider>

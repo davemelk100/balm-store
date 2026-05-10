@@ -17,7 +17,7 @@ export const TermsOfServiceContent = () => {
       <h2 className="text-xl font-semibold mt-6 mb-3">2. Use License</h2>
       <p className="mb-4">
         Permission is granted to temporarily download one copy of the materials
-        on BALM Store's website for personal, non-commercial transitory viewing
+        on Balm Products and Services's website for personal, non-commercial transitory viewing
         only.
       </p>
       <p className="mb-4">Under this license you may not:</p>
@@ -75,7 +75,7 @@ export const TermsOfServiceContent = () => {
       </h2>
       <p className="mb-4">
         All content on this website, including text, graphics, logos, images,
-        and software, is the property of BALM Store and is protected by
+        and software, is the property of Balm Products and Services and is protected by
         copyright and trademark laws.
       </p>
 
@@ -83,7 +83,7 @@ export const TermsOfServiceContent = () => {
         9. Limitation of Liability
       </h2>
       <p className="mb-4">
-        BALM Store shall not be liable for any indirect, incidental, special, or
+        Balm Products and Services shall not be liable for any indirect, incidental, special, or
         consequential damages arising out of or in connection with the use of
         our website or products.
       </p>
@@ -91,7 +91,7 @@ export const TermsOfServiceContent = () => {
       <h2 className="text-xl font-semibold mt-6 mb-3">10. Governing Law</h2>
       <p className="mb-4">
         These terms shall be governed by and construed in accordance with the
-        laws of the jurisdiction in which BALM Store operates.
+        laws of the jurisdiction in which Balm Products and Services operates.
       </p>
 
       <h2 className="text-xl font-semibold mt-6 mb-3">11. Changes to Terms</h2>

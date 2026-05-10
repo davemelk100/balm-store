@@ -9,13 +9,30 @@
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Load Google Fonts non-blocking. The print-media trick makes the
+         browser skip render-blocking on this stylesheet, then onload
+         swaps it in. Combined with display=swap, the page paints with
+         a fallback font and upgrades to New Amsterdam when ready. -->
     <link
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=New+Amsterdam&display=swap"
-      rel="stylesheet"
     />
-    <title>BALM Store</title>
-    <meta property="og:title" content="BALM Store" />
-    <meta property="og:description" content="BALM Store" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=New+Amsterdam&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=New+Amsterdam&display=swap"
+      />
+    </noscript>
+    <title>Balm Products and Services</title>
+    <meta property="og:title" content="Balm Products and Services" />
+    <meta property="og:description" content="Balm Products and Services" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://balmsoothes.com/" />
     <meta property="og:image" content="https://balmsoothes.com/og-img.png" />
@@ -24,8 +41,8 @@
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="BALM" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="BALM Store" />
-    <meta name="twitter:description" content="BALM Store" />
+    <meta name="twitter:title" content="Balm Products and Services" />
+    <meta name="twitter:description" content="Balm Products and Services" />
     <meta name="twitter:image" content="https://balmsoothes.com/og-img.png" />
     <meta name="twitter:image:alt" content="BALM" />
   </head>
