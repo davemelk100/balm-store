@@ -41,6 +41,14 @@ const Art = () => {
             className="space-y-8"
             style={{ fontFamily: '"Geist Mono", monospace' }}
           >
+            {brightwire && (
+              <h1
+                className="text-black text-left"
+                style={{ fontSize: "24px", fontWeight: 400 }}
+              >
+                {brightwire.name}
+              </h1>
+            )}
             {artImages.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {artImages.map((src, i) => (
