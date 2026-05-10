@@ -106,10 +106,10 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                   "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
               }}
             >
-              <span className="balm-header-title text-[40px] md:text-[44px]">
+              <span className="balm-header-title text-[48px] md:text-[44px]">
                 BALM
               </span>
-              <span className="balm-header-title text-[16px] md:text-[18px] mt-1">
+              <span className="balm-header-title text-[20px] md:text-[18px] mt-1">
                 products and services
               </span>
             </Link>
