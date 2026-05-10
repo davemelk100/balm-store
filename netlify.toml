@@ -7,6 +7,14 @@
   command = "npm run build"
   publish = "dist"
 
+[build.environment]
+  # `VITE_*` env vars are public by design — Vite inlines anything with
+  # this prefix into the client bundle so the browser can read it. The
+  # secrets scanner doesn't know that and flags the build, so we tell
+  # it to skip these specific keys. Real secrets without the prefix
+  # (GOOGLE_CLIENT_SECRET, STRIPE_SECRET_KEY) stay scanned.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_API_BASE,VITE_GOOGLE_CLIENT_ID,VITE_GOOGLE_REDIRECT_URI,VITE_STRIPE_PUBLISHABLE_KEY_TEST,VITE_MAINTENANCE_MODE"
+
 # SPA fallback: React Router owns client-side routes (e.g. /artists,
 # /artists/:slug, /product/:id). Without this, hitting those URLs
 # directly 404s on Netlify's static host.
