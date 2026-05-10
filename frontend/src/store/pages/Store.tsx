@@ -10,6 +10,7 @@ import StoreHeader from "../components/StoreHeader";
 import { StoreFooter } from "../components/StoreFooter";
 import { StoreNav } from "../components/StoreNav";
 import { ProductCard } from "../components/ProductCard";
+import { ContactForm } from "../components/ContactForm";
 import { API_ENDPOINTS } from "../../config/api";
 
 const Store = () => {
@@ -156,18 +157,7 @@ const Store = () => {
                     {para}
                   </p>
                 ))}
-                <a
-                  href="mailto:balmsoothes@gmail.com?subject=Demo%20%2F%20Artist%20Submission"
-                  className="inline-block mt-3 border-b border-transparent hover:border-[rgb(80,80,80)]"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 300,
-                    color: "rgb(80, 80, 80)",
-                    textDecoration: "none",
-                  }}
-                >
-                  balmsoothes@gmail.com
-                </a>
+                <ContactForm />
               </motion.section>
             ) : (
               <motion.section variants={fadeInUp} className="space-y-6">
