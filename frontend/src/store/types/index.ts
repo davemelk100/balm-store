@@ -3,6 +3,9 @@
 export interface Show {
   // ISO date (YYYY-MM-DD). Used for sorting and to filter past shows.
   date: string;
+  // Optional display override — use when the show date is unknown
+  // (e.g. "TBD") rather than a known day.
+  dateLabel?: string;
   venue: string;
   city: string;
   ticketUrl?: string;

@@ -229,7 +229,7 @@ const ArtistDetail = () => {
                           style={{ fontSize: "14px", fontWeight: 300 }}
                         >
                           <span style={{ color: "rgb(80, 80, 80)" }}>
-                            {formatDate(show.date)}
+                            {show.dateLabel ?? formatDate(show.date)}
                           </span>
                           <span className="text-black">
                             {show.venue} — {show.city}

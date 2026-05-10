@@ -137,37 +137,37 @@ const Store = () => {
             {isHome ? (
               <motion.section
                 variants={fadeInUp}
-                className="text-left max-w-3xl"
+                className="text-center max-w-3xl mx-auto"
                 style={{ fontFamily: '"Geist Mono", monospace' }}
               >
-                <p
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: 300 }}
+                {[
+                  "Balm is a multidisciplinary creative house working across underground music, streetwear, and physical-media art. Part record label, part clothing imprint, part artist collective, it exists for work that resists category.",
+                  "The clothing line draws on zine culture, hardcore flyers, and DIY print ephemera, translated into limited-run garments built around bold graphics and unconventional silhouettes. Every drop is treated like a release: numbered, intentional, and made to live with.",
+                  "The record label catalogs sounds that sit outside the comfortable middle, from dense noise rock and desert groove to collage-driven ambient and deconstructed post-punk. Each signing is chosen for a distinct voice rather than scene fit.",
+                  "Alongside the music, Balm publishes artists working in print, collage, photography, zines, and tape-based work. These releases run as equal output, not merch.",
+                  "What ties it together is a commitment to texture, atmosphere, and objects made by people who care more about the work than the algorithm.",
+                  "Contact us with demos or artist submissions.",
+                ].map((para, i) => (
+                  <p
+                    key={i}
+                    className={`text-black ${i === 0 ? "" : "mt-2"}`}
+                    style={{ fontSize: "14px", fontWeight: 300 }}
+                  >
+                    {para}
+                  </p>
+                ))}
+                <a
+                  href="mailto:balmsoothes@gmail.com?subject=Demo%20%2F%20Artist%20Submission"
+                  className="inline-block mt-3 border-b border-transparent hover:border-[rgb(80,80,80)]"
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 300,
+                    color: "rgb(80, 80, 80)",
+                    textDecoration: "none",
+                  }}
                 >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Sed do eiusmod tempor incididunt ut labore et dolore
-                  magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip ex ea
-                  commodo consequat.
-                </p>
-                <p
-                  className="mt-2 text-black"
-                  style={{ fontSize: "14px", fontWeight: 300 }}
-                >
-                  Duis aute irure dolor in reprehenderit in voluptate
-                  velit esse cillum dolore eu fugiat nulla pariatur.
-                  Excepteur sint occaecat cupidatat non proident, sunt in
-                  culpa qui officia deserunt mollit anim id est laborum.
-                </p>
-                <p
-                  className="mt-2 text-black"
-                  style={{ fontSize: "14px", fontWeight: 300 }}
-                >
-                  Sed ut perspiciatis unde omnis iste natus error sit
-                  voluptatem accusantium doloremque laudantium, totam rem
-                  aperiam, eaque ipsa quae ab illo inventore veritatis et
-                  quasi architecto beatae vitae dicta sunt explicabo.
-                </p>
+                  balmsoothes@gmail.com
+                </a>
               </motion.section>
             ) : (
               <motion.section variants={fadeInUp} className="space-y-6">

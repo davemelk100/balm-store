@@ -10,6 +10,24 @@ export const artists: Artist[] = [
     spotifyUrl: "https://open.spotify.com/",
     paypalUrl: "https://paypal.me/Balmsoothes",
     venmoUrl: "https://venmo.com/u/Dave-Melkonian",
+    shows: [
+      {
+        // Sentinel ISO date keeps the entry in the future-only filter;
+        // dateLabel renders as "TBD" instead of an actual date.
+        date: "2099-01-01",
+        dateLabel: "TBD",
+        venue: "TBD",
+        city: "TBD",
+      },
+    ],
+    releases: [
+      {
+        date: "2099-01-01",
+        dateLabel: "TBD",
+        title: "TBD",
+        type: "TBD",
+      },
+    ],
   },
   {
     slug: "full-time-bionic",
