@@ -77,7 +77,22 @@ const ArtistDetail = () => {
   };
 
   const artistProducts = useMemo(
-    () => products.filter((p) => p.artistSlug === slug),
+    () =>
+      products.filter(
+        (p) => p.artistSlug === slug && !p.hideFromArtistPage
+      ),
+    [products, slug]
+  );
+
+  // Embedded players for the artist — rendered as a separate section
+  // below the product grid, mirroring the inline-embed treatment on
+  // /music. Includes products that are hidden from the card grid via
+  // `hideFromArtistPage` so they still get a player here.
+  const artistEmbeds = useMemo(
+    () =>
+      products.filter(
+        (p) => p.artistSlug === slug && p.bandcampEmbedUrl
+      ),
     [products, slug]
   );
 
@@ -209,6 +224,22 @@ const ArtistDetail = () => {
                 ))}
             </motion.div>
 
+            {artist.gallery && artist.gallery.length > 0 && (
+              <motion.section variants={fadeInUp} className="space-y-6">
+                <div className="flex flex-wrap justify-start gap-4">
+                  {artist.gallery.map((src, i) => (
+                    <img
+                      key={src}
+                      src={src}
+                      alt={`${artist.name} — image ${i + 1}`}
+                      className="w-full max-w-[480px] h-auto rounded-lg"
+                      loading="lazy"
+                    />
+                  ))}
+                </div>
+              </motion.section>
+            )}
+
             {hasUpcoming && (
               <motion.section
                 variants={fadeInUp}
@@ -317,6 +348,31 @@ const ArtistDetail = () => {
                 ))}
               </div>
             </motion.section>
+
+            {artistEmbeds.length > 0 && (
+              <motion.section variants={fadeInUp} className="space-y-6">
+                <div className="flex flex-wrap justify-start gap-4">
+                  {artistEmbeds.map((product) => (
+                    <iframe
+                      key={product.id}
+                      title={`${product.title} — embedded player`}
+                      src={product.bandcampEmbedUrl}
+                      seamless
+                      allow="autoplay"
+                      style={{
+                        border: 0,
+                        width: `${product.bandcampEmbedWidth ?? 350}px`,
+                        height: `${product.bandcampEmbedHeight ?? 442}px`,
+                      }}
+                    >
+                      <a href={product.bandcampUrl}>
+                        {product.title} on Bandcamp
+                      </a>
+                    </iframe>
+                  ))}
+                </div>
+              </motion.section>
+            )}
           </motion.div>
         </div>
       </section>

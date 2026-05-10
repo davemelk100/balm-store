@@ -56,4 +56,17 @@ export const artists: Artist[] = [
       },
     ],
   },
+  {
+    slug: "brightwire-designs",
+    name: "Brightwire Designs",
+    image: "/img/products/brightwire-logo.png",
+    websiteUrl: "https://brightwiredesigns.com/",
+    gallery: [
+      "/img/products/brightwire-installation.png",
+      "/img/products/brightwire-portrait.png",
+      "/img/products/brightwire-sculpture.png",
+      "/img/products/brightwire-silhouette.png",
+    ],
+    bio: "My approach to wire art is based on the mastery of two things: process and material. By understanding the limits and properties of the material, I can fine tune my techniques.\n\nMy art background consists mainly of playing drums in punk rock bands and writing poetry. My business background includes forays into everything from Mobile Apps and ebooks, to Timber Hawk, a line of hunting backpacks. I got into wire art because I developed a new way of working with a material, which happened to be strangely therapeutic. And I could make stuff people would buy.\n\nNothing about the wire art I'd seen intrigued me, and I didn't really have any desire to pursue any visual art form. It was a visit to the local metal recycling center that changed my trajectory. Among the piles of copper wire and scrap aluminum, I noticed two massive bins loaded with wire; gold in the first and silver in the second. What really caught my eye was how it lay piled together, folded rather than tangled. And even though it was dirty still sparkled. The employee told me it was brass EDM wire and explained what it was used for. I left that day with a couple big coolers full, having no idea what I might do with it. I pulled out some of the yellow stuff, stretched it into a weird, phallic shape and stapled it to the ceiling of my garage where it hung for at least six months. At some point that winter I opened one of the coolers and pulled out a thick mass of the wire and it fell over my hand, supporting itself in a dome shape about fifteen inches in diameter. That was the moment I realized I could make a cool lampshade out of brass wire. I made one, and sold it pretty quick. But it took two more years before I understood how to make certain shapes consistently. There were no YouTube videos to watch, no workshops to sign up for. I became my own teacher and apprentice, eventually developing my own techniques for working with EDM and MIG wire.",
+  },
 ];

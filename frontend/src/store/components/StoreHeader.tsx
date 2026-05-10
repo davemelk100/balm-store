@@ -1,9 +1,10 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ShoppingCart } from "lucide-react";
+import { Menu, ShoppingCart, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { storeNavItems, isStoreNavActive } from "./StoreNav";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,8 +40,15 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
   minimal = false,
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout, isAuthenticated } = useAuth();
   const { getTotalItems } = useCart();
+
+  // Mobile-only nav menu state — desktop uses inline links in StoreNav.
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -59,16 +67,38 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           transition={{ duration: 0.6 }}
           className="flex items-center"
         >
-          {/* Left spacer for balance — desktop only so the logo can sit
-              flush-left on mobile. */}
-          <div className="hidden md:block flex-1"></div>
+          {/* Left column — mobile menu button on small screens, empty
+              spacer on desktop. Either way, flex-1 balances the
+              right-side actions so the title stays centered. */}
+          <div className="flex-1 flex items-center justify-start">
+            {!minimal && (
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen((v) => !v)}
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={mobileMenuOpen}
+                className="md:hidden flex items-center justify-center w-9 h-9 rounded-full cursor-pointer"
+                style={{
+                  backgroundColor: "#f0f0f0",
+                  boxShadow:
+                    "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
+                  color: "rgb(100, 100, 100)",
+                }}
+              >
+                {mobileMenuOpen ? (
+                  <X className="h-4 w-4" />
+                ) : (
+                  <Menu className="h-4 w-4" />
+                )}
+              </button>
+            )}
+          </div>
 
-          {/* Header title. Centered on desktop (between spacers),
-              left-aligned and smaller on mobile. */}
+          {/* Header title — centered on all viewports. */}
           <div className="flex-shrink-0">
             <Link
               to="/"
-              className="font-bold balm-logo hover:opacity-80 transition-opacity text-[18px] md:text-[56px]"
+              className="font-bold balm-logo hover:opacity-80 transition-opacity text-[24px] md:text-[56px]"
               style={{
                 color: "#d0d0d0",
                 textShadow:
@@ -211,6 +241,39 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
               )}
           </div>
         </motion.div>
+
+        {/* Mobile dropdown panel — anchored under the header bar. */}
+        {!minimal && mobileMenuOpen && (
+          <div
+            className="md:hidden mt-3 flex flex-col items-start gap-2"
+            style={{ fontFamily: '"Geist Mono", monospace' }}
+          >
+            {storeNavItems.map((item) => {
+              const active = isStoreNavActive(location.pathname, item.to);
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`px-2 py-1 bg-transparent border-b ${
+                    active
+                      ? "border-[rgb(80,80,80)]"
+                      : "border-transparent hover:border-[rgb(80,80,80)]"
+                  }`}
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: active ? 600 : 300,
+                    color: active
+                      ? "rgb(20, 20, 20)"
+                      : "rgb(100, 100, 100)",
+                    textDecoration: "none",
+                  }}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

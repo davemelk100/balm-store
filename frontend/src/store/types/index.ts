@@ -27,6 +27,10 @@ export interface Artist {
   slug: string;
   name: string;
   image: string;
+  // Additional images shown as a gallery on /artists/:slug, below the
+  // bio. The top `image` field stays the logo/avatar — these are
+  // photos, work samples, etc.
+  gallery?: string[];
   bio?: string;
   websiteUrl?: string;
   bandcampUrl?: string;
@@ -43,6 +47,10 @@ export interface Product {
   // When set, the product belongs to a featured artist and is shown on
   // /artists/:slug rather than the main BALM grid.
   artistSlug?: string;
+  // When true, the product is excluded from /artists/:slug even if its
+  // artistSlug matches. Used for items we want on /music but not on the
+  // artist page.
+  hideFromArtistPage?: boolean;
   // Direct payment links surfaced on the product page alongside Stripe
   // checkout. Used for artist merch where Stripe products may not exist
   // yet — buyers can pay via PayPal/Venmo directly.

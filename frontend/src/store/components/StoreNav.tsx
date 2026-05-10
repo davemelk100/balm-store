@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 
-const items = [
+// Shared by StoreNav (desktop inline) and StoreHeader (mobile menu).
+export const storeNavItems = [
   { label: "Home", to: "/" },
   { label: "Clothing", to: "/clothing" },
   { label: "Music", to: "/music" },
@@ -8,41 +9,43 @@ const items = [
   { label: "Artists", to: "/artists" },
 ];
 
+export const isStoreNavActive = (pathname: string, to: string) =>
+  to === "/artists" ? pathname.startsWith("/artists") : pathname === to;
+
 export const StoreNav = () => {
   const location = useLocation();
 
+  // Desktop only — the mobile menu lives in StoreHeader so its trigger
+  // can sit to the left of the title.
   return (
     <nav
-      className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-6 flex items-center justify-center gap-8"
+      className="hidden md:block max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-6"
       style={{ fontFamily: '"Geist Mono", monospace' }}
     >
-      {items.map((item) => {
-        // Highlight Artists for any /artists/* path so the section feels
-        // sticky when drilling into an artist detail page.
-        const isActive =
-          item.to === "/artists"
-            ? location.pathname.startsWith("/artists")
-            : location.pathname === item.to;
-        return (
-          <Link
-            key={item.to}
-            to={item.to}
-            className={`px-2 py-1 bg-transparent border-b ${
-              isActive
-                ? "border-[rgb(80,80,80)]"
-                : "border-transparent hover:border-[rgb(80,80,80)]"
-            }`}
-            style={{
-              fontSize: "16px",
-              fontWeight: isActive ? 600 : 300,
-              color: isActive ? "rgb(20, 20, 20)" : "rgb(100, 100, 100)",
-              textDecoration: "none",
-            }}
-          >
-            {item.label}
-          </Link>
-        );
-      })}
+      <div className="flex items-center justify-center gap-8">
+        {storeNavItems.map((item) => {
+          const active = isStoreNavActive(location.pathname, item.to);
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`px-2 py-1 bg-transparent border-b ${
+                active
+                  ? "border-[rgb(80,80,80)]"
+                  : "border-transparent hover:border-[rgb(80,80,80)]"
+              }`}
+              style={{
+                fontSize: "16px",
+                fontWeight: active ? 600 : 300,
+                color: active ? "rgb(20, 20, 20)" : "rgb(100, 100, 100)",
+                textDecoration: "none",
+              }}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+      </div>
     </nav>
   );
 };
