@@ -226,13 +226,13 @@ const ArtistDetail = () => {
 
             {artist.gallery && artist.gallery.length > 0 && (
               <motion.section variants={fadeInUp} className="space-y-6">
-                <div className="flex flex-wrap justify-start gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                   {artist.gallery.map((src, i) => (
                     <img
                       key={src}
                       src={src}
                       alt={`${artist.name} — image ${i + 1}`}
-                      className="w-full max-w-[480px] h-auto rounded-lg"
+                      className="w-full aspect-square object-cover rounded-lg"
                       loading="lazy"
                     />
                   ))}
