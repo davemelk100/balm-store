@@ -57,7 +57,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
 
   return (
     <section
-      className="pt-[40px] pb-[0]"
+      className="pt-[40px] pb-6 md:pb-0"
       style={{ backgroundColor: "rgba(240, 240, 240, 0.75)" }}
     >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -98,14 +98,20 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           <div className="flex-shrink-0">
             <Link
               to="/"
-              className="font-bold balm-logo hover:opacity-80 transition-opacity text-[24px] md:text-[56px]"
+              className="font-bold balm-logo hover:opacity-80 transition-opacity text-[34px] md:text-[44px]"
               style={{
                 color: "#d0d0d0",
+                fontWeight: 700,
                 textShadow:
                   "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
               }}
             >
-              BALM PRODUCTS AND SERVICES
+              <span className="balm-header-title md:hidden">
+                BALM PRODUCTS
+              </span>
+              <span className="balm-header-title hidden md:inline">
+                BALM PRODUCTS AND SERVICES
+              </span>
             </Link>
           </div>
 

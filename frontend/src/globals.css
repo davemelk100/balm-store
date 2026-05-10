@@ -80,6 +80,14 @@
     }
 }
 
+/* Header title (BALM PRODUCTS / AND SERVICES) — opted out of the
+   global span defaults above so the size + weight from its parent /
+   inline style take effect. */
+.balm-header-title {
+    font-size: inherit;
+    font-weight: 700;
+}
+
 /* Stripe Buy Button Styling */
 .stripe-buy-button-container {
     display: flex;
