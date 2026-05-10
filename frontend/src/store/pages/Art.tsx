@@ -45,6 +45,12 @@ const Art = () => {
               Coming soon — physical media including print, collage,
               photography, zines, and tape-based work.
             </p>
+            <p
+              className="mt-2 text-black"
+              style={{ fontSize: "14px", fontWeight: 300 }}
+            >
+              Contact us with demos or artist submissions.
+            </p>
             <a
               href="mailto:balmsoothes@gmail.com?subject=Art%20Submission"
               className="inline-block mt-4 border-b border-transparent hover:border-[rgb(80,80,80)]"
