@@ -115,7 +115,18 @@ const Store = () => {
 
   const filteredProducts = useMemo(() => {
     if (!routeCategory) return [];
-    return products.filter((p) => p.mainCategory === routeCategory);
+    const matches = products.filter((p) => p.mainCategory === routeCategory);
+    if (routeCategory !== "music") return matches;
+    // /music groups by artist with Full Time Bionic first, then Balm.
+    // Anything untagged falls to the end.
+    const order = ["full-time-bionic", "balm"];
+    const rank = (slug?: string) => {
+      const i = slug ? order.indexOf(slug) : -1;
+      return i === -1 ? order.length : i;
+    };
+    return [...matches].sort(
+      (a, b) => rank(a.artistSlug) - rank(b.artistSlug)
+    );
   }, [products, routeCategory]);
 
   // Note: Stripe button styling removed from home page as it's not needed here
