@@ -65,7 +65,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex items-center"
+          className="flex items-center gap-4 md:gap-0"
         >
           {/* Left column — mobile menu button on small screens, empty
               spacer on desktop. Either way, flex-1 balances the
