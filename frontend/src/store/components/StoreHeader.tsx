@@ -98,7 +98,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
           <div className="flex-shrink-0">
             <Link
               to="/"
-              className="font-bold balm-logo hover:opacity-80 transition-opacity text-[34px] md:text-[44px]"
+              className="font-bold balm-logo hover:opacity-80 transition-opacity flex flex-col items-center leading-none"
               style={{
                 color: "#d0d0d0",
                 fontWeight: 700,
@@ -106,7 +106,12 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
                   "rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px",
               }}
             >
-              <span className="balm-header-title">BALM</span>
+              <span className="balm-header-title text-[34px] md:text-[44px]">
+                BALM
+              </span>
+              <span className="balm-header-title text-[14px] md:text-[18px] mt-1">
+                products and services
+              </span>
             </Link>
           </div>
 
