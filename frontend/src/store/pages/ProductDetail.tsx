@@ -279,12 +279,13 @@ const ProductDetail = () => {
                   )}
                 </div>
                 <iframe
-                  title={`${product.title} — Bandcamp player`}
+                  title={`${product.title} — embedded player`}
                   src={product.bandcampEmbedUrl}
                   seamless
+                  allow="autoplay"
                   style={{
                     border: 0,
-                    width: "350px",
+                    width: `${product.bandcampEmbedWidth ?? 350}px`,
                     height: `${product.bandcampEmbedHeight ?? 442}px`,
                   }}
                 >

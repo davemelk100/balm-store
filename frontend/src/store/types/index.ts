@@ -82,12 +82,18 @@ export interface Product {
   streamUrl?: string;
   spotifyUrl?: string;
   bandcampUrl?: string;
-  // Bandcamp <iframe> embed src — when set, the product page replaces the
-  // image carousel with the embedded player.
+  // Embed <iframe> src — when set, the product page (and the Music
+  // grid) replaces the image with the embedded player. Despite the
+  // name, the URL doesn't have to point at Bandcamp; any embed source
+  // works (e.g. fulltimebionic.com/embed/...).
   bandcampEmbedUrl?: string;
-  // Optional override for the embed iframe height (px). Bandcamp's embed
-  // markup ships a per-release height (e.g. 442 for tracks, 470 for albums).
+  // Optional override for the embed iframe height (px). Bandcamp's
+  // embeds ship a per-release height (e.g. 442 for tracks, 470 for
+  // albums). Other providers may differ.
   bandcampEmbedHeight?: number;
+  // Optional override for the embed iframe width (px). Defaults to
+  // 350 (Bandcamp's standard) when unset.
+  bandcampEmbedWidth?: number;
   // Track listing for albums / EPs / singles.
   tracks?: { title: string; duration: string }[];
 }

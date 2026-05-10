@@ -145,7 +145,7 @@ const Store = () => {
               >
                 {[
                   "Balm is a multidisciplinary creative house working across underground music, streetwear, and physical-media art. Part record label, part clothing imprint, part artist collective, it exists for work that resists category.",
-                  "The clothing line draws on zine culture, hardcore flyers, and DIY print ephemera, translated into limited-run garments built around bold graphics and unconventional silhouettes. Every drop is treated like a release: numbered, intentional, and made to live with.",
+                  "The clothing line draws on zine culture, hardcore flyers, and DIY print ephemera, translated into limited-run garments built around bold graphics and unconventional silhouettes. Every drop is treated like a release: intentional, and made to live with.",
                   "The record label catalogs sounds that sit outside the comfortable middle, from dense noise rock and desert groove to collage-driven ambient and deconstructed post-punk. Each signing is chosen for a distinct voice rather than scene fit.",
                   "Alongside the music, Balm publishes artists working in print, collage, photography, zines, and tape-based work. These releases run as equal output, not merch.",
                   "What ties it together is a commitment to texture, atmosphere, and objects made by people who care more about the work than the algorithm.",
@@ -174,10 +174,33 @@ const Store = () => {
               </motion.section>
             ) : (
               <motion.section variants={fadeInUp} className="space-y-6">
-                <div className="flex flex-wrap justify-center gap-4">
-                  {filteredProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
+                <div className="flex flex-wrap justify-start gap-4">
+                  {filteredProducts.map((product) =>
+                    routeCategory === "music" && product.bandcampEmbedUrl ? (
+                      // On the Music page, render the Bandcamp player
+                      // inline instead of a thumbnail card linking out.
+                      // Falls back to ProductCard for any music product
+                      // that doesn't carry an embed URL.
+                      <iframe
+                        key={product.id}
+                        title={`${product.title} — embedded player`}
+                        src={product.bandcampEmbedUrl}
+                        seamless
+                        allow="autoplay"
+                        style={{
+                          border: 0,
+                          width: `${product.bandcampEmbedWidth ?? 350}px`,
+                          height: `${product.bandcampEmbedHeight ?? 442}px`,
+                        }}
+                      >
+                        <a href={product.bandcampUrl}>
+                          {product.title} on Bandcamp
+                        </a>
+                      </iframe>
+                    ) : (
+                      <ProductCard key={product.id} product={product} />
+                    )
+                  )}
                 </div>
               </motion.section>
             )}
