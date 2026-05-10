@@ -16,9 +16,16 @@ import { API_ENDPOINTS } from "../../config/api";
 const Store = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
-  // The home route renders a bio block instead of the merch grid;
-  // /shirts keeps the catalog.
+  // /  → bio block (no grid)
+  // /clothing or /shirts → clothing-only grid
+  // /music → music-only grid
   const isHome = location.pathname === "/";
+  const routeCategory: "clothing" | "music" | null =
+    location.pathname === "/clothing" || location.pathname === "/shirts"
+      ? "clothing"
+      : location.pathname === "/music"
+      ? "music"
+      : null;
 
   // Products state — start empty so we never flash stale stock from the
   // static fallback. Live data comes from Stripe via /api/products.
@@ -108,13 +115,9 @@ const Store = () => {
   // ];
 
   const filteredProducts = useMemo(() => {
-    // Merch grid: clothing + music from every artist. Music releases
-    // also surface on /artists/:slug, but the top-level Merch page
-    // shows everything purchasable/streamable.
-    return products.filter(
-      (p) => p.mainCategory === "clothing" || p.mainCategory === "music"
-    );
-  }, [products]);
+    if (!routeCategory) return [];
+    return products.filter((p) => p.mainCategory === routeCategory);
+  }, [products, routeCategory]);
 
   // Note: Stripe button styling removed from home page as it's not needed here
   // It's only used on the ProductDetail page

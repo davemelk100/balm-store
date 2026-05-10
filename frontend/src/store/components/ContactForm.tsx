@@ -29,6 +29,24 @@ export const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("submitting");
+
+    // In dev, Vite serves the SPA but doesn't know about Netlify
+    // Forms — a POST to "/" 404s. Skip the network call and simulate
+    // success so the UX can be verified locally; real submissions only
+    // go through on the deployed Netlify site.
+    if (import.meta.env.DEV) {
+      console.info("[ContactForm] dev mode — simulated submit:", {
+        name,
+        email,
+        message,
+      });
+      setStatus("ok");
+      setName("");
+      setEmail("");
+      setMessage("");
+      return;
+    }
+
     try {
       const res = await fetch("/", {
         method: "POST",

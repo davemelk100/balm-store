@@ -2,7 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 
 const items = [
   { label: "Home", to: "/" },
-  { label: "Merch", to: "/shirts" },
+  { label: "Clothing", to: "/clothing" },
+  { label: "Music", to: "/music" },
   { label: "Artists", to: "/artists" },
 ];
 

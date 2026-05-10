@@ -55,6 +55,9 @@ function App() {
                 <Route path="/auth-callback" element={<AuthCallback />} />
                 <Route path="/auth/auth/callback" element={<AuthCallback />} />
                 <Route path="/" element={<Store />} />
+                <Route path="/clothing" element={<Store />} />
+                <Route path="/music" element={<Store />} />
+                {/* Legacy alias — old links to /shirts still work. */}
                 <Route path="/shirts" element={<Store />} />
                 <Route path="/artists" element={<Artists />} />
                 <Route path="/artists/:slug" element={<ArtistDetail />} />
