@@ -6,9 +6,12 @@ import { TermsOfServiceContent } from "../../components/TermsOfServiceContent";
 import StoreHeader from "../components/StoreHeader";
 import { StoreFooter } from "../components/StoreFooter";
 import { StoreNav } from "../components/StoreNav";
+import { artists } from "../data/artists";
 
 const Art = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const brightwire = artists.find((a) => a.slug === "brightwire-designs");
+  const artImages = brightwire?.gallery ?? [];
 
   const legalModal = searchParams.get("legal");
   const openLegalModal = (type: "privacy" | "terms") => {
@@ -35,34 +38,42 @@ const Art = () => {
             initial="initial"
             animate="animate"
             variants={fadeInUp}
-            className="text-center max-w-3xl mx-auto"
+            className="space-y-8"
             style={{ fontFamily: '"Geist Mono", monospace' }}
           >
-            <p
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: 300 }}
-            >
-              Coming soon — physical media including print, collage,
-              photography, zines, and tape-based work.
-            </p>
-            <p
-              className="mt-2 text-black"
-              style={{ fontSize: "14px", fontWeight: 300 }}
-            >
-              Contact us with demos or artist submissions.
-            </p>
-            <a
-              href="mailto:balmsoothes@gmail.com?subject=Art%20Submission"
-              className="inline-block mt-4 border-b border-transparent hover:border-[rgb(80,80,80)]"
-              style={{
-                fontSize: "14px",
-                fontWeight: 300,
-                color: "rgb(80, 80, 80)",
-                textDecoration: "none",
-              }}
-            >
-              balmsoothes@gmail.com
-            </a>
+            {artImages.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                {artImages.map((src, i) => (
+                  <img
+                    key={src}
+                    src={src}
+                    alt={`Brightwire Designs — image ${i + 1}`}
+                    className="w-full aspect-square object-cover rounded-lg"
+                    loading="lazy"
+                  />
+                ))}
+              </div>
+            )}
+            <div className="text-center max-w-3xl mx-auto">
+              <p
+                className="text-black"
+                style={{ fontSize: "14px", fontWeight: 300 }}
+              >
+                Contact us with demos or artist submissions.
+              </p>
+              <a
+                href="mailto:balmsoothes@gmail.com?subject=Art%20Submission"
+                className="inline-block mt-4 border-b border-transparent hover:border-[rgb(80,80,80)]"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: 300,
+                  color: "rgb(80, 80, 80)",
+                  textDecoration: "none",
+                }}
+              >
+                balmsoothes@gmail.com
+              </a>
+            </div>
           </motion.div>
         </div>
       </section>
