@@ -109,7 +109,10 @@ const StoreHeader: React.FC<StoreHeaderProps> = ({
               <span className="balm-header-title text-[56px] md:text-[56px]">
                 BALM
               </span>
-              <span className="balm-header-title text-[24px] md:text-[22px] mt-1">
+              <span
+                className="balm-header-title text-[24px] md:text-[22px] mt-1"
+                style={{ letterSpacing: "2px" }}
+              >
                 products and services
               </span>
             </Link>
