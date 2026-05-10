@@ -80,12 +80,15 @@
     }
 }
 
-/* Header title (BALM PRODUCTS / AND SERVICES) — opted out of the
-   global span defaults above so the size + weight from its parent /
-   inline style take effect. */
-.balm-header-title {
-    font-size: inherit;
-    font-weight: 700;
+/* Header title (BALM / subtitle) — opted out of the global span
+   defaults above. Wrapped in @layer components so Tailwind utilities
+   (e.g. text-[56px]) in @layer utilities can still override font-size
+   per element. font-weight: 700 stays unless a utility competes. */
+@layer components {
+    .balm-header-title {
+        font-size: inherit;
+        font-weight: 700;
+    }
 }
 
 /* Stripe Buy Button Styling */
