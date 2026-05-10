@@ -140,7 +140,7 @@ const Store = () => {
       <StoreNav />
 
       {/* Store Content */}
-      <section className="pb-2 sm:pb-3 lg:pb-4 xl:pb-6 relative z-10">
+      <main className="pb-2 sm:pb-3 lg:pb-4 xl:pb-6 relative z-10">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial="initial"
@@ -185,7 +185,13 @@ const Store = () => {
               </motion.section>
             ) : (
               <motion.section variants={fadeInUp} className="space-y-6">
-                <div className="flex flex-wrap justify-start gap-4">
+                <div
+                  className={`flex flex-wrap gap-4 ${
+                    routeCategory === "clothing"
+                      ? "justify-center"
+                      : "justify-start"
+                  }`}
+                >
                   {filteredProducts.map((product) =>
                     routeCategory === "music" && product.bandcampEmbedUrl ? (
                       // On the Music page, render the Bandcamp player
@@ -219,7 +225,7 @@ const Store = () => {
             )}
           </motion.div>
         </div>
-      </section>
+      </main>
 
       {/* Legal Modals */}
       <LegalModal

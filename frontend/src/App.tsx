@@ -4,21 +4,25 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Suspense } from "react";
+import { Suspense, lazy } from "react";
 import { CartProvider, StoreProvider, AuthProvider } from "./store";
 import { ProtectedRoute } from "./store/components/ProtectedRoute";
 import { Toaster } from "@/components/ui/toaster";
-import Store from "./store/pages/Store";
-import ProductDetail from "./store/pages/ProductDetail";
-import Artists from "./store/pages/Artists";
-import ArtistDetail from "./store/pages/ArtistDetail";
-import Art from "./store/pages/Art";
-import Checkout from "./store/pages/Checkout";
-import CheckoutSuccess from "./store/pages/CheckoutSuccess";
-import Login from "./store/pages/Login";
-import Signup from "./store/pages/Signup";
-import AuthCallback from "./store/pages/AuthCallback";
-import ComingSoon from "./store/pages/ComingSoon";
+
+// Route-level code splitting — each page ships as its own chunk so the
+// initial bundle stays small. Without this we shipped ~515KB upfront
+// with ~290KB never executed on the home page (Lighthouse audit).
+const Store = lazy(() => import("./store/pages/Store"));
+const ProductDetail = lazy(() => import("./store/pages/ProductDetail"));
+const Artists = lazy(() => import("./store/pages/Artists"));
+const ArtistDetail = lazy(() => import("./store/pages/ArtistDetail"));
+const Art = lazy(() => import("./store/pages/Art"));
+const Checkout = lazy(() => import("./store/pages/Checkout"));
+const CheckoutSuccess = lazy(() => import("./store/pages/CheckoutSuccess"));
+const Login = lazy(() => import("./store/pages/Login"));
+const Signup = lazy(() => import("./store/pages/Signup"));
+const AuthCallback = lazy(() => import("./store/pages/AuthCallback"));
+const ComingSoon = lazy(() => import("./store/pages/ComingSoon"));
 
 function App() {
   // Check for maintenance mode from env and bypass token
@@ -30,9 +34,11 @@ function App() {
   if (isMaintenanceMode && !hasMaintenanceBypass) {
     return (
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <Routes>
-          <Route path="*" element={<ComingSoon />} />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="*" element={<ComingSoon />} />
+          </Routes>
+        </Suspense>
       </Router>
     );
   }

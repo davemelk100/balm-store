@@ -127,7 +127,7 @@ const ArtistDetail = () => {
       <StoreHeader />
       <StoreNav />
 
-      <section className="pb-2 sm:pb-3 lg:pb-4 xl:pb-6 relative z-10">
+      <main className="pb-2 sm:pb-3 lg:pb-4 xl:pb-6 relative z-10">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial="initial"
@@ -375,7 +375,7 @@ const ArtistDetail = () => {
             )}
           </motion.div>
         </div>
-      </section>
+      </main>
 
       <LegalModal
         isOpen={legalModal === "privacy"}
