@@ -189,6 +189,8 @@ const Store = () => {
                   className={`flex flex-wrap gap-4 ${
                     routeCategory === "clothing"
                       ? "justify-center"
+                      : routeCategory === "music"
+                      ? "justify-center lg:justify-start"
                       : "justify-start"
                   }`}
                 >

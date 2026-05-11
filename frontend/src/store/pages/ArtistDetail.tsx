@@ -156,15 +156,19 @@ const ArtistDetail = () => {
               <img
                 src={artist.image}
                 alt={`${artist.name} logo`}
-                className="block w-40 h-auto mb-3"
+                className={`block h-auto mb-3 ${
+                  slug === "full-time-bionic" ? "w-80" : "w-40"
+                }`}
                 loading="eager"
               />
-              <h1
-                className="text-black"
-                style={{ fontSize: "24px", fontWeight: 400 }}
-              >
-                {artist.name}
-              </h1>
+              {slug !== "full-time-bionic" && (
+                <h1
+                  className="text-black"
+                  style={{ fontSize: "24px", fontWeight: 400 }}
+                >
+                  {artist.name}
+                </h1>
+              )}
 
               {/* Streaming + website links — only the URLs the artist
                   has are rendered. Bandcamp uses an icon button

@@ -32,7 +32,7 @@ export const artists: Artist[] = [
   {
     slug: "full-time-bionic",
     name: "Full Time Bionic",
-    image: "/img/products/ftb-stacked.png",
+    image: "/img/products/ftb-horizontal.svg",
     bio: "A dense mix of heavy abrasion and desert groove, where precise, repetitive riffs nod to Helmet's locked-in precision, Unsane's razor-sharp attack, and Fu Manchu's thick, rolling fuzz, driven by a deadpan, spoken delivery that echoes somewhere between Steve Albini and Eddie Glass. Heavy, hypnotic, and tightly controlled.",
     websiteUrl: "https://fulltimebionic.com/",
     bandcampUrl: "https://fulltimebionic.bandcamp.com/album/woodshed-studios-ep",
